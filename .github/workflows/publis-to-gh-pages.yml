@@ -12,14 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:  
     - uses: actions/checkout@v3
-    - run: cd BlazorStaticWebsite
     - name: update tailwindcss
       uses: ZoeyVid/tailwindcss-update@main
+      working-directory: ./BlazorStaticWebsite
       with:
-        input: ./BlazorStaticWebsite/wwwroot/app.css 
-        output: ./BlazorStaticWebsite/wwwroot/app.min.css 
+        input: ./wwwroot/app.css 
+        output: ./wwwroot/app.min.css 
         params: "--minify"
-    - run: cd ..   
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -30,8 +29,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: rund
-      run: dotnet run
+    - name: run
+      run: dotnet run --project BlazorStaticWebsite/BlazorStaticWebsite.csproj --no-build
       
     - name: Deploy to GitHub Pages 
       uses: JamesIves/github-pages-deploy-action@v4
