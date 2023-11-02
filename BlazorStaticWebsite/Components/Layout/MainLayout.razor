@@ -1,0 +1,46 @@
+﻿@using Microsoft.Extensions.Options
+@inherits LayoutComponentBase
+@inject IOptions<AppSettings> AppSettings
+
+
+<div class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0 ">
+    <div class="flex h-screen flex-col justify-between font-sans">
+
+        <NavMenu/>
+
+        <main class="mb-auto">
+            @Body
+        </main>
+
+        <footer>
+            <div class="mt-16 flex flex-col items-center">
+                <div class="mb-3 flex space-x-4">
+                    @* <a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="mailto:address@yoursite.com"> *@
+                    @*     <span class="sr-only"> *@
+                    @*         mail *@
+                    @*     </span> *@
+                    @*     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class=" hover:text-primary-400 h-6 w-6 fill-current text-gray-200"> *@
+                    @*         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path> *@
+                    @*         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path> *@
+                    @*     </svg> *@
+                    @* </a> *@
+                    <a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="@AppSettings.Value.GitHubRepo">
+                        <span class="sr-only">github</span>
+                        <Svg Icon="Svg.Icons.Github"/>
+                    </a>
+                   
+                    <a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="https://twitter.com/tesar-tech">
+                        <span class="sr-only">twitter</span>
+                        <Svg Icon="Svg.Icons.Twitter"/>
+                    </a>
+                </div>
+                <div class="mb-2 flex space-x-2 text-sm text-gray-400">
+                      <a target="_blank" rel="noopener noreferrer" href="https://github.com/tesar-tech/BlazorStatic">Blazor Static</a>
+                    <div>•</div>
+                    <div>© 2023</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
