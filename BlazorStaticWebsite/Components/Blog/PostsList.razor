@@ -28,7 +28,7 @@
                                     <div class="flex flex-wrap">
                                         @foreach (var tag in post.FrontMatter.Tags)
                                         {
-                                            <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="/tag/@tag">@tag</a>
+                                            <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="tag/@tag">@tag</a>
                                         }
                                     </div>
                                 </div>
@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                             <div class="text-base font-medium leading-6">
-                                <a class="text-primary-500 hover:text-primary-400" aria-label='Read "@(post.FrontMatter.Lead)"' href="/blog/@(post.FileNameNoExtension)">Read more →</a>
+                                <a class="text-primary-500 hover:text-primary-400" aria-label='Read "@(post.FrontMatter.Lead)"' href="blog/@(post.FileNameNoExtension)">Read more →</a>
                             </div>
                         </div>
                     </div>

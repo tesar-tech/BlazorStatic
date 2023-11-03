@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Remove launchSettings.json
+    - name: Remove launchSettings.json (to not override ASPNETCORE_ENVIRONMENT)
       run: rm ${{ env.WEBAPP_PATH }}/Properties/launchSettings.json
     - name: Tailwind - download and run cli
       run: |
@@ -27,7 +27,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
-    - name: Change base-tag in App.razor from to your gh repo
+    - name: Change <base href="" /> in App.razor to match gh repo name
       run: |
         REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
         sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
@@ -35,7 +35,7 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: run
+    - name: Run webapp and generate static files
       run: |
         dotnet run --project ${{ env.WEBAPP_PATH }}/BlazorStaticWebsite.csproj --no-build 
     

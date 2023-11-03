@@ -16,7 +16,7 @@ builder.Services.AddBlazorStaticServices<FrontMatter>(opt => {
 
         foreach (string? fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
         {
-            opt.PagesToGenerate.Add(new($"/Docs/{fileName}", Path.Combine("Docs", $"{fileName}.html")));
+            opt.PagesToGenerate.Add(new($"/docs/{fileName}", Path.Combine("docs", $"{fileName}.html")));
         }
     };
 });
