@@ -47,6 +47,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>();
+Console.WriteLine($"Asp net env is {app.Environment.EnvironmentName}");
 
-app.UseBlazorStaticGenerator<FrontMatter>();
+app.UseBlazorStaticGenerator<FrontMatter>(shutdownAppAfterFileGeneration:true);
 app.Run();

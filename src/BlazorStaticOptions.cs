@@ -6,7 +6,6 @@ public class BlazorStaticOptions<TFrontMatter>
     public string OutputFolderPath { get; set; } = "output";
 
     public bool SuppressFileGeneration { get; set; } 
-    public bool ShutdownAppAfterFileGeneration { get; set; } 
     public List<PageToGenerate> PagesToGenerate { get; } = new();
 
 

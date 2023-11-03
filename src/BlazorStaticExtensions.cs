@@ -19,7 +19,7 @@ public static class BlazorStaticExtensions
         return services;
     }
 
-    public static void UseBlazorStaticGenerator<TFrontMatter>(this WebApplication app)
+    public static void UseBlazorStaticGenerator<TFrontMatter>(this WebApplication app, bool shutdownAppAfterFileGeneration = false)
         where TFrontMatter : class, IFrontMatter
     {
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService<TFrontMatter>>();
@@ -29,7 +29,7 @@ public static class BlazorStaticExtensions
         lifetime.ApplicationStarted.Register(
         async () => {
             await blazorStaticService.GenerateStaticPages(app.Urls.First());
-            if (blazorStaticService.ShutdownAppAfterFileGeneration)
+            if (shutdownAppAfterFileGeneration)
                 lifetime.StopApplication();
         }
         );

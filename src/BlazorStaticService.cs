@@ -14,7 +14,6 @@ public class BlazorStaticService<TFrontMatter>(BlazorStaticOptions<TFrontMatter>
 {
 
     public List<Post<TFrontMatter>> BlogPosts => options.BlogPosts;
-    internal bool ShutdownAppAfterFileGeneration => options.ShutdownAppAfterFileGeneration;
     public async Task GenerateStaticPages(string appUrl)
     {
         
