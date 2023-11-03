@@ -23,7 +23,7 @@
                             <div class="space-y-6">
                                 <div>
                                     <h2 class="text-2xl font-bold leading-8 tracking-tight">
-                                        <a class="text-gray-100" href="/blog/@(post.FileNameNoExtension)">@post.FrontMatter.Title</a>
+                                        <a class="text-gray-100" href="blog/@(post.FileNameNoExtension)">@post.FrontMatter.Title</a>
                                     </h2>
                                     <div class="flex flex-wrap">
                                         @foreach (var tag in post.FrontMatter.Tags)
