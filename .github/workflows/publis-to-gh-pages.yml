@@ -31,7 +31,9 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Change base-tag in App.razor from to your gh repo
-      run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorStatic\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
+      run: |
+        REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
+        sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
