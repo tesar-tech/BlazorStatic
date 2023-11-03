@@ -5,7 +5,6 @@ on:
   push:
     branches: [ "*" ]
 env:
-  ASPNETCORE_ENVIRONMENT: Production
   WEBAPP_PATH: BlazorStaticWebsite
 
 jobs:
@@ -20,7 +19,7 @@ jobs:
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
     - uses: actions/checkout@v3
-    - name: update tailwindcss
+    - name: Tailwind - download and run cli
       run: |
         wget https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64 -O /usr/local/bin/tailwindcss
         chmod +x /usr/local/bin/tailwindcss
@@ -39,9 +38,12 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: run
-      run: dotnet run --project BlazorStaticWebsite/BlazorStaticWebsite.csproj --no-build
-      
+      run: |
+        dotnet run --project ${{ env.WEBAPP_PATH }}/BlazorStaticWebsite.csproj \
+        --no-build -- ASPNETCORE_ENVIRONMENT=Production
+    
+    
     - name: Deploy to GitHub Pages 
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        FOLDER: BlazorStaticWebsite/output
+        FOLDER: ${{ env.WEBAPP_PATH }}/output
