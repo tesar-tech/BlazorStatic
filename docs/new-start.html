@@ -12,9 +12,9 @@
     </head>
 
 <body class="bg-gray-950 font-tomorrow text-gray-200"><div class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0 "><div class="flex h-screen flex-col justify-between"><header class="flex items-center justify-between py-10"><div><a aria-label="BlazorStatic" href="/"><div class="flex items-center justify-between"><div class="mr-3"><img class="w-72" src="imgs/logo.png" alt="logo"></div></div></a></div>
-    <div class="flex items-center space-x-4 leading-5 sm:space-x-6"><a href="" class="hidden font-medium text-gray-100 sm:block bg-primary-950 px-2 py-1 rounded-xl" aria-current="page">Home</a><a href="blog" class="hidden font-medium text-gray-100 sm:block">Blog</a><a href="docs" class="hidden font-medium text-gray-100 sm:block">Docs</a><button id="toggle-button" aria-label="Toggle Menu" class="sm:hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-8 w-8 text-gray-100"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg></button>
+    <div class="flex items-center space-x-4 leading-5 sm:space-x-6"><a href="" class="hidden font-medium text-gray-100 sm:block">Home</a><a href="blog" class="hidden font-medium text-gray-100 sm:block">Blog</a><a href="docs" class="hidden font-medium text-gray-100 sm:block bg-primary-950 px-2 py-1 rounded-xl" aria-current="page">Docs</a><button id="toggle-button" aria-label="Toggle Menu" class="sm:hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-8 w-8 text-gray-100"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg></button>
         <div id="mobile-menu" class="fixed left-0 top-0 z-10 h-full w-full translate-x-full transform   duration-300 ease-in-out bg-gray-950 opacity-[0.98]"><div class="flex justify-end"><button id="close-mobile-menu-button" class="mr-8 mt-11 h-8 w-8" aria-label="Toggle Menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-gray-100"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button></div>
-            <nav class="fixed mt-8 h-full"><div class="px-12 py-4"><a href="" class="text-2xl font-bold tracking-widest text-gray-100 underline" aria-current="page">Home</a></div><div class="px-12 py-4"><a href="blog" class="text-2xl font-bold tracking-widest text-gray-100">Blog</a></div><div class="px-12 py-4"><a href="docs" class="text-2xl font-bold tracking-widest text-gray-100">Docs</a></div></nav></div></div></header>
+            <nav class="fixed mt-8 h-full"><div class="px-12 py-4"><a href="" class="text-2xl font-bold tracking-widest text-gray-100">Home</a></div><div class="px-12 py-4"><a href="blog" class="text-2xl font-bold tracking-widest text-gray-100">Blog</a></div><div class="px-12 py-4"><a href="docs" class="text-2xl font-bold tracking-widest text-gray-100 underline" aria-current="page">Docs</a></div></nav></div></div></header>
 <script>
 //👎 but what can I do? It's a static html. I can't use C# here.
  const toggleMobileMenu = () => document.querySelector('#mobile-menu').classList.toggle('translate-x-full');
@@ -23,83 +23,11 @@
  document.querySelector('#close-mobile-menu-button').addEventListener('click', toggleMobileMenu);
 </script>
 
-        <main class="mb-auto"><div class="prose prose-invert"><h1>Blazor Static</h1>
-<p>Is a way how to use Blazor component model to scaffold static website with some helpers for making it pleasant experience.</p>
-<p>Use standart way of creating and testing .NET8 Blazor app (server side rendered). When you are ready, add a little bit of magic to your <code>Program.cs</code> and the whole website will be generated as static html.</p>
-<p>BlazorStatic will also help you with using Markdown for content you you wish to do it.</p>
-<blockquote>
-<p>README under construction</p>
-</blockquote>
-<h2>How to start?</h2>
-<p>Multiple ways:</p>
-<h3>BlazorStaticMinimalBlog</h3>
-<ul>
-<li>Fork <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">link</a></li>
-<li>Let it build and boom - you have your website up and running.</li>
-<li>Edit the content, change styling, configuration, etc.</li>
-</ul>
-<h3>dotnet new</h3>
-<ul>
-<li><p>Create Blazor App with <code>dotnet new blazor -o MyNewWebsite</code></p>
-</li>
-<li><p>Add <code>BlazorStatic</code> package to your project</p>
-</li>
-<li><p>Add:</p>
-<pre><code class="language-csharp">//Program.cs
-builder.Services.AddBlazorStaticServices&lt;FrontMatter&gt;(); 
-//...
-//before app.Run():
-app.UseBlazorStaticGenerator&lt;FrontMatter&gt;();
+        <main class="mb-auto"><div class="prose prose-invert"><p><code>dotnet new blazor -n Zodoc -o . -int None -e </code></p>
+<pre><code>  &lt;ItemGroup&gt;
+    &lt;PackageReference Include=&quot;BlazorStatic&quot; Version=&quot;1.0.0-beta.1&quot; /&gt;
+  &lt;/ItemGroup&gt;
 </code></pre>
-</li>
-<li><p>Add content with markdown</p>
-</li>
-<li><p>Change configuration that will suits your needs and folder structure.</p>
-</li>
-<li><p>Delete <code>blazor.js</code></p>
-</li>
-<li><p>All the default config is described here</p>
-</li>
-</ul>
-<h2>Key features</h2>
-<ul>
-<li>Create website with .NET 8, run it, test it, debug it as usual.</li>
-<li>Add a little bit of magic to your <code>Program.cs</code> and the whole website will be generated as static html.</li>
-<li>Use Markdown for content you you wish to do it.</li>
-<li>Host static html on anywhere (GitHub Pages, Azure Static Web Apps, Netlify, ...)</li>
-</ul>
-<h2>How it works?</h2>
-<ul>
-<li>You work in the components, for example check the Blog.razor. It is using markdown file as a source of content.
-You can use all the stuff like markwond settings, changing urls, etc in here.</li>
-</ul>
-<p>We need the magic for few things:</p>
-<ul>
-<li>Generate static html from Blazor components</li>
-<li>Use Markdown</li>
-</ul>
-<h2>Why TailwindCSS?</h2>
-<p>Because I like it. You don't have to use it. You can use any CSS framework you like, just like in any other Blazor app.</p>
-<p>The theme is inspired by https://github.com/timlrx/tailwind-nextjs-starter-blog</p>
-<h2>What is static website?</h2>
-<h3>Blazor Static vs Blazor WebAssembly</h3>
-<h2>How to use it?</h2>
-<h2>Creating your own theme from default Blazor template</h2>
-<ul>
-<li>Delete blazor.js</li>
-</ul>
-<h2>Specify your own FrontMatter</h2>
-<h2>ToDo</h2>
-<ul>
-<li>Tag cloud</li>
-<li>Comments</li>
-<li>Search</li>
-<li>RSS</li>
-<li>Sitemap</li>
-<li>Google Analytics</li>
-<li>SEO</li>
-<li>Subscribe to newsletter</li>
-</ul>
 </div></main>
 
         <footer><div class="mt-16 flex flex-col items-center"><div class="mb-3 flex space-x-4"><a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="https://github.com/tesar-tech/blob/BlazorStatic/"><span class="sr-only">github</span>
