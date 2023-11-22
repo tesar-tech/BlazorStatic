@@ -43,7 +43,7 @@ jobs:
       - name: Upload webapp output artifacts
         uses: actions/upload-artifact@v2
         with:
-            name: static-peges-output
+            name: static-pages-output
             path: ${{ env.WEBAPP_PATH }}/output
     
       - name: Upload NuGet package artifacts
@@ -59,7 +59,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
-          name: tatic-peges-output
+          name: static-pages-output
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
