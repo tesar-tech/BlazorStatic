@@ -3,14 +3,23 @@
 @using BlazorStaticWebsite.Components.Blog
 @using BlazorStatic
 @using BlazorStatic.Services
+@using System.Net
 @inject BlogService<FrontMatter> BlogService
 
 @if (TagName == null)
 {
-    <div class="flex flex-wrap gap-1 justify-between">
-        @foreach (var tag in BlogService.BlogPosts.SelectMany(x => x.FrontMatter.Tags).Distinct().Order())
-        {
-            <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="tag/@tag">@tag</a>
+    <div class="flex flex-wrap justify-between gap-1">
+        @{
+            var tagsWithCount = BlogService.BlogPosts
+                .SelectMany(x => x.FrontMatter.Tags)
+                .GroupBy(x => x)
+                .Select(group => new { Tag = group.Key, Count = group.Count() })
+                .OrderByDescending(x => x.Count);
+
+            foreach (var tag in tagsWithCount)
+            {
+                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlogService.Options.TagsPageUrl/@WebUtility.HtmlEncode(tag.Tag)">@tag.Tag (@tag.Count)</a>
+            }
         }
     </div>
     return;

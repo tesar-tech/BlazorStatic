@@ -1,4 +1,5 @@
-﻿@inject NavigationManager Nm
+﻿@using Microsoft.Extensions.Options
+@inject NavigationManager Nm
 
 <header class="flex items-center justify-between py-10">
     <div>
@@ -55,11 +56,19 @@
 
 @code
 {
-    List<(string name, string link)> menuItems = new()
-    {
-        ("Home", ""),
-        ("Blog", "blog"),
-        ("Docs", "docs"),
-    };
-    
+    [Inject] IOptions<AppSettings> AppSettings { get; set; } = null!;
+
+    List<(string name, string link)> menuItems = null!;
+    protected override void OnInitialized() { 
+        base.OnInitialized(); 
+        menuItems =new()
+        {
+            ("Home", ""),
+            ("Blog", "blog"),
+            ("Docs", "docs"),
+            ("Tags", "tags"),
+            ("Github",AppSettings.Value.GitHubRepo ),
+        };
+        
+    }
 }

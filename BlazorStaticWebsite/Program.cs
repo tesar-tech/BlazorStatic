@@ -10,6 +10,7 @@ builder.Services.AddBlazorStaticService(opt => {
     opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });//pre-build version for tailwind
     opt.BeforeFilesGenerationAction = () => {
         //add docs pages
+        opt.PagesToGenerate.Add(new("/docs", "docs/index.html"));
         var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md").ToList();
         docsFiles.RemoveAll(x => x.EndsWith("README.md"));//readme is added in Docs.razor
 
