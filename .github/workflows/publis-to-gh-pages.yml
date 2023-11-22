@@ -35,11 +35,8 @@ jobs:
         REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
         sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
 
-    - name: Restore dependencies
-      run: dotnet restore
-
     - name: Build
-      run: dotnet build --no-restore  --configuration Release
+      run: dotnet build --configuration Release
 
     - name: Run webapp and generate static files
       run: |
