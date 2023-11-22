@@ -42,12 +42,19 @@ public static class BlazorStaticExtensions
         var blogService = app.Services.GetRequiredService<BlogService<TFrontMatter>>();
         var options = app.Services.GetRequiredService<BlogOptions<TFrontMatter>>();
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
-        
+
+
+        //StaticFileOptions doesn't like .. parent dir (e.g "Content/Blog/en/../media")
+        //This converts it to "Content/Blog/media"...
+        string requestPath ="/"+ Path.GetFullPath(options.MediaRequestPath)[Directory.GetCurrentDirectory().Length..]
+            .TrimStart(Path.DirectorySeparatorChar)
+            .Replace("\\", "/");
+
         app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
             options.ContentPath,options.MediaFolderRelativeToContentPath)),
-            RequestPath = "/" + options.MediaRequestPath
+            RequestPath = requestPath
         });
         blazorStaticService.BlogAction = blogService.ParseAndAddBlogPosts;//will run later 
         //in GenerateStaticPages
