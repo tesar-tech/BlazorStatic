@@ -46,8 +46,8 @@ public static class BlazorStaticExtensions
         app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
-            options.ContentPath,options.MediaFolder)),
-            RequestPath = options.MediaRequestPath
+            options.ContentPath,options.MediaFolderRelativeToContentPath)),
+            RequestPath = "/" + options.MediaRequestPath
         });
         blazorStaticService.BlogAction = blogService.ParseAndAddBlogPosts;//will run later 
         //in GenerateStaticPages

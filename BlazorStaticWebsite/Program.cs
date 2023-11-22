@@ -20,7 +20,10 @@ builder.Services.AddBlazorStaticService(opt => {
         }
     };
 }
-).AddBlogService<FrontMatter>();
+).AddBlogService<FrontMatter>(opt => {
+    
+}
+);
 
 
 

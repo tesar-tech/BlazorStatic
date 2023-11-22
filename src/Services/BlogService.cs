@@ -19,7 +19,7 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
         {
             var (htmlContent, frontMatter) = await helpers.ParseMarkdownFile<TFrontMatter>(file, 
         
-        (options.MediaFolder,options.MediaRequestPath));
+        (options.MediaFolderRelativeToContentPath, options.MediaRequestPath));
             Post<TFrontMatter> post = new()
             {
                 FrontMatter = frontMatter,
@@ -31,11 +31,19 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
             blazorStaticService.Options.PagesToGenerate.Add(new($"{options.BlogPageUrl}/{post.FileNameNoExtension}", Path.Combine("blog", $"{post.FileNameNoExtension}.html")));
         }
         
+        //copy media folder to output
+        string pathWithMedia = Path.Combine(options.ContentPath, options.MediaFolderRelativeToContentPath);
+        blazorStaticService.Options.ContentToCopyToOutput.Add(new(pathWithMedia, pathWithMedia));
+
+        //add tags pages
         if (options.AddTagPagesFromPosts)
+        {
+            blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));   
             foreach (var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct())//gather all unique tags from all blog posts
             {
                 blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}/{tag}", Path.Combine(options.TagsPageUrl, $"{tag}.html")));
             }
+        }
         options.AfterBlogParsedAndAddedAction?.Invoke();
 
     }

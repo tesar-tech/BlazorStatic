@@ -63,10 +63,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: static-pages-output
+          folser: static-pages-output
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          FOLDER: .
+          FOLDER: static-pages-output
 
   publish-to-nuget:
     needs: build

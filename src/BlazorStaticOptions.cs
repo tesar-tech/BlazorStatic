@@ -44,13 +44,12 @@ public class BlazorStaticOptions
 public class BlogOptions<TFrontMatter>
     where TFrontMatter : class, IFrontMatter
 {
-    public bool AddPosts { get; set; } = true;
     public string ContentPath { get; set; } = Path.Combine("Content", "Blog");
     /// <summary>
     /// folder in ContentPath where media files are stored.
     /// Important for app.UseStaticFiles targeting the correct folder
     /// </summary>
-    public string MediaFolder { get; set; } = "media";
+    public string MediaFolderRelativeToContentPath { get; set; } = "media";
     /// <summary>
     /// URL path for media files for blog posts.
     /// Used in app.UseStaticFiles to target the correct folder
@@ -59,7 +58,7 @@ public class BlogOptions<TFrontMatter>
     /// leading slash / is necessary for RequestPath in app.UseStaticFiles,
     /// is removed in ParseBlogPosts
     /// </summary>
-    public string MediaRequestPath { get; set; } = "/Content/Blog/media"; // URL path
+    public string MediaRequestPath => Path.Combine(ContentPath, MediaFolderRelativeToContentPath).Replace(@"\", "/");
     /// <summary>
     /// pattern for blog post files in ContentPath
     /// </summary>

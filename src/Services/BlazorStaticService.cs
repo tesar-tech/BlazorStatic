@@ -27,6 +27,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
 
         foreach (var pathToCopy in options.ContentToCopyToOutput)
         {
+            logger.LogInformation("Copying {sourcePath} to {targetPath}", pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath,  pathToCopy.TargetPath ));
             helpers.CopyContent(pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath, pathToCopy.TargetPath), options.IgnoredPathsOnContentCopy);
         }
 
