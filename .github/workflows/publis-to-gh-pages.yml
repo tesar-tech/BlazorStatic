@@ -6,6 +6,7 @@ on:
     branches: [ "*" ]
 env:
   WEBAPP_PATH: BlazorStaticWebsite
+  NUGET_PKG_PATH: src/bin/Release
   WEBAPP_CSPROJ: BlazorStaticWebsite.csproj
   ASPNETCORE_ENVIRONMENT: Production
 
@@ -35,13 +36,16 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore  --configuration Release
     - name: Run webapp and generate static files
       run: |
-        dotnet run --project ${{ env.WEBAPP_PATH }}/${{WEBAPP_CSPROJ}} --no-build 
+        dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}} --no-build 
 
     
     - name: Deploy to GitHub Pages 
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         FOLDER: ${{ env.WEBAPP_PATH }}/output
+    - name: Publish to NuGet
+      run: |
+          dotnet nuget push "${{ env.NUGET_PKG_PATH }}/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate

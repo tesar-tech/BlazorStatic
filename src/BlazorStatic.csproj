@@ -28,13 +28,15 @@
         <Description>Static site generator for Blazor on .NET8.</Description>
         <PackageId>BlazorStatic</PackageId>
         <!--Setn EnvironmentName using dotnet build -c Release -p:EnvironmentName=Development -->
-        <Version Condition="'$(EnvironmentName)' != 'Development'">1.0.0-beta.8</Version>
+        <Version Condition="'$(EnvironmentName)' != 'Development'">1.0.0-beta.1</Version>
         <Version Condition="'$(EnvironmentName)' == 'Development'">1.0.0-dev.$([System.DateTime]::Now.ToString("yyMMddHHmmss"))</Version>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <RepositoryUrl>https://github.com/tesar-tech/BlazorStatic/</RepositoryUrl>
         <PackageTags>Blazor, StaticSiteGenerator</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+
 
     </PropertyGroup>
 
