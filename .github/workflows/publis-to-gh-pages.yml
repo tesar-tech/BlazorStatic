@@ -29,23 +29,28 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+
     - name: Change <base href="" /> in App.razor to match gh repo name
       run: |
         REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
         sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build --no-restore  --configuration Release
+
     - name: Run webapp and generate static files
       run: |
-        dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}} --no-build 
+        dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}} --no-build --configuration Release
 
     
     - name: Deploy to GitHub Pages 
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         FOLDER: ${{ env.WEBAPP_PATH }}/output
+
     - name: Publish to NuGet
       run: |
           dotnet nuget push "${{ env.NUGET_PKG_PATH }}/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
