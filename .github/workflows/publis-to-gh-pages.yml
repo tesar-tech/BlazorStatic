@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Download build artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: static-pages-output
       - name: Deploy to GitHub Pages
@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: nuget-packages
       - name: Publish to NuGet
