@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+<!--Copy README.md from repo to here (will be used as index.html)-->
+  <Target Name="CopyReadMe" BeforeTargets="Build">
+    <Copy SourceFiles="../README.md" DestinationFiles="README.md" />
+  </Target>
+  
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.33.0" />
+    <PackageReference Include="YamlDotNet" Version="13.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Content/**/*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+<!--  <Target Name="CopyMediaContent" AfterTargets="AfterBuild">-->
+<!--    <ItemGroup>-->
+<!--      <MediaFiles Include="Content/Blog/media/**/*" />-->
+<!--    </ItemGroup>-->
+<!--    <Copy SourceFiles="@(MediaFiles)" DestinationFolder="$(OutputPath)/wwwroot/Content/media/%(RecursiveDir)" />-->
+<!--  </Target>-->
+
+<!--  <Target Name="CopyBlogMediaToWwwroot" BeforeTargets="BeforeBuild">-->
+<!--    <ItemGroup>-->
+<!--      <MediaFiles Include="Content/Blog/media/**/*" />-->
+<!--    </ItemGroup>-->
+<!--    <Copy SourceFiles="@(MediaFiles)" DestinationFolder="wwwroot/Content/media/%(RecursiveDir)" />-->
+<!--  </Target>-->
+
+  <ItemGroup>
+    <Folder Include="Content\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\BlazorStatic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\Content\media\dalle_first_release.jpg" />
+  </ItemGroup>
+
+</Project>

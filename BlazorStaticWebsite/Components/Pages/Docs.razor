@@ -1,0 +1,27 @@
+@page "/Docs"
+@page "/Docs/{fileName}"
+@using Markdig.Syntax
+@using Markdig
+
+@if (htmlContent is null)
+{
+    return;
+}
+
+<div class="prose prose-invert">
+    @((MarkupString)htmlContent)
+</div>
+
+@code {
+
+    [Parameter] public string? FileName { get; set; }
+    string? htmlContent;
+    protected override async Task OnInitializedAsync()
+    {
+        string file = $"Content/Docs/{(string.IsNullOrWhiteSpace(FileName) ? "README" : FileName)}.md";
+
+        string markdownContent = await File.ReadAllTextAsync(file);
+        MarkdownDocument document = Markdown.Parse(markdownContent);
+        htmlContent = document.ToHtml();
+    }
+}

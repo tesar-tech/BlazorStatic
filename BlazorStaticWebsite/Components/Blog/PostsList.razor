@@ -1,0 +1,62 @@
+@using System.Globalization
+@using Markdig
+@using BlazorStatic
+@using BlazorStatic.Services
+@inject BlogService<FrontMatter> BlogService
+@inject BlazorStaticService BlazorStaticService
+
+<ul class="divide-y   divide-gray-700">
+        @foreach (var post in posts )
+        {
+            <li class="py-12">
+                <article>
+                    <div class="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
+                        <dl>
+                            <dt class="sr-only">Published on</dt>
+                            <dd class="text-base font-medium leading-6 text-gray-400">
+
+                                <time datetime="@post.FrontMatter.Published.ToString("yyyy-MM-ddTHH:mm:ss.fffK", CultureInfo.InvariantCulture)">
+                                    @post.FrontMatter.Published.ToString("MMMM d, yyyy", new CultureInfo("en-US"))
+                                </time>
+
+                            </dd>
+                        </dl>
+                        <div class="space-y-5 xl:col-span-3">
+                            <div class="space-y-6">
+                                <div>
+                                    <h2 class="text-2xl font-bold leading-8 tracking-tight">
+                                        <a class="text-gray-100" href="@BlogService.Options.BlogPageUrl/@(post.FileNameNoExtension)">@post.FrontMatter.Title</a>
+                                    </h2>
+                                    <div class="flex flex-wrap">
+                                        @foreach (var tag in post.FrontMatter.Tags)
+                                        {
+                                            <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlogService.Options.TagsPageUrl/@tag">@tag</a>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="prose max-w-none text-gray-400">
+                                    @((MarkupString)post.FrontMatter.Lead)
+                                </div>
+                            </div>
+                            <div class="text-base font-medium leading-6">
+                                <a class="text-primary-500 hover:text-primary-400" aria-label='Read "@(post.FrontMatter.Lead)"' href="@BlogService.Options.BlogPageUrl/@(post.FileNameNoExtension)">Read more →</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </li>
+        }
+    </ul>
+
+
+@code {
+    List<Post<FrontMatter>> posts = new();
+
+
+    [Parameter] public List<Post<FrontMatter>>? Posts { get; set; }
+    protected override void OnInitialized()
+    {
+        posts = Posts!=null? Posts.OrderBy(x=>x.FrontMatter.Published).ToList() : BlogService.BlogPosts;
+        base.OnInitialized();
+    }
+}

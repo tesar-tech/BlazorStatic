@@ -1,0 +1,15 @@
+﻿@page "/"
+@using Markdig
+
+<div class="prose prose-invert">
+@((MarkupString)htmlContent)
+</div>
+  
+@code{
+  string htmlContent = "";
+  protected override async Task OnInitializedAsync()
+  {
+    var markdownContent = await File.ReadAllTextAsync("README.md");
+    htmlContent = Markdown.ToHtml(markdownContent);
+  }
+}
