@@ -28,12 +28,30 @@
     </None>
   </ItemGroup>
 
+<!--  <Target Name="CopyMediaContent" AfterTargets="AfterBuild">-->
+<!--    <ItemGroup>-->
+<!--      <MediaFiles Include="Content/Blog/media/**/*" />-->
+<!--    </ItemGroup>-->
+<!--    <Copy SourceFiles="@(MediaFiles)" DestinationFolder="$(OutputPath)/wwwroot/Content/media/%(RecursiveDir)" />-->
+<!--  </Target>-->
+
+<!--  <Target Name="CopyBlogMediaToWwwroot" BeforeTargets="BeforeBuild">-->
+<!--    <ItemGroup>-->
+<!--      <MediaFiles Include="Content/Blog/media/**/*" />-->
+<!--    </ItemGroup>-->
+<!--    <Copy SourceFiles="@(MediaFiles)" DestinationFolder="wwwroot/Content/media/%(RecursiveDir)" />-->
+<!--  </Target>-->
+
   <ItemGroup>
     <Folder Include="Content\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\src\BlazorStatic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\Content\media\dalle_first_release.jpg" />
   </ItemGroup>
 
 </Project>

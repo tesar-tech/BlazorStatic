@@ -6,6 +6,7 @@ on:
     branches: [ "*" ]
 env:
   WEBAPP_PATH: BlazorStaticWebsite
+  WEBAPP_CSPROJ: BlazorStaticWebsite.csproj
   ASPNETCORE_ENVIRONMENT: Production
 
 jobs:
@@ -37,7 +38,8 @@ jobs:
       run: dotnet build --no-restore
     - name: Run webapp and generate static files
       run: |
-        dotnet run --project ${{ env.WEBAPP_PATH }}/BlazorStaticWebsite.csproj --no-build 
+        dotnet run --project ${{ env.WEBAPP_PATH }}/${{WEBAPP_CSPROJ}} --no-build 
+
     
     - name: Deploy to GitHub Pages 
       uses: JamesIves/github-pages-deploy-action@v4

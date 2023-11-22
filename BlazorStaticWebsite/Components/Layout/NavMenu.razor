@@ -5,9 +5,9 @@
         <a aria-label="BlazorStatic" href="/">
             <div class="flex items-center justify-between">
                 <div class="mr-3">
-                    <img class="w-16" src="imgs/blazor-static_200px.png" alt="logo"/>
+                    <img class="w-72" src="imgs/logo.png" alt="logo"/>
                 </div>
-                <div class="hidden h-6 text-2xl font-semibold sm:block text-gray-100">Blazor Static</div>
+                @* <div class="hidden h-6 text-2xl font-semibold sm:block text-gray-100">Blazor Static</div> *@
             </div>
         </a>
     </div>
@@ -18,7 +18,7 @@
                      Match="@(item.link==""?NavLinkMatch.All:NavLinkMatch.Prefix)" href="@item.link">@item.name</NavLink>
 
             @* <a class="hidden font-medium text-gray-100 sm:block   @(Nm.Uri.EndsWith(item.link)?"":"") " href="@item.link">@item.name</a> *@
-        }
+        } 
         <button id="toggle-button" aria-label="Toggle Menu" class="sm:hidden">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-8 w-8 text-gray-100">
                 <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>

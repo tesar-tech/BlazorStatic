@@ -1,0 +1,2 @@
+﻿# Blazor Static
+

@@ -21,6 +21,9 @@ module.exports = {
         ],
     theme: {
         extend: {
+            fontFamily: {
+                'tomorrow': ['Tomorrow', 'sans'],
+            },
             colors: {
                vidaloca,
                 primary:vidaloca,
@@ -29,10 +32,11 @@ module.exports = {
             typography: (theme) => ({
                 DEFAULT: {
                     css: {
+                        // 'font-family': `${theme('fontFamily.tomorrow')}`,
                         h1: {color: vidaloca['600'],},
-                        h2: {color: vidaloca['600'],},
-                        h3: {color: vidaloca['600'],},
-                        h4: {color: vidaloca['600'],},
+                        h2: {color: vidaloca['400'],},
+                        h3: {color: vidaloca['300'],},
+                        h4: {color: vidaloca['400'],},
                     }
                 },
             }),

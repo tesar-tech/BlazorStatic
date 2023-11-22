@@ -6,10 +6,9 @@ using BlazorStaticWebsite;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddBlazorStaticServices<FrontMatter>(opt => {
+builder.Services.AddBlazorStaticService(opt => {
     opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });//pre-build version for tailwind
-
-    opt.AddExtraPages = () => {
+    opt.BeforeFilesGenerationAction = () => {
         //add docs pages
         var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md").ToList();
         docsFiles.RemoveAll(x => x.EndsWith("README.md"));//readme is added in Docs.razor
@@ -19,7 +18,9 @@ builder.Services.AddBlazorStaticServices<FrontMatter>(opt => {
             opt.PagesToGenerate.Add(new($"/docs/{fileName}", Path.Combine("docs", $"{fileName}.html")));
         }
     };
-});
+}
+).AddBlogService<FrontMatter>();
+
 
 
 // Add services to the container.
@@ -44,10 +45,15 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+
+// app.UseStaticFiles(Path.Combine("/Content", "Blog", "media"));
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>();
 Console.WriteLine($"Asp net env is {app.Environment.EnvironmentName}");
 
-app.UseBlazorStaticGenerator<FrontMatter>(shutdownApp:!app.Environment.IsDevelopment());
+app.UseBlog<FrontMatter>();
+app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
+
 app.Run();

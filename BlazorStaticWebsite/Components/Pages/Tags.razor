@@ -1,13 +1,21 @@
-@page "/Tag/{tagName}"
+@page "/Tags/{tagName}"
+@page "/Tags"
 @using BlazorStaticWebsite.Components.Blog
 @using BlazorStatic
-@inject BlazorStaticService<FrontMatter> BlazorStaticService
+@using BlazorStatic.Services
+@inject BlogService<FrontMatter> BlogService
 
 @if (TagName == null)
 {
-    <div>No Tag specified</div>
+    <div class="flex flex-wrap gap-1 justify-between">
+        @foreach (var tag in BlogService.BlogPosts.SelectMany(x => x.FrontMatter.Tags).Distinct().Order())
+        {
+            <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="tag/@tag">@tag</a>
+        }
+    </div>
     return;
 }
+
 
 <div class="divide-y divide-gray-700">
     <div class="space-y-2 pb-8 pt-6 md:space-y-5">
@@ -16,7 +24,7 @@
             <span class="text-primary-300">@TagName</span> 
             </p>
     </div>
-<PostsList />
+<PostsList Posts="posts"/>
 </div>
 
 @code {
@@ -28,7 +36,7 @@
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(TagName)) return;
-        posts =  BlazorStaticService.BlogPosts.Where(x => x.FrontMatter.Tags.Contains(TagName)).ToList();
+        posts =  BlogService.BlogPosts.Where(x => x.FrontMatter.Tags.Contains(TagName)).ToList();
     }
     
 }

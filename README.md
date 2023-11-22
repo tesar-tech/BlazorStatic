@@ -2,6 +2,10 @@
 
 Is a way how to use Blazor component model to scaffold static website with some helpers for making it pleasant experience.
 
+Use standart way of creating and testing .NET8 Blazor app (server side rendered). When you are ready, add a little bit of magic to your `Program.cs` and the whole website will be generated as static html.
+
+BlazorStatic will also help you with using Markdown for content you you wish to do it.
+
 > README under construction
 
 ## How to start?

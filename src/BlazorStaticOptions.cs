@@ -1,32 +1,80 @@
 ﻿namespace BlazorStatic;
 
-public class BlazorStaticOptions<TFrontMatter>
-    where TFrontMatter :class, IFrontMatter
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+
+public class BlazorStaticOptions
 {
     public string OutputFolderPath { get; set; } = "output";
-
-    public bool SuppressFileGeneration { get; set; } 
+    public bool SuppressFileGeneration { get; set; }
+    
+    /// <summary>
+    /// List of pages to generate with url to call and path of .html file to generate.
+    /// </summary>
     public List<PageToGenerate> PagesToGenerate { get; } = new();
-
-
-    public bool ParseBlogPosts { get; set; } = true;
-    public bool AddBlogPosts { get; set; } = true;
-    public string BlogContentPath { get; set; } =  Path.Combine("Content","Blog");
-    public string BlogPostFilePattern { get; set; } = "*.md";
-    public List<Post<TFrontMatter>> BlogPosts { get;  } = new();
     
     public bool AddNonParametrizedRazorPages { get; set; } = true;
-    public string RazorPagesPath { get; set; } = Path.Combine("Components","Pages");
     
+    /// <summary>
+    /// Where to look for non-parametrized razor pages 
+    /// Non-parametrized razor page: @page "/about"
+    /// Parametrized razor page: @page "/docs/{slug}"
+    /// Parametrized razor page should be handled in own way.
+    /// (by calling AddExtraPages)
+    /// </summary>
+    public string RazorPagesPath { get; set; } = Path.Combine("Components", "Pages");
     public string IndexPageHtml { get; set; } = "index.html";
-    public bool AddTagPagesFromBlogPosts { get; set; } = true;
-    public Action? AddExtraPages { get; set; } 
-    
+    /// <summary>
+    /// Optional usage for adding additional pages, i.e. docs pages
+    /// Is called in GenerateStaticPages, after all other pages are added
+    /// </summary>
+    public Action? BeforeFilesGenerationAction { get; set; }
     public List<string> IgnoredPathsOnContentCopy { get; } = new();
-    public List<ContentToCopy> ContentToCopyToOutput { get;  } = new()
+    public List<ContentToCopy> ContentToCopyToOutput { get; } = new()
     {
-        new ("wwwroot","")//all from wwwroot will be placed in output dir
+        new ContentToCopy("wwwroot", "") // All from wwwroot will be placed in output dir
     };
     
+    public IDeserializer FrontMatterDeserializer { get; set; } = new DeserializerBuilder()
+        .WithNamingConvention(CamelCaseNamingConvention.Instance)
+        .IgnoreUnmatchedProperties()
+        .Build();
+}
+
+public class BlogOptions<TFrontMatter>
+    where TFrontMatter : class, IFrontMatter
+{
+    public bool AddPosts { get; set; } = true;
+    public string ContentPath { get; set; } = Path.Combine("Content", "Blog");
+    /// <summary>
+    /// folder in ContentPath where media files are stored.
+    /// Important for app.UseStaticFiles targeting the correct folder
+    /// </summary>
+    public string MediaFolder { get; set; } = "media";
+    /// <summary>
+    /// URL path for media files for blog posts.
+    /// Used in app.UseStaticFiles to target the correct folder
+    /// and in ParseBlogPosts to generate correct URLs for images
+    /// changes ![alt](media/image.png) to ![alt](Content/Blog/media/image.png
+    /// leading slash / is necessary for RequestPath in app.UseStaticFiles,
+    /// is removed in ParseBlogPosts
+    /// </summary>
+    public string MediaRequestPath { get; set; } = "/Content/Blog/media"; // URL path
+    /// <summary>
+    /// pattern for blog post files in ContentPath
+    /// </summary>
+    public string PostFilePattern { get; set; } = "*.md";
+    public List<Post<TFrontMatter>> Posts { get; } = new();
+    /// <summary>
+    /// tag pages will be generated from all tags found in blog posts
+    /// </summary>
+    public bool AddTagPagesFromPosts { get; set; } = true;
     
+    public string BlogPageUrl { get; set; } = "blog";
+    public string TagsPageUrl { get; set; } = "tags";
+    
+    public Action? AfterBlogParsedAndAddedAction { get; set; }
+
+
+   
 }

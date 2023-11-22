@@ -7,7 +7,7 @@ public interface IFrontMatter
 
 public class FrontMatter:IFrontMatter
 {
-    public string Title { get; set; } = "";
+    public string Title { get; set; } = "Empty title";
     public string Lead { get; set; } = "";
     public DateTime Published { get; set; } = DateTime.Now;
     public List<string> Tags { get; set; } = new();
