@@ -11,43 +11,68 @@ env:
   ASPNETCORE_ENVIRONMENT: Production
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      webapp-path: ${{ env.WEBAPP_PATH }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Remove launchSettings.json (to not override ASPNETCORE_ENVIRONMENT)
+        run: rm ${{ env.WEBAPP_PATH }}/Properties/launchSettings.json
+      - name: Tailwind - download and run cli
+        run: |
+          wget https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64 -O /usr/local/bin/tailwindcss
+          chmod +x /usr/local/bin/tailwindcss
+          cd ${{ env.WEBAPP_PATH }}
+          tailwindcss --input ./wwwroot/app.css  --output ./wwwroot/app.min.css  --minify
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+      - name: Change <base href="" /> in App.razor to match gh repo name
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
+          sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Run webapp and generate static files
+        run: |
+          dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}} --no-build --configuration Release
+
+      - name: Upload webapp output artifacts
+        uses: actions/upload-artifact@v2
+        with:
+            name: static-peges-output
+            path: ${{ env.WEBAPP_PATH }}/output
+    
+      - name: Upload NuGet package artifacts
+        uses: actions/upload-artifact@v2
+        with:
+            name: nuget-packages
+            path: ${{ env.NUGET_PKG_PATH }}/*.nupkg
+
   deploy-to-gh-pages:
-    permissions:
-      contents: write 
+    needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Remove launchSettings.json (to not override ASPNETCORE_ENVIRONMENT)
-      run: rm ${{ env.WEBAPP_PATH }}/Properties/launchSettings.json
-    - name: Tailwind - download and run cli
-      run: |
-        wget https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64 -O /usr/local/bin/tailwindcss
-        chmod +x /usr/local/bin/tailwindcss
-        cd ${{ env.WEBAPP_PATH }}
-        tailwindcss --input ./wwwroot/app.css  --output ./wwwroot/app.min.css  --minify
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: tatic-peges-output
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          FOLDER: .
 
-    - name: Change <base href="" /> in App.razor to match gh repo name
-      run: |
-        REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
-        sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
-
-    - name: Build
-      run: dotnet build --configuration Release
-
-    - name: Run webapp and generate static files
-      run: |
-        dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}} --no-build --configuration Release
-
-    
-    - name: Deploy to GitHub Pages 
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        FOLDER: ${{ env.WEBAPP_PATH }}/output
-
-    - name: Publish to NuGet
-      run: |
-          dotnet nuget push "${{ env.NUGET_PKG_PATH }}/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+  publish-to-nuget:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download NuGet package artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: nuget-packages
+      - name: Publish to NuGet
+        run: |
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
