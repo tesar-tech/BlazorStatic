@@ -41,18 +41,20 @@ jobs:
           dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}} --no-build --configuration Release
 
       - name: Upload webapp output artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
             name: static-pages-output
             path: ${{ env.WEBAPP_PATH }}/output
     
       - name: Upload NuGet package artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
             name: nuget-packages
             path: ${{ env.NUGET_PKG_PATH }}/*.nupkg
 
   deploy-to-gh-pages:
+    permissions:
+      contents: write 
     needs: build
     runs-on: ubuntu-latest
     steps:
