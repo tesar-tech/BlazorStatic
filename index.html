@@ -24,43 +24,49 @@
 </script>
 
         <main class="mb-auto"><div class="prose prose-invert"><h1>Blazor Static</h1>
-<p>Is a way how to use Blazor component model to scaffold static website with some helpers for making it pleasant experience.</p>
-<p>Use standart way of creating and testing .NET8 Blazor app (server side rendered). When you are ready, add a little bit of magic to your <code>Program.cs</code> and the whole website will be generated as static html.</p>
-<p>BlazorStatic will also help you with using Markdown for content you you wish to do it.</p>
+<p><img src="BlazorStaticWebsite/wwwroot/imgs/logo.png" alt="" /></p>
+<p>Leverage the power of Blazor SSR to create a static website.</p>
+<h2>How to start?</h2>
+<p>BlazorStatic is a library, that you use in your Blazor app. Few ways how to start:</p>
+<h3>Fork or clone BlazorStaticMinimalBlog</h3>
+<p><a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">BlazorStaticMinimalBlog</a> is a minimal blog website that uses BlazorStatic.
+Quick and easy way hot to have your page deployed in 3 minutes. It includes the publish github action, so you can just fork it, enable GitHub Pages and you have your own BlazorStatic website up and running. Then you can edit the content, change styling, configuration, etc.</p>
+<h3>dotnet global tool</h3>
+<p>That would be great, it wouls scaffold the project for you. <strong>TODO</strong></p>
+<h3>Do it from scratch</h3>
+<ul>
+<li>Starts with creating Blazor SSR app, then adding contnet and using BlazorStatic. All is described <a href="new-start">here</a>.
+You will end up with something like BlazorStaticMinimalBlog. Good (but not necessary) for understanding how it works.</li>
+</ul>
+<h2>How it works?</h2>
+<ul>
+<li><p>Build and debug your website as usual.</p>
+<ul>
+<li>BlazorStatic helps you with:
+<ul>
+<li>processing markdown and front matter (using Markdig an yamldotnet)</li>
+<li>creating <code>Blog</code> and <code>Tags</code> pages by exposing <code>Post&lt;FrontMatter&gt;</code> so you can use it in your components (<code>post.FrontMatter.Title </code>)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Use BlazorStatic to:</p>
+<ul>
+<li>find pages to generate</li>
+<li>copy neccessary contntet to the output (e.g. <code>wwwroot</code> folder)</li>
+<li>generate html files.</li>
+</ul>
+</li>
+<li><p>Build, run and generate static html files in CI/CD pipeline.</p>
+</li>
+<li><p>Host static html on anywhere (GitHub Pages, Azure Static Web Apps, Netlify, ...)</p>
+</li>
+</ul>
+<p>Themes- no themese, doesnt force you
+Taiwlidn ok, boostrap ok.</p>
 <blockquote>
 <p>README under construction</p>
 </blockquote>
-<h2>How to start?</h2>
-<p>Multiple ways:</p>
-<h3>BlazorStaticMinimalBlog</h3>
-<ul>
-<li>Fork <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">link</a></li>
-<li>Let it build and boom - you have your website up and running.</li>
-<li>Edit the content, change styling, configuration, etc.</li>
-</ul>
-<h3>dotnet new</h3>
-<ul>
-<li><p>Create Blazor App with <code>dotnet new blazor -o MyNewWebsite</code></p>
-</li>
-<li><p>Add <code>BlazorStatic</code> package to your project</p>
-</li>
-<li><p>Add:</p>
-<pre><code class="language-csharp">//Program.cs
-builder.Services.AddBlazorStaticServices&lt;FrontMatter&gt;(); 
-//...
-//before app.Run():
-app.UseBlazorStaticGenerator&lt;FrontMatter&gt;();
-</code></pre>
-</li>
-<li><p>Add content with markdown</p>
-</li>
-<li><p>Change configuration that will suits your needs and folder structure.</p>
-</li>
-<li><p>Delete <code>blazor.js</code></p>
-</li>
-<li><p>All the default config is described here</p>
-</li>
-</ul>
 <h2>Key features</h2>
 <ul>
 <li>Create website with .NET 8, run it, test it, debug it as usual.</li>

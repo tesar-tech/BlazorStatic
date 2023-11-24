@@ -1,40 +1,45 @@
 ﻿# Blazor Static
 
-Is a way how to use Blazor component model to scaffold static website with some helpers for making it pleasant experience.
+![](BlazorStaticWebsite/wwwroot/imgs/logo.png)
 
-Use standart way of creating and testing .NET8 Blazor app (server side rendered). When you are ready, add a little bit of magic to your `Program.cs` and the whole website will be generated as static html.
-
-BlazorStatic will also help you with using Markdown for content you you wish to do it.
-
-> README under construction
+Leverage the power of Blazor SSR to create a static website.
 
 ## How to start?
 
-Multiple ways:
+BlazorStatic is a library, that you use in your Blazor app. Few ways how to start:
 
-### BlazorStaticMinimalBlog
+### Fork or clone BlazorStaticMinimalBlog
 
-- Fork [link](https://github.com/tesar-tech/BlazorStaticMinimalBlog)
-- Let it build and boom - you have your website up and running.
-- Edit the content, change styling, configuration, etc.
+[BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) is a minimal blog website that uses BlazorStatic.
+Quick and easy way hot to have your page deployed in 3 minutes. It includes the publish github action, so you can just fork it, enable GitHub Pages and you have your own BlazorStatic website up and running. Then you can edit the content, change styling, configuration, etc.
 
-### dotnet new
-- Create Blazor App with `dotnet new blazor -o MyNewWebsite`
-- Add `BlazorStatic` package to your project
-- Add:
- 
-  ```csharp
-  //Program.cs
-  builder.Services.AddBlazorStaticServices<FrontMatter>(); 
-  //...
-  //before app.Run():
-  app.UseBlazorStaticGenerator<FrontMatter>();
-  ```
-- Add content with markdown
-- Change configuration that will suits your needs and folder structure.
-- Delete `blazor.js` 
-- All the default config is described here 
+### dotnet global tool
+That would be great, it wouls scaffold the project for you. **TODO**
 
+
+### Do it from scratch
+- Starts with creating Blazor SSR app, then adding contnet and using BlazorStatic. All is described [here](new-start). 
+You will end up with something like BlazorStaticMinimalBlog. Good (but not necessary) for understanding how it works. 
+
+
+## How it works?
+
+- Build and debug your website as usual.
+  - BlazorStatic helps you with:
+    - processing markdown and front matter (using Markdig an yamldotnet)
+    - creating `Blog` and `Tags` pages by exposing `Post<FrontMatter>` so you can use it in your components (`post.FrontMatter.Title `)
+
+- Use BlazorStatic to:
+  - find pages to generate
+  - copy neccessary contntet to the output (e.g. `wwwroot` folder)
+  - generate html files.
+- Build, run and generate static html files in CI/CD pipeline.
+- Host static html on anywhere (GitHub Pages, Azure Static Web Apps, Netlify, ...)
+
+Themes- no themese, doesnt force you
+Taiwlidn ok, boostrap ok. 
+
+> README under construction
 
 
 ## Key features

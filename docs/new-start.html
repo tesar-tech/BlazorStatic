@@ -23,11 +23,86 @@
  document.querySelector('#close-mobile-menu-button').addEventListener('click', toggleMobileMenu);
 </script>
 
-        <main class="mb-auto"><div class="prose prose-invert"><p><code>dotnet new blazor -n Zodoc -o . -int None -e </code></p>
-<pre><code>  &lt;ItemGroup&gt;
-    &lt;PackageReference Include=&quot;BlazorStatic&quot; Version=&quot;1.0.0-beta.1&quot; /&gt;
-  &lt;/ItemGroup&gt;
+        <main class="mb-auto"><div class="prose prose-invert"><p>Start by creating new Blazor project. <code>Interactivity</code> is set to <code>None</code> since that is not something we need for static site.</p>
+<p><code>dotnet new blazor --name BlazorStaticMinimalBlog --output BlazorStaticMinimalBlog --interactivity None --empty</code></p>
+<p>Remove <code>blazor.web.js</code> from <code>App.razor</code></p>
+<p>Make necessary changes to your layout. I am using tailwindcss, so everything is accomadated to that.</p>
+<p>When you run <code>dotnet watch</code> your app should be running.</p>
+<p>(if you also using tailwind, you need to run <code>tailwindcss -i .\wwwroot\app.css -o .\wwwroot\app.min.css -w</code> or npm command )</p>
+<p>Now we can constract our static site.</p>
+<p>For that we need some contentent in markdown.
+Add folder <code>Content</code> to the root of the project. Then add <code>Blog</code> folder to <code>Content</code>.
+The directory structure can be customized (by BlazorStaticOptions), but for simplicity we will use the default one.</p>
+<p>Add <code>first-post.md</code> to <code>Blog</code> folder.</p>
+<p>The post start with yaml front matter metadata.</p>
+<pre><code class="language-yaml">---
+title: First post
+lead: Sample post so you can see how it works
+published: 2023-11-04
+tags: [tag-001, another-sample-tag]
+authors:
+    - name: &quot;Jan Tesař&quot;
+      gitHubUserName: &quot;tesar-tech&quot;
+      twitterUserName: &quot;tesar-tech&quot;
+---
 </code></pre>
+<p>These metadata has to match C# class that we will use now.</p>
+<p>I also added second post (<code>second-post.md</code> to <code>Blog</code> folder), to actually see some content.</p>
+<p>Now we need to add <code>BlazorStatic</code> package to our project.</p>
+<blockquote>
+<p>dotnet add package BlazorStatic --prerelease</p>
+</blockquote>
+<p>Now we add BlazorStaticService and BlogService to our <code>Program.cs</code></p>
+<pre><code class="language-csharp">builder.Services.AddBlazorStaticService(opt =&gt; {
+    opt.IgnoredPathsOnContentCopy.Add(&quot;app.css&quot;);//pre-build version for tailwind
+}
+).AddBlogService&lt;FrontMatter&gt;();
+</code></pre>
+<p><code>FrontMatter</code> is the class that will be used to parse the metadata from markdown files. This is part of the BlazorStatic package. And it exactly matches the metadata in <code>first-post.md</code> and <code>second-post.md</code>. Nothing stops you from creating your own class that will match your own metadata. It just needs to implement interface <code>IFrontMatter</code>, which has just one property <code>List&lt;string&gt; Tags { get; set; }</code>.</p>
+<p>BlazorStaticService has options you can change. For example you can change the directory structure (where your md files are located), or you can ignore some files (like <code>app.css</code> in this case (we have <code>app.min.css</code>)).</p>
+<p>Before running the app we need to tell the service to acttually do something:</p>
+<pre><code class="language-csharp">app.UseBlog&lt;FrontMatter&gt;();
+app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
+</code></pre>
+<p>UseBlog will parse the markdown files and expose them to the app as Post<FrontMatter> through <code>BlogService</code>.
+UseBlazorStaticGenerator will generate the static files a put them into the <code>output</code> folder. It will shutdown the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run &quot;forever&quot; in particualr job.</p>
+<p>How is the file generation done? It will run the app, and use <code>HttpClient</code> to get the html of all the pages. Then it will save it to the file.
+How does it know what pages to generate?</p>
+<ul>
+<li>Blog posts in <code>Content/Blog</code> folder (and also tag pages)</li>
+<li>Non-parametrized razor pages (that have <code>@page</code> directive without a parameter in <code>{}</code>). For example <code>@page &quot;/blog&quot;</code></li>
+<li>Pages you tell it to generate using <code>opt.PagesToGenerate.Add(new($&quot;/docs/paramValue&quot;, &quot;someFileName.html&quot;)</code></li>
+</ul>
+<p>Before we run the app, we need an UI to display the posts.
+First is <code>Blog.razor</code> page with thse page directives:</p>
+<pre><code class="language-razor">@page &quot;/blog&quot; 
+@page &quot;/blog/{fileName}&quot;
+</code></pre>
+<p>First will display the list of posts, second will display the post itself. The list of post is in <code>PostList.razor</code> component.</p>
+<p>Also add a page for tags</p>
+<h3>dotnet new</h3>
+<ul>
+<li><p>Create Blazor App with <code>dotnet new blazor -o MyNewWebsite</code></p>
+</li>
+<li><p>Add <code>BlazorStatic</code> package to your project</p>
+</li>
+<li><p>Add:</p>
+<pre><code class="language-csharp">//Program.cs
+builder.Services.AddBlazorStaticServices&lt;FrontMatter&gt;(); 
+//...
+//before app.Run():
+app.UseBlazorStaticGenerator&lt;FrontMatter&gt;();
+</code></pre>
+</li>
+<li><p>Add content with markdown</p>
+</li>
+<li><p>Change configuration that will suits your needs and folder structure.</p>
+</li>
+<li><p>Delete <code>blazor.js</code></p>
+</li>
+<li><p>All the default config is described here</p>
+</li>
+</ul>
 </div></main>
 
         <footer><div class="mt-16 flex flex-col items-center"><div class="mb-3 flex space-x-4"><a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="https://github.com/tesar-tech/blob/BlazorStatic/"><span class="sr-only">github</span>
