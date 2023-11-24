@@ -1,7 +1,6 @@
 ﻿namespace BlazorStatic;
 public interface IFrontMatter
 {
-    string Title { get; set; }
     List<string> Tags { get; set; }
 }
 

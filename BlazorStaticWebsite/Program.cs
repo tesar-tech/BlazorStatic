@@ -10,9 +10,8 @@ builder.Services.AddBlazorStaticService(opt => {
     opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });//pre-build version for tailwind
     opt.BeforeFilesGenerationAction = () => {
         //add docs pages
-        opt.PagesToGenerate.Add(new("/docs", "docs/index.html"));
-        var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md").ToList();
-        docsFiles.RemoveAll(x => x.EndsWith("README.md"));//readme is added in Docs.razor
+        var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
+            .Where(x=>!x.EndsWith("README.md"));//ignore readme
 
         foreach (string? fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
         {
@@ -21,7 +20,10 @@ builder.Services.AddBlazorStaticService(opt => {
     };
 }
 ).AddBlogService<FrontMatter>(opt => {
-    
+    opt.ContentPath = Path.Combine("Content", "Blog");
+    opt.BlogPageUrl = "/blog";
+    opt.PostFilePattern = "*.md";
+    opt.MediaFolderRelativeToContentPath = "media";
 }
 );
 

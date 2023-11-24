@@ -22,7 +22,7 @@ public class BlazorStaticOptions
     /// Parametrized razor page should be handled in own way.
     /// (by calling AddExtraPages)
     /// </summary>
-    public string RazorPagesPath { get; set; } = Path.Combine("Components", "Pages");
+    public List<string> RazorPagesPaths { get; internal set; } = new(){ Path.Combine("Components", "Pages")};
     public string IndexPageHtml { get; set; } = "index.html";
     /// <summary>
     /// Optional usage for adding additional pages, i.e. docs pages

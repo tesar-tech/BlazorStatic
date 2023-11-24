@@ -65,8 +65,14 @@ public class BlazorStaticService(BlazorStaticOptions options,
                               @page "/(?!.*\{.*\})(.*?)"
                               """);// Regular expression to match @page directive, but ignore when {} are present
 
-        var filePaths = Directory.GetFiles(options.RazorPagesPath, "*.razor");// Get all .razor files
-        foreach (var filePath in filePaths)
+        var allRazorFilePaths = new List<string>();
+
+        foreach (var path in options.RazorPagesPaths)
+        {
+            var filePaths = Directory.GetFiles(path, "*.razor");
+            allRazorFilePaths.AddRange(filePaths);
+        }
+        foreach (var filePath in allRazorFilePaths)
         {
             var content = File.ReadAllText(filePath);
 
@@ -74,8 +80,8 @@ public class BlazorStaticService(BlazorStaticOptions options,
             if (match is not { Success: true, Groups.Count: > 1 })
                 continue;
             string url = match.Groups[1].Value;
-            string file = url == "" ? options.IndexPageHtml : $"{url}.html";
-            options.PagesToGenerate.Add(new($"/{url}", file));
+            string file = Path.Combine(url, options.IndexPageHtml);//for @page "/blog" generate blog/index.html 
+            options.PagesToGenerate.Add(new($"{url}", file));
         }
     }
 }

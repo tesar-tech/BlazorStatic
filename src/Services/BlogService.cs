@@ -38,7 +38,7 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
         //add tags pages
         if (options.AddTagPagesFromPosts)
         {
-            blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));   
+            // blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));   
             foreach (var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct())//gather all unique tags from all blog posts
             {
                 blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}/{tag}", Path.Combine(options.TagsPageUrl, $"{tag}.html")));
