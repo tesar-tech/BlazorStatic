@@ -1,7 +1,11 @@
 ﻿@page "/"
 @using Markdig
-
-<div class="prose prose-invert">
+@using BlazorStatic
+@inject BlazorStaticHelpers BlazorStaticHelpers
+<div class="prose prose-invert 
+[&_img]:inline-block
+[&_#imglogo]:hidden 
+">
 @((MarkupString)htmlContent)
 </div>
   
@@ -9,7 +13,6 @@
   string htmlContent = "";
   protected override async Task OnInitializedAsync()
   {
-    var markdownContent = await File.ReadAllTextAsync("README.md");
-    htmlContent = Markdown.ToHtml(markdownContent);
+    htmlContent =  await BlazorStaticHelpers.ParseMarkdownFile("README.md");
   }
 }

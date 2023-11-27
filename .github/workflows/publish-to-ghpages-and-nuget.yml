@@ -47,6 +47,7 @@ jobs:
             path: ${{ env.WEBAPP_PATH }}/output
     
       - name: Upload NuGet package artifacts
+        if: github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@v3
         with:
             name: nuget-packages
@@ -71,6 +72,7 @@ jobs:
   publish-to-nuget:
     needs: build
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Download NuGet package artifacts
         uses: actions/download-artifact@v3

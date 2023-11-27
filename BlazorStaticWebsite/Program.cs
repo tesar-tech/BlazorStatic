@@ -1,6 +1,7 @@
 using BlazorStatic;
 using BlazorStaticWebsite.Components;
 using BlazorStaticWebsite;
+using Microsoft.Extensions.FileProviders;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,22 +21,14 @@ builder.Services.AddBlazorStaticService(opt => {
     };
 }
 ).AddBlogService<FrontMatter>(opt => {
-    opt.ContentPath = Path.Combine("Content", "Blog");
-    opt.BlogPageUrl = "/blog";
-    opt.PostFilePattern = "*.md";
-    opt.MediaFolderRelativeToContentPath = "media";
+ 
 }
 );
-
 
 
 // Add services to the container.
 builder.Services.AddRazorComponents();
 
-builder.Services.AddOptions<AppSettings>()
-    .BindConfiguration(nameof(AppSettings))
-    .ValidateDataAnnotations()
-    .ValidateOnStart();
 
 var app = builder.Build();
 
@@ -52,14 +45,27 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),"Content","Docs","media")),
+    RequestPath = "/Content/Docs/media"
+});
 
-// app.UseStaticFiles(Path.Combine("/Content", "Blog", "media"));
+
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>();
-Console.WriteLine($"Asp net env is {app.Environment.EnvironmentName}");
 
 app.UseBlog<FrontMatter>();
 app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 
 app.Run();
+
+
+public static  class WebsiteKeys
+{
+    public const string BlogPostStorageAddress = "https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite/Content/Blog/";
+
+    public const string GitHubRepo  = "https://github.com/tesar-tech/blob/BlazorStatic/";
+}
+

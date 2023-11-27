@@ -56,7 +56,7 @@
     [Parameter] public List<Post<FrontMatter>>? Posts { get; set; }
     protected override void OnInitialized()
     {
-        posts = Posts!=null? Posts.OrderBy(x=>x.FrontMatter.Published).ToList() : BlogService.BlogPosts;
+        posts = Posts ?? BlogService.BlogPosts.OrderByDescending(x=>x.FrontMatter.Published).ToList();
         base.OnInitialized();
     }
 }

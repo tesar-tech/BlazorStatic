@@ -3,13 +3,33 @@ namespace BlazorStatic.Services;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
+/// <summary>
+/// The BlazorStaticService is responsible for generating static pages for a Blazor application.
+/// </summary>
+/// <param name="options"></param>
+/// <param name="helpers"></param>
+/// <param name="logger"></param>
 public class BlazorStaticService(BlazorStaticOptions options,
     BlazorStaticHelpers helpers,
     ILogger<BlazorStaticService> logger)
 {
+    /// <summary>
+    /// The BlazorStaticOptions used to configure the generation process.
+    /// </summary>
     public BlazorStaticOptions Options => options;
-
     internal Func<Task>? BlogAction { get; set; }
+    
+    /// <summary>
+    /// Generates static pages for the Blazor application. This method performs several key operations:
+    /// - Invokes an optional pre-defined blog action.
+    /// - Conditionally generates non-parametrized Razor pages based on configuration.
+    /// - Clears the existing output folder and creates a fresh one for new content.
+    /// - Copies specified content to the output folder.
+    /// - Uses an HttpClient to fetch and save the content of each configured page.
+    /// The method respects the configuration provided in 'options', including the suppression of file generation,
+    /// paths for content copying, and the list of pages to generate.
+    /// </summary>
+    /// <param name="appUrl">The base URL of the application, used for making HTTP requests to fetch page content.</param>
     internal async Task GenerateStaticPages(string appUrl)
     {
         if (BlogAction is not null)
@@ -56,7 +76,19 @@ public class BlazorStaticService(BlazorStaticOptions options,
             await File.WriteAllTextAsync(outFilePath, content);
         }
     }
-
+    /// <summary>
+    /// Adds non-parametrized Razor pages to the list of pages to be generated as static content.
+    /// This method scans specified directories for Razor files and identifies those with an @page directive
+    /// that do not include parameters (i.e., no '{}' in the directive). For each matching file, it constructs
+    /// a URL based on the @page directive and determines a corresponding file path for the static HTML output.
+    /// The method assumes that each URL path should map to a folder structure with an 'index.html' file in it,
+    /// as specified in options.IndexPageHtml.
+    /// </summary>
+    /// <remarks>
+    /// This operation is controlled by the options.AddNonParametrizedRazorPages flag. Only Razor files in
+    /// directories specified in options.RazorPagesPaths are considered. The method employs regular expression
+    /// matching to identify suitable @page directives.
+    /// </remarks>
     void AddNonParametrizedRazorPages()
     {
         if (!options.AddNonParametrizedRazorPages) return;

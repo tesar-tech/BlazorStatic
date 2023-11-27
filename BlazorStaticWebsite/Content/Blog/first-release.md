@@ -1,8 +1,8 @@
 ---
 title: First release
 lead: First version of Blazor static was released
-Published: 2023-11-04
-tags: [release, tag-x-y-z]
+published: 2023-11-04
+tags: [release]
 authors:
     - name: "Jan Tesař"
       gitHubUserName: "tesar-tech"

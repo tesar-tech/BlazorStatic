@@ -37,6 +37,9 @@ module.exports = {
                         h2: {color: vidaloca['400'],},
                         h3: {color: vidaloca['300'],},
                         h4: {color: vidaloca['400'],},
+                        code: {
+                            color: colors.violet['700'], 
+                        },
                     }
                 },
             }),
