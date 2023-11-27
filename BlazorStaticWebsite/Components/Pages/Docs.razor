@@ -1,7 +1,7 @@
 @page "/docs"
 @page "/docs/{fileName}"
-@using Markdig.Syntax
-@using Markdig
+@using BlazorStatic
+@inject BlazorStaticHelpers BlazorStaticHelpers
 
 @if (htmlContent is null)
 {
@@ -20,8 +20,6 @@
     {
         string file = $"Content/Docs/{(string.IsNullOrWhiteSpace(FileName) ? "README" : FileName)}.md";
 
-        string markdownContent = await File.ReadAllTextAsync(file);
-        MarkdownDocument document = Markdown.Parse(markdownContent);
-        htmlContent = document.ToHtml();
+        htmlContent =  await BlazorStaticHelpers.ParseMarkdownFile(file,("media","Content/Docs/media") );
     }
 }

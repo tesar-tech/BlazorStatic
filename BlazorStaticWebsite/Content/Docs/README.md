@@ -1,5 +1,7 @@
 # Documentation for BlazorStatic
 
-Read about [Deployment](docs/deployement).
+> This page is under construction, it serves more as a showcase of what is possible with BlazorStatic.
 
-How it works is described [here](docs/how-it-works).
+- Read about [Deployment](docs/deployemement).
+
+- How to produce BlazorStatic app from scratch is described [here](docs/new-start).

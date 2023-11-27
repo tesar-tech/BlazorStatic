@@ -1,5 +1,4 @@
 ﻿namespace BlazorStatic;
-
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
@@ -7,19 +6,45 @@ using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 using YamlDotNet.Serialization;
 
+/// <summary>
+/// Helpers for BlazorStatic
+/// </summary>
+/// <param name="options"></param>
+/// <param name="logger"></param>
 public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStaticHelpers> logger)
 {
-    public  async Task<  (string htmlContent, T frontMatter)> 
-        ParseMarkdownFile<T>(string file, (string mediaPathToBeReplaced, string mediaPathNew)? mediaPaths = default, IDeserializer? yamlDeserializer = default) where T : new()
+    
+    /// <summary>
+    /// Parses a markdown file and returns the HTML content.
+    /// Uses the options.MarkdownPipeline to parse the markdown (set this in BlazorStaticOptions).
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <param name="mediaPaths">If you need to change media paths of images, do it here.
+    /// Used in internal parsing method. Translating "media/img.jpg" to "path/configured/by/useStaticFiles/img.jpg"</param>
+    /// <returns></returns>
+    public async Task<string> ParseMarkdownFile(string filePath, (string mediaPathToBeReplaced, string mediaPathNew)? mediaPaths = default)
+    {
+        string markdownContent = await File.ReadAllTextAsync(filePath);
+        string htmlContent = Markdown.ToHtml(ReplaceImagePathsInMarkdown(markdownContent,mediaPaths), options.MarkdownPipeline);
+        return htmlContent;
+    }
+
+    /// <summary>
+    /// Parses a markdown file and returns the HTML content and the front matter.
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <param name="mediaPaths"></param>
+    /// <param name="yamlDeserializer"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public  async Task< (string htmlContent, T frontMatter)> 
+        ParseMarkdownFile<T>(string filePath, (string mediaPathToBeReplaced, string mediaPathNew)? mediaPaths = default,
+        IDeserializer? yamlDeserializer = default) where T : new()
     {
         yamlDeserializer ??= options.FrontMatterDeserializer;
+        string markdownContent = await File.ReadAllTextAsync(filePath);
+        MarkdownDocument document = Markdown.Parse(markdownContent, options.MarkdownPipeline);
         
-        MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
-            .UseYamlFrontMatter()
-            .Build();
-        string markdownContent = await File.ReadAllTextAsync(file);
-        MarkdownDocument document = Markdown.Parse(markdownContent, pipeline);
-
         YamlFrontMatterBlock? yamlBlock = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
         T frontMatter ;
         if (yamlBlock == null)
@@ -38,18 +63,25 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
             catch (Exception e)
             {
                 frontMatter = new();
-                logger.LogWarning("Cannot deserialize YAML front matter in {file}. The default one will be used! Error: {exceptionMessage}", file, e.Message + e.InnerException?.Message);
+                logger.LogWarning("Cannot deserialize YAML front matter in {file}. The default one will be used! Error: {exceptionMessage}", filePath, e.Message + e.InnerException?.Message);
             }
 
         }
 
         string contentWithoutFrontMatter = markdownContent[(yamlBlock == null ? 0 : yamlBlock.Span.End + 1)..];
-        string htmlContent = Markdown.ToHtml(ReplaceImagePathsInMarkdown(contentWithoutFrontMatter,mediaPaths), pipeline);
+        string htmlContent = Markdown.ToHtml(ReplaceImagePathsInMarkdown(contentWithoutFrontMatter,mediaPaths), options.MarkdownPipeline);
         return (htmlContent, frontMatter);
 
     }
     
     
+      /// <summary>
+      /// Copies content from sourcePath to targetPath.
+      /// For example wwwroot to output folder.
+      /// </summary>
+      /// <param name="sourcePath"></param>
+      /// <param name="targetPath"></param>
+      /// <param name="ignoredPaths"></param>
       public  void CopyContent(string sourcePath, string targetPath, List<string> ignoredPaths)
     {
         if (File.Exists(sourcePath))//source path is a file
