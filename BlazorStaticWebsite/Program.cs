@@ -9,19 +9,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddBlazorStaticService(opt => {
     opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });//pre-build version for tailwind
-    opt.BeforeFilesGenerationAction = () => {
-        //add docs pages
-        var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
-            .Where(x=>!x.EndsWith("README.md"));//ignore readme
+   
+    
+    //add docs pages
+    var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
+        .Where(x => !x.EndsWith("README.md"));//ignore readme
 
-        foreach (string? fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
-        {
-            opt.PagesToGenerate.Add(new($"/docs/{fileName}", Path.Combine("docs", $"{fileName}.html")));
-        }
-    };
+    foreach (string? fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
+    {
+        opt.PagesToGenerate.Add(new($"/docs/{fileName}", Path.Combine("docs", $"{fileName}.html")));
+    }
 }
 ).AddBlogService<FrontMatter>(opt => {
- 
+
 }
 );
 
@@ -47,7 +47,7 @@ app.UseStaticFiles();
 
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),"Content","Docs","media")),
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content", "Docs", "media")),
     RequestPath = "/Content/Docs/media"
 });
 
@@ -62,10 +62,9 @@ app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 app.Run();
 
 
-public static  class WebsiteKeys
+public static class WebsiteKeys
 {
     public const string BlogPostStorageAddress = "https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite/Content/Blog/";
 
-    public const string GitHubRepo  = "https://github.com/tesar-tech/blob/BlazorStatic/";
+    public const string GitHubRepo = "https://github.com/tesar-tech/blob/BlazorStatic/";
 }
-

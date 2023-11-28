@@ -7,7 +7,7 @@
 
 Transform your Blazor app into a static site generator.
 
-  <img id="imglogo" src="BlazorStaticWebsite/wwwroot/imgs/logo.png" alt="blazor static logo">
+  <img id="imglogo" src="./BlazorStaticWebsite/wwwroot/imgs/logo.png" alt="blazor static logo">
 
 Embrace the capabilities of Blazor on .NET 8 to craft static websites.
 
@@ -17,72 +17,70 @@ BlazorStatic is a small library designed for integration into Blazor application
 
 ### Fork or clone BlazorStaticMinimalBlog
 
-[BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) offers a quick and convenient way to deploy your site within minutes. It includes a GitHub Actions workflow for publishing, allowing you to fork the repository, enable GitHub Pages, and launch your BlazorStatic website effortlessly. From there, you can personalize the content, modify the styling, adjust configurations, and more.
+**RECOMMENDED STARTING POINT**: [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) offers a quick and convenient way to deploy your site within minutes.
+
+
+### Build from Scratch
+
+Begin by creating a Blazor application, then proceed to add content and integrate BlazorStatic. Comprehensive instructions are available [here](./BlazorStatitWebsite/Content/Docs/new-start.md). This approach will help you build a project akin to BlazorStaticMinimalBlog and is beneficial for understanding the inner workings of BlazorStatic, although it's not strictly necessary.
 
 ### Using dotnet new blazorStatic
 
 Ideally, this command would set up your project automatically. However, this feature is currently a significant **[TODO](https://github.com/tesar-tech/BlazorStatic/issues/2)** awaiting implementation.
 
-### Build from Scratch
-
-Begin by creating a Blazor application, then proceed to add content and integrate BlazorStatic. Comprehensive instructions are available [here](BlazorStatitWebsite/Content/Docs/deployment.md/new-start). This approach will help you build a project akin to BlazorStaticMinimalBlog and is beneficial for understanding the inner workings of BlazorStatic, although it's not strictly necessary.
-
 
 ## How it works? What it does?
 
 BlazorStatic:
-- Automates the discovery of pages to generate by scanning for the `@page` directive in Razor files.
-  - It targets only non-parametrized pages (e.g., `@page "/mypage"`, not `@page "/mypage/{param}"`).
-  - Specify paths with `opt.RazorPagesPaths` (default is `Components/Pages` folder).
-  - More information [here](https://github.com/tesar-tech/BlazorStatic/blob/master/BlazorStaticWebsite/Program.cs).
-
-- Enables adding additional pages for generation using `opt.PagesToGenerate.Add(new($"/mypage/paramValue", "paramValue.html"))`. Example [here](https://github.com/tesar-tech/BlazorStatic/blob/master/BlazorStaticWebsite/Program.cs) for adding `docs` pages. This is also integrated for `Blog` and `Tags` pages.
-  
-
-- Simplifies blog post generation from markdown files, respecting a specified folder structure:
-  ```csharp
-  builder.Services.AddBlogService<FrontMatter>(opt => {
-      // Defaults, customizable
-      opt.ContentPath = Path.Combine("Content", "Blog");
-      opt.BlogPageUrl = "/blog";
-      opt.PostFilePattern = "*.md";
-      opt.MediaFolderRelativeToContentPath = "media";
-  });
-  ```
-
-- Provides `FrontMatter` class for parsing blog post metadata. Example metadata format:
-
-  ```yml
-  ---
-  title: First post
-  lead: Sample post so you can see how it works
-  published: 2023-11-04
-  tags: [tag-001, another-sample-tag]
-  authors:
-      - name: "Jan Tesař"
-        gitHubUserName: "tesar-tech"
-        twitterUserName: "tesar-tech"
-  ---
-  ``` 
-
-- Allows for custom `IFrontMatter` implementations to suit various markdown (front matter) formats.
-
-- Facilitates copying necessary files to the output folder (e.g. `wwwroot` folder (this is the default, you can add it or change by: `ContentToCopyToOutput.Add(new("MyFolder","SomeFolder/MyFolder"))` ) ). You can specify files to ignore by `opt.IgnoredPathsOnContentCopy.Add("app.css")`.
-
--Outputs generated files to a designated folder (`output` as default), customizable via `opt.OutputFolderPath = "myOutputFolder"`.
 
 - Generates static HTML files by running the app and fetching page HTML with `HttpClient`  
   - Use the following in your app:: 
   ```csharp
-  app.UseBlog<FrontMatter>();
+  app.UseBlog<FrontMatter>(); //processes markdown files, adds blog and tags pages
   app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
   ```
-  - `UseBlog` processes markdown files, adds tag pages, etc.
   - `shutdownApp` is essential for CI/CD pipelines to prevent indefinite running.
+
+
+- Automates the discovery of pages to generate by scanning for the `@page` directive in Razor files. It targets only non-parametrized pages (e.g., `@page "/mypage"`, not `@page "/mypage/{param}"`).
+
+- Enables adding additional pages for generation using
+
+  ```csharp
+  builder.Services.AddBlazorStaticService(opt => {
+    opt.PagesToGenerate.Add(new($"/mypage/paramValue", "paramValue.html"))
+  }); 
+  ```
+  Example [here](./BlazorStaticWebsite/Program.cs) for adding `docs` pages.   
+
+- Simplifies blog post generation from markdown files, respecting a specified folder structure:
+  ```csharp
+  builder.Services.AddBlogService<FrontMatter>(opt => {
+      opt.BlogPageUrl = "blog"; //default value
+      opt.PostFilePattern = "*.md"; //default value
+      opt.ContentPath = Path.Combine("Content", "Blog"); //default path
+      opt.MediaFolderRelativeToContentPath = "media"; //default folder
+  });
+  ```
+
+- Provides `FrontMatter` class for parsing blog post metadata.
+- Allows for custom `IFrontMatter` implementations to suit various markdown (front matter) formats.
+
+- Facilitates copying necessary files to the output folder:
+
+  ```csharp
+  builder.Services.AddBlazorStaticService(opt => {
+     opt.OutputFolderPath = "output";//root of the output 
+     opt.ContentToCopyToOutput.Add(new("wwwroot",""));//content of root gets copied to the output
+     opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" }); //don't copy app.css
+  }); 
+  ```
+
+
 
 - Offers flexibility in CSS frameworks and themes, without locking you into a specific choice. TailwindCSS is used in the default theme, but it's fully customizable. Open to suggestions and contributions for design improvements (do it, I am not the right person).
 
-- Easy deployment: run your app in a CI/CD pipeline and deploy the generated files to platforms like GitHub Pages, Azure Static Web Apps, Netlify, etc. See [the pipline](https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-gh-pages.yml) for a minimal blog setup or check the [deployement guid](BlazorStatitWebsite/Content/Docs/deployment.md) for more details
+- Easy deployment: run your app in a CI/CD pipeline and deploy the generated files to platforms like GitHub Pages, Azure Static Web Apps, Netlify, etc. See [the pipline](https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-gh-pages.yml) for a minimal blog setup or check the [deployment guide](./BlazorStatitWebsite/Content/Docs/deployment.md) for more details
 
 ## Samples
 
