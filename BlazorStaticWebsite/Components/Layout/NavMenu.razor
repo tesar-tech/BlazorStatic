@@ -1,21 +1,25 @@
-﻿@inject NavigationManager Nm
+﻿@using Microsoft.Extensions.Options
+@inject NavigationManager Nm
 
 <header class="flex items-center justify-between py-10">
     <div>
         <a aria-label="BlazorStatic" href="/">
             <div class="flex items-center justify-between">
                 <div class="mr-3">
-                    <img class="w-16" src="imgs/blazor-static_200px.png" alt="logo"/>
+                    <img class="w-72" src="imgs/logo.png" alt="logo"/>
                 </div>
-                <div class="hidden h-6 text-2xl font-semibold sm:block text-gray-100">Blazor Static</div>
+                @* <div class="hidden h-6 text-2xl font-semibold sm:block text-gray-100">Blazor Static</div> *@
             </div>
         </a>
     </div>
     <div class="flex items-center space-x-4 leading-5 sm:space-x-6">
         @foreach(var item in menuItems)
         {
-            <a class="hidden font-medium text-gray-100 sm:block   @(Nm.Uri.EndsWith(item.link)?"bg-primary-950 px-2 py-1 rounded-xl":"") " href="@item.link">@item.name</a>
-        }
+            <NavLink ActiveClass="bg-primary-950 px-2 py-1 rounded-xl" class="hidden font-medium text-gray-100 sm:block" 
+                     Match="@(item.link==""?NavLinkMatch.All:NavLinkMatch.Prefix)" href="@item.link">@item.name</NavLink>
+
+            @* <a class="hidden font-medium text-gray-100 sm:block   @(Nm.Uri.EndsWith(item.link)?"":"") " href="@item.link">@item.name</a> *@
+        } 
         <button id="toggle-button" aria-label="Toggle Menu" class="sm:hidden">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-8 w-8 text-gray-100">
                 <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
@@ -33,7 +37,8 @@
                 @foreach (var item in menuItems)
                 {
                     <div class="px-12 py-4">
-                        <a class="text-2xl font-bold tracking-widest text-gray-100 @(Nm.Uri.EndsWith(item.link)?"underline":"")" href="@item.link">@item.name</a>
+                        <NavLink ActiveClass="underline" class="text-2xl font-bold tracking-widest text-gray-100" 
+                                             Match="@(item.link==""?NavLinkMatch.All:NavLinkMatch.Prefix)" href="@item.link">@item.name</NavLink>
                     </div>
                 }
             </nav>
@@ -51,14 +56,15 @@
 
 @code
 {
-    protected override async Task OnInitializedAsync()
-    {
-      
-    }
-    List<(string name, string link)> menuItems = new()
-    {
-        ("Home", ""),
-        ("Blog", "blog"),
-        ("Docs", "docs"),
-    };
+
+    List<(string name, string link)> 
+        menuItems =new()
+        {
+            ("Home", ""),
+            ("Blog", "blog"),
+            ("Tags", "tags"),
+            ("Docs", "docs"),
+            ("Github  \u2b67",WebsiteKeys.GitHubRepo ),
+        };
+        
 }

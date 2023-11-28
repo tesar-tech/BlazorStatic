@@ -1,34 +1,34 @@
 using BlazorStatic;
 using BlazorStaticWebsite.Components;
 using BlazorStaticWebsite;
+using Microsoft.Extensions.FileProviders;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddBlazorStaticServices<FrontMatter>(opt => {
+builder.Services.AddBlazorStaticService(opt => {
     opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });//pre-build version for tailwind
+   
+    
+    //add docs pages
+    var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
+        .Where(x => !x.EndsWith("README.md"));//ignore readme
 
-    opt.AddExtraPages = () => {
-        //add docs pages
-        var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md").ToList();
-        docsFiles.RemoveAll(x => x.EndsWith("README.md"));//readme is added in Docs.razor
+    foreach (string? fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
+    {
+        opt.PagesToGenerate.Add(new($"/docs/{fileName}", Path.Combine("docs", $"{fileName}.html")));
+    }
+}
+).AddBlogService<FrontMatter>(opt => {
 
-        foreach (string? fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
-        {
-            opt.PagesToGenerate.Add(new($"/Docs/{fileName}", Path.Combine("Docs", $"{fileName}.html")));
-        }
-    };
-});
+}
+);
 
 
 // Add services to the container.
 builder.Services.AddRazorComponents();
 
-builder.Services.AddOptions<AppSettings>()
-    .BindConfiguration(nameof(AppSettings))
-    .ValidateDataAnnotations()
-    .ValidateOnStart();
 
 var app = builder.Build();
 
@@ -44,9 +44,27 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content", "Docs", "media")),
+    RequestPath = "/Content/Docs/media"
+});
+
+
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>();
 
-app.UseBlazorStaticGenerator<FrontMatter>();
+app.UseBlog<FrontMatter>();
+app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
+
 app.Run();
+
+
+public static class WebsiteKeys
+{
+    public const string BlogPostStorageAddress = "https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite/Content/Blog/";
+
+    public const string GitHubRepo = "https://github.com/tesar-tech/blob/BlazorStatic/";
+}
