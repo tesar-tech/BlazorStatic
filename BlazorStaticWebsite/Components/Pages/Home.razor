@@ -13,6 +13,7 @@
   string htmlContent = "";
   protected override async Task OnInitializedAsync()
   {
-    htmlContent =  await BlazorStaticHelpers.ParseMarkdownFile("README.md");
+  htmlContent =  await BlazorStaticHelpers.ParseMarkdownFile("README.md");
+  htmlContent = htmlContent.Replace("./BlazorStaticWebsite/Content/Docs/","docs/");
   }
 }

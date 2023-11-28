@@ -22,7 +22,7 @@ BlazorStatic is a small library designed for integration into Blazor application
 
 ### Build from Scratch
 
-Begin by creating a Blazor application, then proceed to add content and integrate BlazorStatic. Comprehensive instructions are available [here](./BlazorStatitWebsite/Content/Docs/new-start.md). This approach will help you build a project akin to BlazorStaticMinimalBlog and is beneficial for understanding the inner workings of BlazorStatic, although it's not strictly necessary.
+Begin by creating a Blazor application, then proceed to add content and integrate BlazorStatic. Comprehensive instructions are available [here](./BlazorStaticWebsite/Content/Docs/new-start.md). This approach will help you build a project akin to BlazorStaticMinimalBlog and is beneficial for understanding the inner workings of BlazorStatic.
 
 ### Using dotnet new blazorStatic
 
@@ -51,7 +51,7 @@ BlazorStatic:
     opt.PagesToGenerate.Add(new($"/mypage/paramValue", "paramValue.html"))
   }); 
   ```
-  Example [here](./BlazorStaticWebsite/Program.cs) for adding `docs` pages.   
+  Example [here](https://github.com/tesar-tech/BlazorStatic/blob/master/BlazorStaticWebsite/Program.cs) for adding `docs` pages.   
 
 - Simplifies blog post generation from markdown files, respecting a specified folder structure:
   ```csharp
@@ -80,7 +80,7 @@ BlazorStatic:
 
 - Offers flexibility in CSS frameworks and themes, without locking you into a specific choice. TailwindCSS is used in the default theme, but it's fully customizable. Open to suggestions and contributions for design improvements (do it, I am not the right person).
 
-- Easy deployment: run your app in a CI/CD pipeline and deploy the generated files to platforms like GitHub Pages, Azure Static Web Apps, Netlify, etc. See [the pipline](https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-gh-pages.yml) for a minimal blog setup or check the [deployment guide](./BlazorStatitWebsite/Content/Docs/deployment.md) for more details
+- Easy deployment: run your app in a CI/CD pipeline and deploy the generated files to platforms like GitHub Pages, Azure Static Web Apps, Netlify, etc. See [the pipline](https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-gh-pages.yml) for a minimal blog setup or check the [deployment guide](./BlazorStaticWebsite/Content/Docs/deployment.md) for more details
 
 ## Samples
 
