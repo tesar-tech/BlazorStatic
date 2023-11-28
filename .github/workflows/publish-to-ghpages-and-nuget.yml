@@ -1,5 +1,5 @@
 
-name: Build and publish to gh pages
+name: Build, publish to gh pages and nuget
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
     outputs:
       webapp-path: ${{ env.WEBAPP_PATH }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Remove launchSettings.json (to not override ASPNETCORE_ENVIRONMENT)
         run: rm ${{ env.WEBAPP_PATH }}/Properties/launchSettings.json
       - name: Tailwind - download and run cli
@@ -59,7 +59,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
