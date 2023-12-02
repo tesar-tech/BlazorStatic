@@ -1,7 +1,7 @@
 ---
 title: First release
-lead: First version of Blazor static was released
-published: 2023-11-04
+lead: First version of BlazorStatic was released
+published: 2023-11-20
 tags: [release]
 authors:
     - name: "Jan Tesař"
@@ -9,9 +9,7 @@ authors:
       twitterUserName: "tesar-tech"
 ---
 
-Of blazor static. 
-
-This is a demo markdown file...
+Of BlazorStatic. Check the nuget package [here](https://www.nuget.org/packages/BlazorStatic/).
 
 ![First release of BlazorStatic](media/dalle_first_release.jpg)
 
