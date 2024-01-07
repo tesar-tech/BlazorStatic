@@ -42,7 +42,7 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
         
         (options.MediaFolderRelativeToContentPath, options.MediaRequestPath));
             
-            if(frontMatter.Draft) continue;
+            if(frontMatter.IsDraft) continue;
             
             Post<TFrontMatter> post = new()
             {

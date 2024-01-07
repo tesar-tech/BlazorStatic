@@ -14,7 +14,7 @@ public interface IFrontMatter
     /// <summary>
     /// If true, the blog post will not be generated.
     /// </summary>
-    bool Draft { get; set; }
+    bool IsDraft => false;
 }
 
 
@@ -39,7 +39,7 @@ public class FrontMatter:IFrontMatter
     public List<string> Tags { get; set; } = new();
 
     /// <inheritdoc />
-    public bool Draft { get; set; }
+    public bool IsDraft { get; set; }
 
     /// <summary>
     /// Authors of the blog post.
