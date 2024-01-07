@@ -10,6 +10,11 @@ public interface IFrontMatter
     /// Useful for generating tag pages.
     /// </summary>
     List<string> Tags { get; set; }
+    
+    /// <summary>
+    /// If true, the blog post will not be generated.
+    /// </summary>
+    bool Draft { get; set; }
 }
 
 
@@ -32,6 +37,10 @@ public class FrontMatter:IFrontMatter
     public DateTime Published { get; set; } = DateTime.Now;
     /// <inheritdoc />
     public List<string> Tags { get; set; } = new();
+
+    /// <inheritdoc />
+    public bool Draft { get; set; }
+
     /// <summary>
     /// Authors of the blog post.
     /// </summary>
