@@ -41,6 +41,9 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
             var (htmlContent, frontMatter) = await helpers.ParseMarkdownFile<TFrontMatter>(file, 
         
         (options.MediaFolderRelativeToContentPath, options.MediaRequestPath));
+            
+            if(frontMatter.IsDraft) continue;
+            
             Post<TFrontMatter> post = new()
             {
                 FrontMatter = frontMatter,
