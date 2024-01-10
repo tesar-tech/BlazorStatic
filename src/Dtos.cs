@@ -36,7 +36,7 @@ public class FrontMatter:IFrontMatter
     /// </summary>
     public DateTime Published { get; set; } = DateTime.Now;
     /// <inheritdoc />
-    public List<string> Tags { get; set; } = new();
+    public List<string> Tags { get; set; } = [];
 
     /// <inheritdoc />
     public bool IsDraft { get; set; }
@@ -44,7 +44,7 @@ public class FrontMatter:IFrontMatter
     /// <summary>
     /// Authors of the blog post.
     /// </summary>
-    public List<Author> Authors { get; set; } = new();
+    public List<Author> Authors { get; set; } = [];
 }
 /// <summary>
 /// Author of a blog post.

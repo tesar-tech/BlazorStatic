@@ -21,7 +21,7 @@ public class BlazorStaticOptions
     /// <summary>
     /// List of pages to generate with url to call and path of .html file to generate.
     /// </summary>
-    public List<PageToGenerate> PagesToGenerate { get; } = new();
+    public List<PageToGenerate> PagesToGenerate { get; } = [];
     
     /// <summary>
     /// Allows to add non-parametrized razor pages to the list of pages to generate.
@@ -35,7 +35,7 @@ public class BlazorStaticOptions
     /// Parametrized razor page should be handled in own way.
     /// (by calling AddExtraPages)
     /// </summary>
-    public List<string> RazorPagesPaths { get;  } = new(){ Path.Combine("Components", "Pages")};
+    public List<string> RazorPagesPaths { get;  } = [Path.Combine("Components", "Pages")];
     /// <summary>
     /// Name of the page used for index. For example @page "/blog" will be generated to blog/index.html   
     /// </summary>
@@ -51,14 +51,11 @@ public class BlazorStaticOptions
     ///         Content to copy is "wwwroot" to -> "" (root of output folder)
     ///         IgnoredPathsOnContentCopy is "app.css" (this would be the path in output folder) 
     /// </summary>
-    public List<string> IgnoredPathsOnContentCopy { get; } = new();
+    public List<string> IgnoredPathsOnContentCopy { get; } = [];
     /// <summary>
     /// Paths (files or dirs) relative to project root, that should be copied to output folder
     /// </summary>
-    public List<ContentToCopy> ContentToCopyToOutput { get; } = new()
-    {
-        new ContentToCopy("wwwroot", "") // All from wwwroot will be placed in output dir
-    };
+    public List<ContentToCopy> ContentToCopyToOutput { get; } = [new ContentToCopy("wwwroot", "")];
     
     /// <summary>
     /// Allows to customize YamlDotNet Deserializer used for parsing front matter
@@ -109,7 +106,7 @@ public class BlogOptions<TFrontMatter>
     /// <summary>
     /// Place where processed blog posts live (their HTML and front matter)
     /// </summary>
-    public List<Post<TFrontMatter>> Posts { get; } = new();
+    public List<Post<TFrontMatter>> Posts { get; } = [];
     /// <summary>
     /// tag pages will be generated from all tags found in blog posts
     /// </summary>
