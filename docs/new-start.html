@@ -34,7 +34,7 @@
 </li>
 <li><p>Remove <code>blazor.web.js</code> from <code>App.razor</code> (we don't need it for static site).</p>
 </li>
-<li><p>Make necessary changes to your layout. I am using tailwindcss, so everything is accomadated to that.</p>
+<li><p>Make necessary changes to your layout. I am using tailwindcss, so everything is accommodated to that.</p>
 </li>
 <li><p>When you run <code>dotnet watch</code> your app should be running.</p>
 <p>(if you are also using tailwind, you need to run <code>tailwindcss -i .\wwwroot\app.css -o .\wwwroot\app.min.css -w</code> or npm command )</p>
@@ -64,7 +64,7 @@ authors:
       twitterUserName: &quot;tesar-tech&quot;
 ---
 </code></pre>
-<p>These metadata has to match C# class (<code>BlazorStatic.FronMatter</code>) that we will use now. You can customize the class to match your own metadata.</p>
+<p>These metadata has to match C# class (<code>BlazorStatic.FrontMatter</code>) that we will use now. You can customize the class to match your own metadata.</p>
 </li>
 <li><p>Mark Content folder to copy to the output:</p>
 <pre><code class="language-xml">&lt;ItemGroup&gt;
@@ -83,7 +83,11 @@ authors:
 <p>dotnet add package BlazorStatic --prerelease</p>
 </blockquote>
 <ul>
-<li><p>Register servicies in <code>Program.cs</code></p>
+<li><p>Turn on <code>StaticWebAssets</code>. This will ensure wwwroot and RLCs assets are copied to the output folder. <a href="docs/release-1.0.0-beta.4">More info</a></p>
+<pre><code class="language-csharp">builder.WebHost.UseStaticWebAssets();
+</code></pre>
+</li>
+<li><p>Register services in <code>Program.cs</code></p>
 <pre><code class="language-csharp">builder.Services.AddBlazorStaticService(opt =&gt; {
     opt.IgnoredPathsOnContentCopy.Add(&quot;app.css&quot;);//pre-build version for tailwind
 }
@@ -93,12 +97,12 @@ authors:
 <p>As you can see <code>BlazorStaticService</code> has options you can change. For example you can change the directory structure (where your md files are located), or you can ignore some files (like <code>app.css</code> in this case (we have <code>app.min.css</code>)).</p>
 </li>
 <li><p>Use <code>BlazorStatic</code>
-Before running the app we need to tell the service to acttually do something:</p>
+Before running the app we need to tell the service to actually do something:</p>
 <pre><code class="language-csharp">app.UseBlog&lt;FrontMatter&gt;();
 app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 </code></pre>
 <p><code>UseBlog</code> will parse the markdown files and expose them to the app as Post<FrontMatter> through <code>BlogService</code>.</p>
-<p><code>UseBlazorStaticGenerator</code> will generate the static files a put them into the <code>output</code> folder (also customizable). It will shutdown the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run &quot;forever&quot; in particualr job.</p>
+<p><code>UseBlazorStaticGenerator</code> will generate the static files a put them into the <code>output</code> folder (also customizable). It will shutdown the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run &quot;forever&quot; in particular job.</p>
 </li>
 </ul>
 <h2 id="scaffold-the-ui-for-blog-posts">Scaffold the UI for blog posts</h2>
@@ -106,7 +110,7 @@ app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 <blockquote>
 <p>File generation is done by using <code>HttpClient</code> and saving the result into <code>.html</code> file.</p>
 </blockquote>
-<p>We need to scafold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you by prividing <code>BlogService&lt;FrontMatter&gt;.Posts</code> collection where your processed posts live.</p>
+<p>We need to scaffold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you by providing <code>BlogService&lt;FrontMatter&gt;.Posts</code> collection where your processed posts live.</p>
 <p>You get get some inspiration for th UI. These pages are important:</p>
 <ul>
 <li><p><a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/Components/Pages/Blog.razor">Blog.razor</a> page which either displays the list of posts or the post itself. It starts with these page directives:</p>
@@ -145,4 +149,4 @@ app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-<script>hljs.highlightAll();</script></html>
+<script>hljs.highlightAll();</script></html><!--Blazor-Web-Initializers:WwogICJfY29udGVudC9NaWNyb3NvZnQuRmx1ZW50VUkuQXNwTmV0Q29yZS5Db21wb25lbnRzL01pY3Jvc29mdC5GbHVlbnRVSS5Bc3BOZXRDb3JlLkNvbXBvbmVudHMubGliLm1vZHVsZS5qcyIKXQ==-->

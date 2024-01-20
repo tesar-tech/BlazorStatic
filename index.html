@@ -76,7 +76,7 @@ app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 <li><p>Facilitates copying necessary files to the output folder:</p>
 <pre><code class="language-csharp">builder.Services.AddBlazorStaticService(opt =&gt; {
    opt.OutputFolderPath = &quot;output&quot;;//root of the output 
-   opt.ContentToCopyToOutput.Add(new(&quot;wwwroot&quot;,&quot;&quot;));//content of root gets copied to the output
+   //wwwroot and _content are copied by default
    opt.IgnoredPathsOnContentCopy.AddRange(new[] { &quot;app.css&quot; }); //don't copy app.css
 }); 
 </code></pre>
@@ -112,7 +112,7 @@ app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 <td><a href="https://zodoc.tech/">live</a></td>
 </tr>
 <tr>
-<td>✅ Add your page here!!!</td>
+<td>❓ Add your page here!!!</td>
 <td></td>
 <td></td>
 </tr>
@@ -139,4 +139,4 @@ app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-<script>hljs.highlightAll();</script></html>
+<script>hljs.highlightAll();</script></html><!--Blazor-Web-Initializers:WwogICJfY29udGVudC9NaWNyb3NvZnQuRmx1ZW50VUkuQXNwTmV0Q29yZS5Db21wb25lbnRzL01pY3Jvc29mdC5GbHVlbnRVSS5Bc3BOZXRDb3JlLkNvbXBvbmVudHMubGliLm1vZHVsZS5qcyIKXQ==-->
