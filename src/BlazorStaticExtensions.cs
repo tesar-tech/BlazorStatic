@@ -110,6 +110,9 @@ public static class BlazorStaticExtensions
     public static void UseBlazorStaticGenerator(this WebApplication app, bool shutdownApp = false)
     {
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
+        
+        AddStaticWebAssetsToOutput(app.Environment.WebRootFileProvider, string.Empty, blazorStaticService);
+
         var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
 
         var logger = app.Services.GetRequiredService<ILogger<BlazorStaticService>>();
@@ -128,5 +131,23 @@ public static class BlazorStaticExtensions
             }
         }
         );
+    }
+    private static void AddStaticWebAssetsToOutput(IFileProvider fileProvider, string subPath, BlazorStaticService blazorStaticService)
+    {
+        IDirectoryContents contents = fileProvider.GetDirectoryContents(subPath);
+
+        foreach (var item in contents)
+        {
+            string fullPath = $"{subPath}{item.Name}";
+            if (item.IsDirectory)
+            {
+                AddStaticWebAssetsToOutput(fileProvider, $"{fullPath}/", blazorStaticService);
+            }
+            else
+            {
+                if (item.PhysicalPath is not null)
+                    blazorStaticService.Options.ContentToCopyToOutput.Add(new(item.PhysicalPath, fullPath));
+            }
+        }
     }
 }

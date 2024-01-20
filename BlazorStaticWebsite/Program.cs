@@ -1,16 +1,15 @@
 using BlazorStatic;
 using BlazorStaticWebsite.Components;
-using BlazorStaticWebsite;
 using Microsoft.Extensions.FileProviders;
-
+using Microsoft.FluentUI.AspNetCore.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseStaticWebAssets();
 
 builder.Services.AddBlazorStaticService(opt => {
     opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });//pre-build version for tailwind
-   
-    
+    opt.ContentToCopyToOutput.Add(new("Content/Docs/media", "Content/Docs/media"));
     //add docs pages
     var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
         .Where(x => !x.EndsWith("README.md"));//ignore readme
@@ -28,6 +27,7 @@ builder.Services.AddBlazorStaticService(opt => {
 
 // Add services to the container.
 builder.Services.AddRazorComponents();
+builder.Services.AddFluentUIComponents();
 
 
 var app = builder.Build();
