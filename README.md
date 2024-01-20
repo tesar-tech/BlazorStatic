@@ -71,7 +71,7 @@ BlazorStatic:
   ```csharp
   builder.Services.AddBlazorStaticService(opt => {
      opt.OutputFolderPath = "output";//root of the output 
-     opt.ContentToCopyToOutput.Add(new("wwwroot",""));//content of root gets copied to the output
+     //wwwroot and _content are copied by default
      opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" }); //don't copy app.css
   }); 
   ```
@@ -89,7 +89,7 @@ BlazorStatic:
 |Page about BlazorStatic (this repo contains the code itself)|[source](https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite) | [live](https://tesar-tech.github.io/BlazorStatic/)|
 | Minimal blog  |[source](https://github.com/tesar-tech/BlazorStaticMinimalBlog)|[live](https://tesar-tech.github.io/BlazorStaticMinimalBlog/)|
 |Zodoc - image processing and deep learning sample| [source](https://github.com/tesar-tech/zodoc/)|[live](https://zodoc.tech/)|
-|✅ Add your page here!!!||
+|❓ Add your page here!!!||
 
 ## Contributions
 

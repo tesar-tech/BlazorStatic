@@ -81,9 +81,10 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
       /// </summary>
       /// <param name="sourcePath"></param>
       /// <param name="targetPath"></param>
-      /// <param name="ignoredPaths"></param>
+      /// <param name="ignoredPaths">Target (full)paths that gets ignored.</param>
       public  void CopyContent(string sourcePath, string targetPath, List<string> ignoredPaths)
     {
+        if(ignoredPaths.Contains(targetPath)) return;
         if (File.Exists(sourcePath))//source path is a file
         {
             string? dir = Path.GetDirectoryName(targetPath);

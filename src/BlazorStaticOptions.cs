@@ -54,8 +54,9 @@ public class BlazorStaticOptions
     public List<string> IgnoredPathsOnContentCopy { get; } = [];
     /// <summary>
     /// Paths (files or dirs) relative to project root, that should be copied to output folder
+    /// Content from RCLs (from _content/) and wwwroot is copied by default
     /// </summary>
-    public List<ContentToCopy> ContentToCopyToOutput { get; } = [new ContentToCopy("wwwroot", "")];
+    public List<ContentToCopy> ContentToCopyToOutput { get; } = [];
     
     /// <summary>
     /// Allows to customize YamlDotNet Deserializer used for parsing front matter

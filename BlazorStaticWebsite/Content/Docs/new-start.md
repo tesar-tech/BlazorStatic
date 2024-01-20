@@ -11,7 +11,7 @@ This guide will show you how to create static site using BlazorStatic. It is goo
 
 - Remove `blazor.web.js` from `App.razor` (we don't need it for static site).
 
-- Make necessary changes to your layout. I am using tailwindcss, so everything is accomadated to that. 
+- Make necessary changes to your layout. I am using tailwindcss, so everything is accommodated to that. 
 
 - When you run `dotnet watch` your app should be running. 
 
@@ -47,7 +47,7 @@ This guide will show you how to create static site using BlazorStatic. It is goo
   ---
   ```
 
-  These metadata has to match C# class (`BlazorStatic.FronMatter`) that we will use now. You can customize the class to match your own metadata.
+  These metadata has to match C# class (`BlazorStatic.FrontMatter`) that we will use now. You can customize the class to match your own metadata.
 
 - Mark Content folder to copy to the output:
   
@@ -66,7 +66,11 @@ This guide will show you how to create static site using BlazorStatic. It is goo
 
 > dotnet add package BlazorStatic --prerelease
 
-- Register servicies in `Program.cs`
+- Turn on `StaticWebAssets`. This will ensure wwwroot and RLCs assets are copied to the output folder. [More info](docs/release-1.0.0-beta.4)
+  ```csharp
+  builder.WebHost.UseStaticWebAssets();
+  ```
+- Register services in `Program.cs`
 
   ```csharp
   builder.Services.AddBlazorStaticService(opt => {
@@ -80,7 +84,7 @@ This guide will show you how to create static site using BlazorStatic. It is goo
   As you can see `BlazorStaticService` has options you can change. For example you can change the directory structure (where your md files are located), or you can ignore some files (like `app.css` in this case (we have `app.min.css`)).
 
 - Use `BlazorStatic`
-  Before running the app we need to tell the service to acttually do something:
+  Before running the app we need to tell the service to actually do something:
 
   ```csharp
   app.UseBlog<FrontMatter>();
@@ -89,7 +93,7 @@ This guide will show you how to create static site using BlazorStatic. It is goo
 
   `UseBlog` will parse the markdown files and expose them to the app as Post<FrontMatter> through `BlogService`.
 
-  `UseBlazorStaticGenerator` will generate the static files a put them into the `output` folder (also customizable). It will shutdown the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run "forever" in particualr job.
+  `UseBlazorStaticGenerator` will generate the static files a put them into the `output` folder (also customizable). It will shutdown the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run "forever" in particular job.
 
 ## Scaffold the UI for blog posts
 
@@ -97,7 +101,7 @@ When you run the app right now, it will output the non-parametrized pages (e.g. 
 
 > File generation is done by using `HttpClient` and saving the result into `.html` file. 
 
-We need to scafold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you by prividing `BlogService<FrontMatter>.Posts` collection where your processed posts live.
+We need to scaffold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you by providing `BlogService<FrontMatter>.Posts` collection where your processed posts live.
 
 You get get some inspiration for th UI. These pages are important:
 

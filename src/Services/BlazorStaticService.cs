@@ -45,10 +45,11 @@ public class BlazorStaticService(BlazorStaticOptions options,
             Directory.Delete(options.OutputFolderPath, true);
         Directory.CreateDirectory(options.OutputFolderPath);
 
+        List<string> ignoredPathsWithOutputFolder = options.IgnoredPathsOnContentCopy.Select(x => Path.Combine(options.OutputFolderPath, x)).ToList();
         foreach (var pathToCopy in options.ContentToCopyToOutput)
         {
             logger.LogInformation("Copying {sourcePath} to {targetPath}", pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath,  pathToCopy.TargetPath ));
-            helpers.CopyContent(pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath, pathToCopy.TargetPath), options.IgnoredPathsOnContentCopy);
+            helpers.CopyContent(pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath, pathToCopy.TargetPath), ignoredPathsWithOutputFolder);
         }
 
 

@@ -1,0 +1,43 @@
+﻿@page "/docs/componentlibs"
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<div class="prose prose-invert">
+  <h1>Fluent UI (and Other Component Libraries) with BlazorStatic</h1>
+  <p>
+      You can use FluentUI with BlazorStatic, as long as you understand its limitations.
+  </p>
+  
+  <p>
+      Only the interactivity handled by JavaScript will work.
+  </p>
+  <p>
+      BlazorStatic will copy all necessary files to the output folder, as expected upon app publish.
+  </p>
+  <p>
+      BlazorStatic is based on Blazor Server-Side Rendering (SSR). For FluentUI to work with SSR, reference the necessary JavaScript as described in the <a href="https://github.com/microsoft/fluentui-blazor?tab=readme-ov-file#script">FluentUI documentation</a>.
+  </p>
+  <p>
+      This information is not tied exclusively to FluentUI; it allows you to use any Blazor component library.
+  </p>
+
+</div>
+
+<div class="prose prose-invert">
+    
+<h2 class="prose prose-invert"> Example using some FluentUI components</h2>
+</div>
+    
+<FluentButton Appearance="@Appearance.Accent">Button</FluentButton>
+<FluentBadge>Badge</FluentBadge>
+
+<FluentSelect Value=@("a string value") TOption="string">
+    <FluentOption>Option1</FluentOption>
+    <FluentOption>Option2</FluentOption>
+    <FluentOption>Option3</FluentOption>
+</FluentSelect>
+
+
+<script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
+@code {
+    
+}

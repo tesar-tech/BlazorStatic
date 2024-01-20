@@ -13,6 +13,8 @@
   
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.33.0" />
+    <!--To showcase it works-->
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.3.1" />
     <PackageReference Include="YamlDotNet" Version="13.7.1" />
   </ItemGroup>
 
@@ -20,6 +22,7 @@
     <None Update="README.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Remove="output\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +33,22 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\BlazorStatic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="output\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="output\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="output\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="output\BlazorStaticWebsite.modules.json" />
   </ItemGroup>
 
 </Project>
