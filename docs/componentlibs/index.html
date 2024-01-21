@@ -39,21 +39,26 @@
   </p>
   <p>
       This information is not tied exclusively to FluentUI; it allows you to use any Blazor component library.
-  </p></div>
+  </p>
+    <blockquote>
+        If you use RCL, it will add <code>_content</code> folder to wwwroot on publish. 
+        If you also use GitHub Pages, you need to prevent the default Jekyll behavior of ignoring folders starting with an underscore (more info <a href="https://github.blog/2009-12-29-bypassing-jekyll-on-github-pages/">here</a>).
+        You can easily do this by putting a .nojekyll file in the wwwroot folder. Check the build pipeline (<a href="https://github.com/tesar-tech/BlazorStatic/blob/fe24361de67d7ce5dbb810f2cc0e3ef42faee18e/.github/workflows/publish-to-ghpages-and-nuget.yml#L67">here</a>) for this project for an example.
+    </blockquote></div>
 
 <div class="prose prose-invert"><h2 class="prose prose-invert"> Example using some FluentUI components</h2></div>
     
 <fluent-button type="button" appearance="accent" b-x1200685t0>Button</fluent-button>
-<fluent-badge id="f64f113be" appearance="neutral"><div style="width: 100%; display: flex; align-items: center; justify-content: center; white-space: nowrap;">Badge</div></fluent-badge>
+<fluent-badge id="f4bed3fd1" appearance="neutral"><div style="width: 100%; display: flex; align-items: center; justify-content: center; white-space: nowrap;">Badge</div></fluent-badge>
 
 <style>
-#f469d7b3b::part(listbox) { z-index: 9995; }
-#f469d7b3b::part(selected-value) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#f464acd3c::part(listbox) { z-index: 9995; }
+#f464acd3c::part(selected-value) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
     
-    <fluent-select id="f469d7b3b" current-value="a string value"><fluent-option id="f3324d9fd">Option1</fluent-option>
-    <fluent-option id="f468d31c3">Option2</fluent-option>
-    <fluent-option id="f726eaffc">Option3</fluent-option></fluent-select>
+    <fluent-select id="f464acd3c" current-value="a string value"><fluent-option id="f150aadb">Option1</fluent-option>
+    <fluent-option id="f34299150">Option2</fluent-option>
+    <fluent-option id="f58a0912f">Option3</fluent-option></fluent-select>
 
 
 <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script></main>

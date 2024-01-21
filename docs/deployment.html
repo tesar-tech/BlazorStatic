@@ -43,7 +43,10 @@ with:
 <li><p>Set the GitHub Pages to use <code>gh-pages</code> branch as source.
 <img src="Content/Docs/media/deployement/img.png" alt="setup github pages" /></p>
 </li>
-<li><p>Check the whole pipeline <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-gh-pages.yml">here</a></p>
+<li><p>Don't forget to add <code>.nojekyll</code> file to your <code>wwwroot</code> folder, otherwise GitHub Pages will ignore folders starting with
+underscore <code>_</code> (e.g. <code>_content</code>, which is used for serving static content from RCL). <a href="https://github.blog/2009-12-29-bypassing-jekyll-on-github-pages/">more info</a></p>
+</li>
+<li><p>Check the whole pipeline <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-ghpages-and-nuget.yml">here</a></p>
 </li>
 </ul>
 <h2 id="netlify">Netlify</h2>

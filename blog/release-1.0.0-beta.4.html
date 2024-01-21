@@ -57,6 +57,12 @@ builder.WebHost.UseStaticWebAssets(); //👈
 <li>Publish the app before running.</li>
 </ul>
 <p>I haven't tested this; let me know if you need it. I am curious about the use case.</p>
+<h3 id="nojekyll-file-on-github-pages">.nojekyll file on GitHub Pages</h3>
+<ul>
+<li>Don't forget to add <code>.nojekyll</code> file to your <code>wwwroot</code> folder, otherwise GitHub Pages will ignore folders starting with
+underscore <code>_</code> (e.g. <code>_content</code>). <a href="https://github.blog/2009-12-29-bypassing-jekyll-on-github-pages/">more info</a></li>
+<li>The best way is to use <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-ghpages-and-nuget.yml">build pipeline</a> for that</li>
+</ul>
 <h2 id="isdraft-property-in-default-frontmatter-is-now-supported">IsDraft property in default FrontMatter is now supported</h2>
 <p>First merged PR from community! Thanks to <a href="https://github.com/chrisg32">Chris Gonzales</a> for this contribution.</p>
 <p>Default <code>FrontMatter</code> has now support for <code>IsDraft</code> property.
