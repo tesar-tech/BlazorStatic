@@ -33,12 +33,11 @@ jobs:
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
           sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
-      - name: Build
-        run: dotnet build --configuration Release
+          
+      - run: dotnet build --configuration Release
 
       - name: Run webapp and generate static files
-        run: |
-          dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}} --no-build --configuration Release
+        run: dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}} --no-build --configuration Release
 
       - name: Upload webapp output artifacts
         uses: actions/upload-artifact@v3
@@ -65,6 +64,7 @@ jobs:
         with:
           name: static-pages-output
           path: output
+      - run: touch output/.nojekyll #folder starting with _ are handled as jekyll. This file will prevent that.  
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
