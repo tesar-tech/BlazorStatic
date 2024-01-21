@@ -52,6 +52,12 @@ If you need to disable `StaticWebAssets`, consider this workaround:
 
 I haven't tested this; let me know if you need it. I am curious about the use case.
 
+### .nojekyll file on GitHub Pages
+- Don't forget to add `.nojekyll` file to your `wwwroot` folder, otherwise GitHub Pages will ignore folders starting with
+  underscore `_` (e.g. `_content`). [more info](https://github.blog/2009-12-29-bypassing-jekyll-on-github-pages/)
+- The best way is to use [build pipeline](https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-ghpages-and-nuget.yml) for that
+
+
 ## IsDraft property in default FrontMatter is now supported
 
 First merged PR from community! Thanks to [Chris Gonzales](https://github.com/chrisg32) for this contribution.
