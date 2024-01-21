@@ -19,7 +19,10 @@ Since the output of BlazorStatic are just plan .html files and assets, you can d
     ```
 - Set the GitHub Pages to use `gh-pages` branch as source. 
   ![setup github pages](media/deployement/img.png)
-- Check the whole pipeline [here](https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-gh-pages.yml)
+- Don't forget to add `.nojekyll` file to your `wwwroot` folder, otherwise GitHub Pages will ignore folders starting with
+underscore `_` (e.g. `_content`, which is used for serving static content from RCL). [more info](https://github.blog/2009-12-29-bypassing-jekyll-on-github-pages/)
+- Check the whole pipeline [here](https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-ghpages-and-nuget.yml)
+
 
 ## Netlify 
 
