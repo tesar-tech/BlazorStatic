@@ -15,8 +15,14 @@
     <div class="flex items-center space-x-4 leading-5 sm:space-x-6">
         @foreach(var item in menuItems)
         {
-            <NavLink ActiveClass="bg-primary-950 px-2 py-1 rounded-xl" class="hidden font-medium text-gray-100 sm:block" 
-                     Match="@(item.link==""?NavLinkMatch.All:NavLinkMatch.Prefix)" href="@item.link">@item.name</NavLink>
+            <NavLink ActiveClass="bg-primary-950 px-2 py-1 rounded-xl" class="hidden font-medium text-gray-100 sm:block"
+                     Match="@(item.Link == "" ? NavLinkMatch.All : NavLinkMatch.Prefix)" href="@item.Link">
+                @item.Name
+                @if (item.Icon != null)
+                {
+                    <Svg Icon="item.Icon"/>
+                }
+            </NavLink>
 
             @* <a class="hidden font-medium text-gray-100 sm:block   @(Nm.Uri.EndsWith(item.link)?"":"") " href="@item.link">@item.name</a> *@
         } 
@@ -37,8 +43,14 @@
                 @foreach (var item in menuItems)
                 {
                     <div class="px-12 py-4">
-                        <NavLink ActiveClass="underline" class="text-2xl font-bold tracking-widest text-gray-100" 
-                                             Match="@(item.link==""?NavLinkMatch.All:NavLinkMatch.Prefix)" href="@item.link">@item.name</NavLink>
+                        <NavLink ActiveClass="underline" class="text-2xl font-bold tracking-widest text-gray-100"
+                                 Match="@(item.Link == "" ? NavLinkMatch.All : NavLinkMatch.Prefix)" href="@item.Link">
+                            @item.Name
+                            @if(item.Icon != null)
+                            {
+                                <Svg Icon="item.Icon"/>
+                            }
+                        </NavLink>
                     </div>
                 }
             </nav>
@@ -56,15 +68,15 @@
 
 @code
 {
+List<MenuItem> menuItems =
+[
+    new("Home", ""),
+    new("Blog", "blog"),
+    new("Tags", "tags"),
+    new("Docs", "docs"),
+    new("", WebsiteKeys.GitHubRepo, Svg.Icons.Github)
+];
+    record MenuItem(string Name, string Link, Svg.Icons? Icon = null);
 
-    List<(string name, string link)> 
-        menuItems =
-        [
-            ("Home", ""),
-            ("Blog", "blog"),
-            ("Tags", "tags"),
-            ("Docs", "docs"),
-            ("Github  \u2b67", WebsiteKeys.GitHubRepo)
-        ];
-        
+
 }

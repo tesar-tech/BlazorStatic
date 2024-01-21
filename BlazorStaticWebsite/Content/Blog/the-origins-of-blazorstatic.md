@@ -1,7 +1,7 @@
 ---
 title: The Origins of BlazorStatic
 lead: BlazorStatic started as a weekend side project, growing into a practical tool for .NET developers seeking an efficient static site generator with Blazor's flexibility.
-Published: 2023-11-27
+published: 2023-11-27
 tags: [story]
 authors:
     - name: "Jan Tesař"

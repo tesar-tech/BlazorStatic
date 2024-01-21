@@ -66,5 +66,5 @@ public static class WebsiteKeys
 {
     public const string BlogPostStorageAddress = "https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite/Content/Blog/";
 
-    public const string GitHubRepo = "https://github.com/tesar-tech/blob/BlazorStatic/";
+    public const string GitHubRepo = "https://github.com/tesar-tech/BlazorStatic/";
 }
