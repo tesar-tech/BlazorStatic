@@ -25,10 +25,6 @@ jobs:
           chmod +x /usr/local/bin/tailwindcss
           cd ${{ env.WEBAPP_PATH }}
           tailwindcss --input ./wwwroot/app.css  --output ./wwwroot/app.min.css  --minify
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x'
       - name: Change <base href="" /> in App.razor to match gh repo name
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
