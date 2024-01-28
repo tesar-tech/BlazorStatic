@@ -1,7 +1,9 @@
 ﻿# Blazor Static
 
 
- [![](https://dcbadge.vercel.app/api/server/DsAXsMuEbx?style=flat)](https://discord.gg/DsAXsMuEbx)
+
+[![Discord](https://img.shields.io/discord/798312431893348414?style=flat&logo=discord&logoColor=white&label=Blazor%20Community%2F%23BlazorStatic&labelColor=5865f2&color=gray)
+](https://discord.gg/DsAXsMuEbx)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/BlazorStatic)](https://www.nuget.org/packages/BlazorStatic/)
 
 
