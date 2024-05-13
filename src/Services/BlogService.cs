@@ -70,10 +70,12 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
             }
         }
         options.AfterBlogParsedAndAddedAction?.Invoke();
+        
+        string[] GetPostsPath(){
+            string execFolder = Directory.GetParent((Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).Location)!.FullName;//! is ok, null only in empty path or root
+            return Directory.GetFiles(Path.Combine(execFolder, options.ContentPath), options.PostFilePattern);
+        }
     }
 
-    private string[] GetPostsPath(){
-        string execFolder = Directory.GetParent(Assembly.GetEntryAssembly().Location).FullName;
-        return Directory.GetFiles(Path.Combine(execFolder, options.ContentPath), options.PostFilePattern);
-    }
+    
 }

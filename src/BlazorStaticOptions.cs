@@ -83,7 +83,9 @@ public class BlogOptions<TFrontMatter>
     where TFrontMatter : class, IFrontMatter
 {
     /// <summary>
-    /// folder relative to project root where blog posts are stored
+    /// folder relative to project root where blog posts are stored.
+    /// Don't forget to copy the content to bin folder (use CopyToOutputDirectory in .csproj),
+    /// because that's where the app will look for the files.
     /// </summary>
     public string ContentPath { get; set; } = Path.Combine("Content", "Blog");
     /// <summary>
