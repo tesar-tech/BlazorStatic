@@ -3,6 +3,7 @@ namespace BlazorStatic.Services;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 
 /// <summary>
@@ -34,7 +35,7 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
     /// </summary>
    public async Task ParseAndAddBlogPosts()
     {
-        var files = Directory.GetFiles(options.ContentPath, options.PostFilePattern);
+        var files = GetPostsPath();
 
         foreach (string file in files)
         {
@@ -69,9 +70,10 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
             }
         }
         options.AfterBlogParsedAndAddedAction?.Invoke();
+    }
 
+    private string[] GetPostsPath(){
+        string execFolder = Directory.GetParent(Assembly.GetEntryAssembly().Location).FullName;
+        return Directory.GetFiles(Path.Combine(execFolder, options.ContentPath), options.PostFilePattern);
     }
 }
-
-
-
