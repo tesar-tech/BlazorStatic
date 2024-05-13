@@ -6,6 +6,76 @@ fluent-anchored-region[b-2ov9fhztky] {
     fluent-anchored-region > *[b-2ov9fhztky] {
         pointer-events: all;
     }
+/* _content/Microsoft.FluentUI.AspNetCore.Components/Components/AppBar/FluentAppBar.razor.rz.scp.css */
+[b-dkkdhxy2t7] .fluent-appbar-item {
+    width: 100%;
+    --appbar-active-indicator-width: calc(var(--design-unit) * 0.5px);
+    height: var(--appbar-item-height, 56px);
+}
+
+    [b-dkkdhxy2t7] .fluent-appbar-item:hover {
+        background-color: var(--neutral-fill-secondary-rest);
+    }
+
+[b-dkkdhxy2t7] a {
+    color: inherit;
+    text-decoration: none;
+    font-size: var(--type-ramp-minus-2-font-size);
+    line-height: var(--type-ramp-minus-2-line-height);
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+}
+
+[b-dkkdhxy2t7] a .stack-vertical {
+    padding: calc(var(--design-unit) * 1px) calc(var(--appbar-active-indicator-width) + (var(--design-unit) * 1.5px));
+    height: 100%;
+}
+
+[b-dkkdhxy2t7] div[part="label"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+}
+
+[b-dkkdhxy2t7] .fluent-appbar-item:not(.popover) a.active::before {
+    content: "";
+    position: absolute;
+    width: var(--appbar-active-indicator-width);
+    height: 100%;
+    background-color: var(--accent-fill-rest);
+    border-radius: calc(var(--control-corner-radius) * 1px);
+    top: 0;
+    left: calc(var(--design-unit) * 0.5px);
+    right: unset;
+}
+
+[b-dkkdhxy2t7] .fluent-appbar-item.fluent-appbar-item-local:not(.popover) a.active::before {
+    all: initial;
+}
+
+[dir='rtl'] *[b-dkkdhxy2t7]  .fluent-appbar-item:not(.popover) a.active::before {
+    right: calc(var(--design-unit) * 0.5px);
+    left: unset;
+}
+
+[dir='rtl'] *[b-dkkdhxy2t7]  .fluent-appbar-item.fluent-appbar-item-local:not(.popover) a.active::before {
+    all: initial;
+}
+
+[b-dkkdhxy2t7] .fluent-popover-content .fluent-popover-body {
+    margin-top: 0 !important;
+}
+
+[b-dkkdhxy2t7] .fluent-appbar-item:hover svg[part="icon-rest"],
+[b-dkkdhxy2t7] .fluent-appbar-item:not(:hover):not(.active) svg[part="icon-active"],
+[b-dkkdhxy2t7] .fluent-appbar-item:not(:hover).active svg[part="icon-rest"],
+[b-dkkdhxy2t7] .fluent-appbar-item[overflow] {
+    display: none;
+}
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/BodyContent/FluentBodyContent.razor.rz.scp.css */
 .body-content[b-9l28a7kahd] {
     margin: 0;
@@ -37,17 +107,30 @@ fluent-anchored-region[b-2ov9fhztky] {
 fluent-card[b-6epdlk0xtt]  {
     padding: calc(var(--design-unit) * 5px);
 }
+
+.fluent-card-minimal-style[b-6epdlk0xtt]  {
+    height: var(--card-height, 100%);
+    width: var(--card-width, 100%);
+    contain: content;
+    background: var(--fill-color);
+    color: var(--neutral-foreground-rest);
+    border: calc(var(--stroke-width)* 1px) solid var(--neutral-stroke-layer-rest);
+    border-radius: calc(var(--layer-corner-radius)* 1px);
+    box-shadow: var(--elevation-shadow-card-rest);
+    padding: calc(var(--design-unit)* 5px);
+}
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/CollapsibleRegion/FluentCollapsibleRegion.razor.rz.scp.css */
 .fluent-collapsible-region-container[b-hk0m26j2or] {
     overflow: hidden;
 }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/CounterBadge/FluentCounterBadge.razor.rz.scp.css */
-.counterbadge-container[b-v8ui8wcemu] {
+.fluentui-counterbadge-container[b-v8ui8wcemu] {
+    display: inline;
     position: relative;
-    display: inline-block;
+    height: 100%;
 }
 
-.counterbadge[b-v8ui8wcemu] {
+.fluentui-counterbadge[b-v8ui8wcemu] {
     position: absolute;
     z-index: 10;
     font-size: var(--type-ramp-minus-2-font-size);
@@ -64,8 +147,10 @@ fluent-card[b-6epdlk0xtt]  {
     cursor: default;
 }
 
-    .counterbadge:empty[b-v8ui8wcemu] {
-        display: none;
+    .fluentui-counterbadge[dot-only][b-v8ui8wcemu] {
+        width: var(--design-unit);
+        min-width: unset;
+        height: var(--design-unit);
     }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/DataGrid/Columns/ColumnBase.razor.rz.scp.css */
 /* Contains the title text and sort indicator, and expands to fill as much of the col width as it can */
@@ -103,18 +188,18 @@ fluent-data-grid[b-ppmhrkw1mj] {
     --col-gap: 1rem;
 }
 
-[b-ppmhrkw1mj] .empty-content-row {
+[b-ppmhrkw1mj] .empty-content-row,
+[b-ppmhrkw1mj] .loading-content-row {
     width: 100%;
-    height: 100%;
+    height: 100% !important ;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-[b-ppmhrkw1mj] .empty-content-cell {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+[b-ppmhrkw1mj] .empty-content-cell, 
+[b-ppmhrkw1mj] .loading-content-cell {
+
     font-weight: 600;
 }
 
@@ -131,7 +216,6 @@ fluent-data-grid[b-ppmhrkw1mj] {
 
 [dir=rtl] .col-options[b-ppmhrkw1mj] {
     left: unset;
-    
 }
 
 .col-justify-end .col-options[b-ppmhrkw1mj], .col-justify-right .col-options[b-ppmhrkw1mj] {
@@ -160,10 +244,9 @@ fluent-data-grid[b-ppmhrkw1mj] {
     cursor: col-resize;
 }
 
-    .col-width-draghandle:hover[b-ppmhrkw1mj], .col-width-draghandle:active[b-ppmhrkw1mj] {
-        background: var(--neutral-stroke-divider-rest);
-    }
-
+.col-width-draghandle:hover[b-ppmhrkw1mj], .col-width-draghandle:active[b-ppmhrkw1mj] {
+    background: var(--neutral-stroke-divider-rest);
+}
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/DataGrid/FluentDataGridCell.razor.rz.scp.css */
 fluent-data-grid-cell[b-w6qdxfylwy] {
     text-overflow: ellipsis;
@@ -177,28 +260,43 @@ fluent-data-grid-cell[b-w6qdxfylwy] {
 
 .column-header[b-w6qdxfylwy] {
     display: flex;
+    width: 100%;
     align-self: center;
     padding-inline: 0;
+    padding-right: 1px;
+    padding-left: 1px;
 }
 
     .column-header.col-justify-end[b-w6qdxfylwy], .column-header.col-justify-right[b-w6qdxfylwy] {
-        width: 100%;
-        padding: 0;
+
+        padding-right: 1px;
+        padding-left: 1px;
         justify-content: end;
     }
 
     .column-header.col-justify-center[b-w6qdxfylwy] {
-        width: 100%;
-        padding: 0;
+
+        padding-left: 1px;
+        padding-right: 1px;
         justify-content: center;
     }
 
-    .column-header[b-w6qdxfylwy] >  .col-sort-button {
+    .column-header[b-w6qdxfylwy] >  .keycapture {
+        display: flex;
+        flex-grow: 1;
+    }
+
+    .column-header[b-w6qdxfylwy] >  .keycapture .col-sort-container {
+        display: flex;
+        flex-grow: 1;
+    }
+
+    .column-header[b-w6qdxfylwy] >  .keycapture .col-sort-container .col-sort-button {
         flex-grow: 1;
         padding-inline-end: 5px;
     }
 
-        .column-header[b-w6qdxfylwy] >  .col-sort-button::part(content) {
+        .column-header[b-w6qdxfylwy] >  .keycapture .col-sort-container .col-sort-button::part(content) {
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -271,6 +369,11 @@ fluent-data-grid-cell[b-w6qdxfylwy] {
 
 .sticky-header[b-upi3f9mbnn] {
     z-index: 3;
+}
+
+.hover:not([row-type='header'],[row-type='sticky-header']):hover[b-upi3f9mbnn] {
+    cursor: pointer;
+    background-color: var(--datagrid-hover-color, var(--neutral-fill-stealth-hover));
 }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/DateTime/FluentCalendar.razor.rz.scp.css */
 /*
@@ -840,10 +943,9 @@ div[dragged-over][b-qxma62j335] {
 }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Footer/FluentFooter.razor.rz.scp.css */
 .footer[b-v3odva5qa5] {
-    display: grid;
+    display: flex;
     z-index: 10;
-    flex-direction: column;
-    position: relative;
+    flex-direction: row;
     font-family: var(--body-font);
     font-weight: normal;
     font-size: var(--type-ramp-minus-1-font-size);
@@ -1528,31 +1630,31 @@ div[dragged-over][b-qxma62j335] {
 
 /* Hidden */
 
-@media (max-width: 599px) {
+@media (max-width: 599.98px) {
     .fluent-grid[b-9fxwfzgab8]  > div[hidden-when~="xs"] {
         display: none;
     }
 }
 
-@media (min-width: 600px) and (max-width: 959px) {
+@media (min-width: 600px) and (max-width: 959.98px) {
     .fluent-grid[b-9fxwfzgab8]  > div[hidden-when~="sm"] {
         display: none;
     }
 }
 
-@media (min-width: 960px) and (max-width: 1279px) {
+@media (min-width: 960px) and (max-width: 1279.98px) {
     .fluent-grid[b-9fxwfzgab8]  > div[hidden-when~="md"] {
         display: none;
     }
 }
 
-@media (min-width: 1280px) and (max-width: 1919px) {
+@media (min-width: 1280px) and (max-width: 1919.98px) {
     .fluent-grid[b-9fxwfzgab8]  > div[hidden-when~="lg"] {
         display: none;
     }
 }
 
-@media (min-width: 1920px) and (max-width: 2559px) {
+@media (min-width: 1920px) and (max-width: 2559.98px) {
     .fluent-grid[b-9fxwfzgab8]  > div[hidden-when~="xl"] {
         display: none;
     }
@@ -1629,6 +1731,12 @@ div[dragged-over][b-qxma62j335] {
         line-height: 8px;
         font-size: var(--type-ramp-minus-2-font-size);
     }
+
+    .fluent-inputfile-container[disabled][b-72uj7bp8pi], .fluent-inputfile-container[disabled="true"][b-72uj7bp8pi] {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
+    }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Label/FluentInputLabel.razor.rz.scp.css */
 .fluent-input-label[b-hum22yrq17] {
     display: flex;
@@ -1642,6 +1750,10 @@ div[dragged-over][b-qxma62j335] {
     margin-bottom: calc(var(--design-unit) * 1px);
     align-items: center;
 }
+
+    .fluent-input-label[orientation='horizontal'][b-hum22yrq17] {
+        margin-bottom: 0;
+    }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Label/FluentLabel.razor.rz.scp.css */
 /*
     --type-ramp-base-font-size: 14px;
@@ -1754,7 +1866,7 @@ div[dragged-over][b-qxma62j335] {
             background: var(--neutral-fill-secondary-hover);
         }
 
-.fluent-autocomplete-multiselect fluent-text-field[b-hg72r5b4ox]::part(start) {
+.fluent-autocomplete-multiselect[b-hg72r5b4ox]  fluent-text-field::part(start) {
     max-width: calc(100% - 80px);
 }
 
@@ -1768,7 +1880,6 @@ div[dragged-over][b-qxma62j335] {
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/List/FluentPersona.razor.rz.scp.css */
 .fluent-persona[b-n7zog0zvqi] {
     display: flex;
-    height: 100%;
     width: fit-content;
     border-radius: 999px;
     align-items: center;
@@ -1788,16 +1899,28 @@ div[dragged-over][b-qxma62j335] {
         aspect-ratio: 1/1;
     }
 
+    .fluent-persona[position='start'] .initials[b-n7zog0zvqi] {
+        order: 3;
+    }
+
         .fluent-persona .initials img[b-n7zog0zvqi] {
             border-radius: 50%;
             aspect-ratio: 1 / 1;
-            height: 100%;
-            width: 100%;
+            width: auto;
+            height: auto;
+            margin-left: auto;
+            margin-right: auto;
         }
 
     .fluent-persona .name[b-n7zog0zvqi] {
-        margin-left: 16px;
+        margin-inline-start: 16px;
     }
+
+    .fluent-persona[position='start'] .name[b-n7zog0zvqi] {
+        order: 1;
+        margin-inline-start: 0px;
+        margin-inline-end: 16px;
+    } 
 
     .fluent-persona .close[b-n7zog0zvqi] {
         display: flex;
@@ -1805,6 +1928,10 @@ div[dragged-over][b-qxma62j335] {
         align-items: center;
         justify-content: center;
         margin: 0px 4px;
+    }
+
+    .fluent-persona[position='start'] .close[b-n7zog0zvqi] {
+        order: 2;
     }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Main/FluentMain.razor.rz.scp.css */
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/MenuButton/FluentMenuButton.razor.rz.scp.css */
@@ -2133,7 +2260,6 @@ div[dragged-over][b-qxma62j335] {
     }
 
 [b-hv9rzieq3w] .fluent-nav-icon {
-    margin-inline-end: calc(var(--design-unit) * 2px + 2px);
     min-width: 20px;
 }
 
@@ -2183,6 +2309,10 @@ div[dragged-over][b-qxma62j335] {
 [b-hv9rzieq3w] .rotate.expand-collapse-button svg {
     transform: rotate(90deg);
 }
+
+:not(.expanded)[b-hv9rzieq3w]  .items {
+    display: none;
+} 
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/NavMenu/FluentNavLink.razor.rz.scp.css */
 [b-5upkyn31e7] .fluent-nav-link {
     width: 100%;
@@ -2192,26 +2322,32 @@ div[dragged-over][b-qxma62j335] {
     display: flex;
 }
 
-[b-5upkyn31e7] .fluent-nav-icon {
-    margin-inline-end: calc(var(--design-unit) * 2px + 2px);
+[b-5upkyn31e7] .fluent-nav-icon:not(fluent-menu-item) {
     min-width: 20px;
 }
 
-[b-5upkyn31e7] .fluent-nav-link.disabled {
-    color: var(--neutral-fill-secondary-rest) !important;
-    cursor: not-allowed ;
+[b-5upkyn31e7] .fluent-nav-link.disabled:not(fluent-menu-item, a) {
+    color: var(--neutral-foreground-rest) !important;
+    opacity: var(--disabled-opacity);
+    cursor: not-allowed;
     pointer-events: none;
 }
 
 
+[b-5upkyn31e7] a.disabled .content-region {
+    opacity: var(--disabled-opacity);
+}
+
+
 [b-5upkyn31e7] .fluent-nav-link.disabled .fluent-nav-icon {
-    fill: var(--neutral-stroke-rest) !important;
+    fill: var(--neutral-foreground-rest) !important;
+    opacity: var(--disabled-opacity);
 }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/NavMenu/FluentNavMenu.razor.rz.scp.css */
 /*  NavMenu */
 .fluent-nav-menu[b-vs37bumpa7] {
-    flex-direction: column;
-    align-items: stretch;
+    padding: 0 2px;
+
 }
 
 [b-vs37bumpa7] .fluent-nav-item.expander:focus-within {
@@ -2219,7 +2355,7 @@ div[dragged-over][b-qxma62j335] {
 }
 
 [b-vs37bumpa7] .fluent-nav-item {
-    margin: calc(var(--design-unit) * 1px + 1px) 0;
+    margin: calc(var(--design-unit) * 1px) 0;
     -webkit-user-select: none;
     user-select: none;
 }
@@ -2270,7 +2406,15 @@ div[dragged-over][b-qxma62j335] {
 }
 
 [b-vs37bumpa7] .fluent-nav-group .fluent-nav-item:last-of-type, .fluent-nav-menu .fluent-nav-item:last-of-type[b-vs37bumpa7] {
-    margin-bottom: 0;
+    margin-bottom: 2px;
+}
+
+[b-vs37bumpa7] fluent-menu-item .fluent-nav-link {
+    width: 100%;
+    color: inherit;
+    align-items: center;
+    text-decoration: none;
+    display: flex;
 }
 
 /* level indenting */
@@ -2291,6 +2435,7 @@ div[dragged-over][b-qxma62j335] {
 }
 
 [b-vs37bumpa7] .fluent-nav-text {
+    margin-inline-start: calc(var(--design-unit) * 2px + 2px);
     overflow: hidden;
     text-overflow: ellipsis;
     width: calc(100% - 70px);
@@ -2316,6 +2461,12 @@ div[dragged-over][b-qxma62j335] {
         [b-vs37bumpa7].collapsed .fluent-nav-group * .fluent-nav-menu > .fluent-nav-item * .fluent-nav-menu > .fluent-nav-item * .fluent-nav-menu > .fluent-nav-item {
             display: none;
         }
+
+@media (max-width: 600px) {
+    [b-vs37bumpa7].collapsed .fluent-nav-text {
+        display: block;
+    }
+}
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Overflow/FluentOverflow.razor.rz.scp.css */
 .fluent-overflow[orientation="horizontal"][b-vceposnczs] {
     display: flex;
@@ -2367,7 +2518,6 @@ div[dragged-over][b-qxma62j335] {
     margin-inline-end: 0;
     gap: 0.5rem;
     align-items: center;
-    background-color: var(--neutral-layer-1);
 }
 
     
@@ -2386,25 +2536,22 @@ div[dragged-over][b-qxma62j335] {
     padding: 1em;
 }
 
-    .fluent-popover-content .fluent-popover-header[b-qp3z8ghd2d] {
+    .fluent-popover-content div[part="header"][b-qp3z8ghd2d] {
         font-size: 20px;
         font-weight: 600;
         width: inherit;
+        margin-bottom: 12px;
     }
 
-    .fluent-popover-content .fluent-popover-body[b-qp3z8ghd2d] {
+    .fluent-popover-content div[part="body"][b-qp3z8ghd2d] {
         height: 100%;
-        width: inherit;
-        margin-top: 1em;
-        display: flex;
-        flex-direction: column;
     }
 
-    .fluent-popover-content .fluent-popover-footer[b-qp3z8ghd2d] {
+    .fluent-popover-content div[part="footer"][b-qp3z8ghd2d] {
         font-size: 14px;
         font-weight: normal;
         width: inherit;
-        margin-top: 1em;
+        margin-top: 12px;
     }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/PresenceBadge/FluentPresenceBadge.razor.rz.scp.css */
 .fluent-presence-badge[b-1o8tp31nhy] {
@@ -2431,10 +2578,300 @@ div[dragged-over][b-qxma62j335] {
         border-radius: 999px;
         border: var(--fluent-presence-badge-border-size) solid var(--neutral-layer-1);
     }
+/* _content/Microsoft.FluentUI.AspNetCore.Components/Components/ProfileMenu/FluentProfileMenu.razor.rz.scp.css */
+.fluent-profile-menu[b-rsm9d6pikk] {
+}
+
+    .fluent-profile-menu[b-rsm9d6pikk]  > .fluent-persona > .name {
+        display: none;
+    }
+
+    .fluent-profile-menu[top-corner][b-rsm9d6pikk]  fluent-anchored-region {
+        transform: unset !important;
+        left: unset;
+        right: -4px;
+    }
+
+[dir="rtl"] .fluent-profile-menu[top-corner][b-rsm9d6pikk]  fluent-anchored-region {
+    transform: unset !important;
+    left: -4px;
+    right: unset;
+}
+/* _content/Microsoft.FluentUI.AspNetCore.Components/Components/PullToRefresh/FluentPullToRefresh.razor.rz.scp.css */
+.fluent-pull-container[b-rq0hhda1ik] {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
+}
+
+    .fluent-pull-container div[part="tip"][b-rq0hhda1ik] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--neutral-layer-2);
+        color: var(--neutral-base-color);
+        padding: 0.5rem;
+        height: var(--fluent-pull-refresh-head-height, 50px);
+        width: 100%;
+    }
+
+        .fluent-pull-container div[part="tip"][direction="down"][b-rq0hhda1ik] {
+            position: relative;
+            top: 0px;
+        }
+
+        .fluent-pull-container div[part="tip"][direction="up"][b-rq0hhda1ik] {
+            position: relative;
+            bottom: 0px;
+        }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Radio/FluentRadio.razor.rz.scp.css */
 fluent-radio[b-98313echfq] {
     margin: calc(var(--design-unit) * 1px) 0;
 }
+/* _content/Microsoft.FluentUI.AspNetCore.Components/Components/SortableList/FluentSortableList.razor.rz.scp.css */
+/* 
+  you need the ::deep identifier if you are using scoped styles like this
+  because scoped styles are only applied to markup in the component, not
+  to the markup inside the render fragment.
+*/
+
+.fluent-sortable-list[b-0uum8h8hrq] {
+    --fluent-sortable-list-background-color: var(--neutral-layer-2);
+    --fluent-sortable-list-item-height: calc(var(--design-unit) * 8px);
+    --fluent-sortable-list-filtered: var(--warning);
+    border: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-input-active);
+    border-radius: calc(var(--control-corner-radius) * 1px);
+    padding: calc(var(--design-unit) * 1px);
+    min-height: var(--fluent-sortable-list-item-height);
+}
+
+    /*Not sure yet if this can be deleted. Need to test on iOS*/
+    /*.fluent-sortable-list ::deep .sortable-fallback {
+        opacity: 1 !important
+    }*/
+
+    .fluent-sortable-list[b-0uum8h8hrq]  .sortable-grab {
+        cursor: grab;
+        background-color: var(--neutral-layer-1);
+        display: flex;
+        position: relative;
+        height: 100%;
+        left: calc(var(--design-unit) * -2px);
+        right: unset;
+        border-radius: calc(var(--control-corner-radius)* 1px) 0 0 calc(var(--control-corner-radius)* 1px);
+        width: 32px;
+        padding: 0 5px;
+    }
+
+    [dir='rtl'] .fluent-sortable-list[b-0uum8h8hrq]  .sortable-grab {
+        left: unset;
+        right: calc(var(--design-unit) * -2px);
+        border-radius: 0 calc(var(--control-corner-radius)* 1px) calc(var(--control-corner-radius)* 1px) 0;
+    }
+
+.fluent-sortable-list[b-0uum8h8hrq]  .sortable-item {
+    display: flex;
+    align-items: center;
+    height: var(--fluent-sortable-list-item-height) !important;
+    background-color: var(--fluent-sortable-list-background-color);
+    border: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-input-active);
+    border-radius: calc(var(--control-corner-radius) * 1px);
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    padding: 0 calc(var(--design-unit) * 2px);
+    margin-bottom: 2px;
+}
+
+    .fluent-sortable-list[b-0uum8h8hrq]  .sortable-item:last-of-type {
+        margin-bottom: 0;
+    }
+
+.fluent-sortable-list[b-0uum8h8hrq]  .sortable-ghost > .sortable-item-content {
+    background-color: var(--neutral-layer-1) !important;
+}
+
+.fluent-sortable-list[b-0uum8h8hrq]  .sortable-ghost {
+    background: var(--neutral-layer-1) !important;
+    border: calc(var(--stroke-width) * 1px) dotted var(--accent-fill-rest) !important;
+}
+
+.fluent-sortable-list > .sortable-item:is(.filtered)[b-0uum8h8hrq] {
+    background: var(--fluent-sortable-list-filtered);
+}
+/* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Splitter/FluentMultiSplitter.razor.rz.scp.css */
+.fluent-multi-splitter[b-ug2ltnxcve] {
+    /* Resize Icon colors */
+    --fluent-multi-splitter-color: var(--neutral-stroke-strong-rest);
+    --fluent-multi-splitter-color-active: var(--neutral-stroke-strong-hover);
+
+    /* Bar colors */
+    --fluent-multi-splitter-background-color: var(--neutral-stroke-rest);
+    --fluent-multi-splitter-background-color-active: var(--neutral-stroke-hover);
+    --fluent-multi-splitter-hover-opacity: 0.8;
+    
+    /* Bar size */
+    --fluent-multi-splitter-bar-size: 8px;
+
+    /* Styles */
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100%;
+}
+
+    /* Resize bar */
+    .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar {
+        flex: 0 0 auto;
+        position: relative;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--fluent-multi-splitter-color);
+        background-color: var(--fluent-multi-splitter-background-color);
+        opacity: 0.4;
+        user-select: none;
+        font-size: 8px;
+    }
+
+        .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="resize"] {
+            border: 1px solid var(--fluent-multi-splitter-color);
+            border-radius: 1px;
+        }
+
+        /* Collapse button */
+        .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="collapse"] {
+            display: table;
+        }
+
+            .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="collapse"]:before {
+                line-height: normal;
+                display: table-cell;
+            }
+
+            .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="collapse"]:hover {
+                cursor: pointer;
+            }
+
+        /* Expand button */
+        .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="expand"] {
+            display: table;
+        }
+
+            .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="expand"]:before {
+                line-height: normal;
+                display: table-cell;
+            }
+
+            .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="expand"]:hover {
+                cursor: pointer;
+            }
+
+    /* Hover and Active */
+    .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar[status="resizable"]:hover {
+        background-color: var(--fluent-multi-splitter-background-color);
+        opacity: var(--fluent-multi-splitter-hover-opacity);
+    }
+
+    .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar[status="resizable"]:active {
+        background-color: var(--fluent-multi-splitter-background-color-active);
+        opacity: var(--fluent-multi-splitter-hover-opacity);
+    }
+
+        .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar[status="resizable"]:active > span[part="expand"],
+        .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar[status="resizable"]:active > span[part="resize"],
+        .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar[status="resizable"]:active > span[part="collapse"] {
+            color: var(--fluent-multi-splitter-color-active);
+        }
+
+        .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar[status="resizable"]:active > span[part="resize"] {
+            border: 1px solid var(--fluent-multi-splitter-color-active);
+        }
+
+    /* Disabled */
+    .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-bar[status="resizable"]:disabled {
+        opacity: 0.2;
+    }
+
+/* Horizontal bar */
+.fluent-multi-splitter[orientation="horizontal"][b-ug2ltnxcve] {
+    flex-direction: row;
+}
+
+    .fluent-multi-splitter[orientation="horizontal"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar {
+        flex-direction: column;
+        width: var(--fluent-multi-splitter-bar-size);
+    }
+
+        .fluent-multi-splitter[orientation="horizontal"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="collapse"]:before {
+            content: '\025C0;';            
+        }
+
+        .fluent-multi-splitter[orientation="horizontal"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="resize"] {
+            height: 16px;
+            margin: 2px 0;
+        }
+
+        .fluent-multi-splitter[orientation="horizontal"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="expand"]:before {
+            content: '\025B6;';
+        }
+
+        .fluent-multi-splitter[orientation="horizontal"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar[status="resizable"]:hover {
+            cursor: ew-resize;
+        }
+
+/* Vertical bar */
+.fluent-multi-splitter[orientation="vertical"][b-ug2ltnxcve] {
+    flex-direction: column;
+}
+
+    .fluent-multi-splitter[orientation="vertical"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar {
+        flex-direction: row;
+        height: var(--fluent-multi-splitter-bar-size);
+    }
+
+        .fluent-multi-splitter[orientation="vertical"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="collapse"]:before {
+            content: '\025B2;';
+        }
+
+        .fluent-multi-splitter[orientation="vertical"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="resize"] {
+            width: 16px;
+            margin: 0 2px;
+        }
+
+        .fluent-multi-splitter[orientation="vertical"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar > span[part="expand"]:before {
+            content: '\025BC;';
+        }
+
+        .fluent-multi-splitter[orientation="vertical"][b-ug2ltnxcve]  > .fluent-multi-splitter-bar[status="resizable"]:hover {
+            cursor: ns-resize;
+        }
+
+/* Pane */
+.fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-pane {
+    overflow: hidden;
+    position: relative;
+    flex: 0 1 auto;
+}
+
+    .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-pane[status="collapsed"] {
+        flex: 0 1 0% !important;
+        overflow: hidden !important;
+        display: block !important;
+    }
+
+    .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-pane[status="lastresizable"] {
+        flex: 1 1 auto;
+    }
+
+    .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-pane[status="resizable"] {
+    }
+
+    .fluent-multi-splitter[b-ug2ltnxcve]  > .fluent-multi-splitter-pane[status="locked"] {
+    }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Stack/FluentStack.razor.rz.scp.css */
 .stack-vertical[b-0nr62qx0mz] {
     display: flex;
@@ -2771,11 +3208,18 @@ fluent-tab[b-urryfr514w] {
         content: "";
         position: absolute;
         left: calc(50% + calc(var(--fluent-wizard-circle-size) / 2 + var(--fluent-wizard-spacing)));
+        right: unset;
         top: calc(var(--fluent-wizard-circle-size) / 2);
         width: calc(100% - var(--fluent-wizard-circle-size) - calc(var(--fluent-wizard-spacing) * 2));
         height: 2px;
         order: -1;
         background-color: var(--neutral-stroke-hover);
+    }
+
+
+    [dir="rtl"] .fluent-wizard[position="top"] > ol > li:not(:last-child)[b-a5o5s1yurv]:after {
+        left: unset;
+        right: calc(50% + calc(var(--fluent-wizard-circle-size) / 2 + var(--fluent-wizard-spacing)));
     }
 
 /* Icon */
@@ -2786,10 +3230,11 @@ fluent-tab[b-urryfr514w] {
 
 /* Icon Number */
 .fluent-wizard > ol > li .fluent-wizard-icon-number[b-a5o5s1yurv] {
-    margin-top: calc(var(--fluent-wizard-circle-size) * -1 - 3px);
+    margin-top: calc(var(--fluent-wizard-circle-size) * -1 - 4px);
     font-size: small;
     color: var(--accent-fill-rest);
     text-align: center;
+    align-content: center;
 }
 
 .fluent-wizard[position="top"] > ol > li .fluent-wizard-icon-number[b-a5o5s1yurv] {
@@ -2853,31 +3298,31 @@ fluent-tab[b-urryfr514w] {
 }
 
 /* Hidden */
-@media (max-width: 599px) {
+@media (max-width: 599.98px) {
     .fluent-wizard > ol > li[b-a5o5s1yurv]  > div[hidden-when~="xs"] {
         display: none;
     }
 }
 
-@media (min-width: 600px) and (max-width: 959px) {
+@media (min-width: 600px) and (max-width: 959.98px) {
     .fluent-wizard > ol > li[b-a5o5s1yurv]  > div[hidden-when~="sm"] {
         display: none;
     }
 }
 
-@media (min-width: 960px) and (max-width: 1279px) {
+@media (min-width: 960px) and (max-width: 1279.98px) {
     .fluent-wizard > ol > li[b-a5o5s1yurv]  > div[hidden-when~="md"] {
         display: none;
     }
 }
 
-@media (min-width: 1280px) and (max-width: 1919px) {
+@media (min-width: 1280px) and (max-width: 1919.98px) {
     .fluent-wizard > ol > li[b-a5o5s1yurv]  > div[hidden-when~="lg"] {
         display: none;
     }
 }
 
-@media (min-width: 1920px) and (max-width: 2559px) {
+@media (min-width: 1920px) and (max-width: 2559.98px) {
     .fluent-wizard > ol > li[b-a5o5s1yurv]  > div[hidden-when~="xl"] {
         display: none;
     }
