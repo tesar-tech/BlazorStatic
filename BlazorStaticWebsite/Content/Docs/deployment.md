@@ -33,6 +33,47 @@ I am not certain this is the best approach, but it is definately working
 - Go to Netlify and target the deployment to the `netlify-deploy` branch.
 - Check the whole pipeline [here](https://github.com/tesar-tech/zodoc/blob/master/.github/workflows/publish-zodoc.yml) (mainly the last steps).
 
+## Netlify (Avoiding github actions / pages entirely)
+- This assumes the project is using 'Clean Architecture', the paths can be changed to accomedate other file structures.
+  
+### Step 1. Add a file to the root of the Web folder named 'netlify.build.sh'
+```
+#!/usr/bin/env bash
+set -e
+
+## install latest .NET 8.0 release
+pushd /tmp
+wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
+chmod u+x /tmp/dotnet-install.sh
+/tmp/dotnet-install.sh --channel 8.0
+popd
+
+## run the project to build the static files. Ensure launch profile ASPNETCORE_ENVIRONMENT is set to Release!
+dotnet run --launch-profile "netlify" --project ./src/Web/Web.csproj
+```
+
+### Step 2. change the permissions for the build script so that netlify can run it.
+```
+git update-index --chmod=+x ./src/Web/netlify.build.sh
+```
+
+### Step 3. Add a launch profile to launchSettings.json
+-   !!!! Important - ensure the environment is set to Release or netlify will build forever !!!!
+```
+ "netlify": {
+   "commandName": "Project",
+   "dotnetRunMessages": true,
+   "launchBrowser": true,
+   "applicationUrl": "http://localhost:5049",
+   "environmentVariables": {
+     "ASPNETCORE_ENVIRONMENT": "Release"
+   }
+ }
+ ```
+
+### Step 4. Setup the netlify build settings. Adjust these as needed!
+![setup build settings](media/deployement/netlifyBuildSettings.png)
+
 ## Azure Static Web Apps
 [**TODO**](https://github.com/tesar-tech/BlazorStatic/issues/1) 
 Shouldn't be complicated, but I haven't tried it yet.
