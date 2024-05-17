@@ -57,6 +57,43 @@ underscore <code>_</code> (e.g. <code>_content</code>, which is used for serving
 <li>Go to Netlify and target the deployment to the <code>netlify-deploy</code> branch.</li>
 <li>Check the whole pipeline <a href="https://github.com/tesar-tech/zodoc/blob/master/.github/workflows/publish-zodoc.yml">here</a> (mainly the last steps).</li>
 </ul>
+<h2 id="netlify-avoiding-github-actions-pages-entirely">Netlify (Avoiding github actions / pages entirely)</h2>
+<ul>
+<li>This assumes the project is using 'Clean Architecture', the paths can be changed to accomedate other file structures.</li>
+</ul>
+<h3 id="step-1.add-a-file-to-the-root-of-the-web-folder-named-netlify.build.sh">Step 1. Add a file to the root of the Web folder named 'netlify.build.sh'</h3>
+<pre><code>#!/usr/bin/env bash
+set -e
+
+## install latest .NET 8.0 release
+pushd /tmp
+wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
+chmod u+x /tmp/dotnet-install.sh
+/tmp/dotnet-install.sh --channel 8.0
+popd
+
+## run the project to build the static files. Ensure launch profile ASPNETCORE_ENVIRONMENT is set to Release!
+dotnet run --launch-profile &quot;netlify&quot; --project ./src/Web/Web.csproj
+</code></pre>
+<h3 id="step-2.change-the-permissions-for-the-build-script-so-that-netlify-can-run-it">Step 2. change the permissions for the build script so that netlify can run it.</h3>
+<pre><code>git update-index --chmod=+x ./src/Web/netlify.build.sh
+</code></pre>
+<h3 id="step-3.add-a-launch-profile-to-launchsettings.json">Step 3. Add a launch profile to launchSettings.json</h3>
+<ul>
+<li>!!!! Important - ensure the environment is set to Release or netlify will build forever !!!!</li>
+</ul>
+<pre><code> &quot;netlify&quot;: {
+   &quot;commandName&quot;: &quot;Project&quot;,
+   &quot;dotnetRunMessages&quot;: true,
+   &quot;launchBrowser&quot;: true,
+   &quot;applicationUrl&quot;: &quot;http://localhost:5049&quot;,
+   &quot;environmentVariables&quot;: {
+     &quot;ASPNETCORE_ENVIRONMENT&quot;: &quot;Release&quot;
+   }
+ }
+</code></pre>
+<h3 id="step-4.setup-the-netlify-build-settings.adjust-these-as-needed">Step 4. Setup the netlify build settings. Adjust these as needed!</h3>
+<p><img src="Content/Docs/media/deployement/netlifyBuildSettings.png" alt="setup build settings" /></p>
 <h2 id="azure-static-web-apps">Azure Static Web Apps</h2>
 <p><a href="https://github.com/tesar-tech/BlazorStatic/issues/1"><strong>TODO</strong></a>
 Shouldn't be complicated, but I haven't tried it yet.</p>
