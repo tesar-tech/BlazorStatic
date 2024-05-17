@@ -72,11 +72,15 @@ chmod u+x /tmp/dotnet-install.sh
 /tmp/dotnet-install.sh --channel 8.0
 popd
 
+## install and run tailwind if you are using it
+
+
+
 ## run the project to build the static files. Ensure launch profile ASPNETCORE_ENVIRONMENT is set to Release!
 dotnet run --launch-profile &quot;netlify&quot; --project ./src/Web/Web.csproj
 </code></pre>
 <h3 id="step-2.change-the-permissions-for-the-build-script-so-that-netlify-can-run-it">Step 2. change the permissions for the build script so that netlify can run it.</h3>
-<pre><code>git update-index --chmod=+x ./src/Web/netlify.build.sh
+<pre><code>git update-index --chmod=+x &quot;.github/workflows/netlify.build.sh&quot;
 </code></pre>
 <h3 id="step-3.add-a-launch-profile-to-launchsettings.json">Step 3. Add a launch profile to launchSettings.json</h3>
 <ul>
