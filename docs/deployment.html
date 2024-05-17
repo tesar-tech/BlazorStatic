@@ -49,19 +49,19 @@ underscore <code>_</code> (e.g. <code>_content</code>, which is used for serving
 <li><p>Check the whole pipeline <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-ghpages-and-nuget.yml">here</a></p>
 </li>
 </ul>
-<h2 id="netlify">Netlify</h2>
-<p>I am not certain this is the best approach, but it is definately working</p>
+<h2 id="netlify-using-github-actions-to-generate-the-output">Netlify (Using GitHub Actions to generate the output)</h2>
+<p>You can use GitHub Actions to build and deploy the app to Netlify.</p>
 <ul>
 <li>Build and run the app in CI/CD pipeline</li>
 <li>Create orphaned branch (e.g. <code>netlify-deploy</code>) and push the output folder there.</li>
 <li>Go to Netlify and target the deployment to the <code>netlify-deploy</code> branch.</li>
 <li>Check the whole pipeline <a href="https://github.com/tesar-tech/zodoc/blob/master/.github/workflows/publish-zodoc.yml">here</a> (mainly the last steps).</li>
 </ul>
-<h2 id="netlify-avoiding-github-actions-pages-entirely">Netlify (Avoiding github actions / pages entirely)</h2>
-<ul>
-<li>This assumes the project is using 'Clean Architecture', the paths can be changed to accomedate other file structures.</li>
-</ul>
-<h3 id="step-1.add-a-file-to-the-root-of-the-web-folder-named-netlify.build.sh">Step 1. Add a file to the root of the Web folder named 'netlify.build.sh'</h3>
+<h2 id="netlify-using-netlify-build-script-to-generate-the-output">Netlify (Using Netlify build script to generate the output)</h2>
+<p>In this scenario, we don|t need GitHub Actions at all. The whole process is handled by Netlify.</p>
+<p>See the result: <a href="https://blazorstatic.netlify.app/">https://blazorstatic.netlify.app/</a></p>
+<h3 id="step-1.add-the-netlify.build.sh">Step 1. Add the 'netlify.build.sh'</h3>
+<p>For this example file is placed in <code>.github/workflows/netlify.build.sh</code>. This script will be used by Netlify to build the project.</p>
 <pre><code>#!/usr/bin/env bash
 set -e
 
@@ -70,14 +70,17 @@ pushd /tmp
 wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
 chmod u+x /tmp/dotnet-install.sh
 /tmp/dotnet-install.sh --channel 8.0
+
+## install and run tailwind (if needed)
+wget https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
+chmod +x /tmp/tailwindcss-linux-x64
+popd
+pushd BlazorStaticWebsite
+/tmp/tailwindcss-linux-x64 --input ./wwwroot/app.css  --output ./wwwroot/app.min.css  --minify
 popd
 
-## install and run tailwind if you are using it
-
-
-
-## run the project to build the static files. Ensure launch profile ASPNETCORE_ENVIRONMENT is set to Release!
-dotnet run --launch-profile &quot;netlify&quot; --project ./src/Web/Web.csproj
+## run the project to build the static files. Ensure launch profile ASPNETCORE_ENVIRONMENT is set to Production!
+dotnet run --launch-profile &quot;netlify&quot; --project ./BlazorStaticWebsite/BlazorStaticWebsite.csproj
 </code></pre>
 <h3 id="step-2.change-the-permissions-for-the-build-script-so-that-netlify-can-run-it">Step 2. change the permissions for the build script so that netlify can run it.</h3>
 <pre><code>git update-index --chmod=+x &quot;.github/workflows/netlify.build.sh&quot;
@@ -96,8 +99,16 @@ dotnet run --launch-profile &quot;netlify&quot; --project ./src/Web/Web.csproj
    }
  }
 </code></pre>
-<h3 id="step-4.setup-the-netlify-build-settings.adjust-these-as-needed">Step 4. Setup the netlify build settings. Adjust these as needed!</h3>
-<p><img src="Content/Docs/media/deployement/netlifyBuildSettings.png" alt="setup build settings" /></p>
+<h3 id="step-4.setup-the-netlify-build-settings">Step 4. Setup the netlify build settings.</h3>
+<p>For this site:</p>
+<ul>
+<li><strong>Runtime</strong>: Not set</li>
+<li><strong>Base directory</strong>: <code>/</code></li>
+<li><strong>Package directory</strong>: Not set</li>
+<li><strong>Build command</strong>: <code>./.github/workflows/netlify.build.sh</code></li>
+<li><strong>Publish directory</strong>: <code>/BlazorStaticWebsite/output</code></li>
+<li><strong>Functions directory</strong>: <code>/netlify/functions</code></li>
+</ul>
 <h2 id="azure-static-web-apps">Azure Static Web Apps</h2>
 <p><a href="https://github.com/tesar-tech/BlazorStatic/issues/1"><strong>TODO</strong></a>
 Shouldn't be complicated, but I haven't tried it yet.</p>
