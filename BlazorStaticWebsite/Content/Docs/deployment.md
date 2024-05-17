@@ -24,19 +24,25 @@ underscore `_` (e.g. `_content`, which is used for serving static content from R
 - Check the whole pipeline [here](https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-ghpages-and-nuget.yml)
 
 
-## Netlify 
+## Netlify (Using GitHub Actions to generate the output)
 
-I am not certain this is the best approach, but it is definately working
+You can use GitHub Actions to build and deploy the app to Netlify.
 
 - Build and run the app in CI/CD pipeline
 - Create orphaned branch (e.g. `netlify-deploy`) and push the output folder there.
 - Go to Netlify and target the deployment to the `netlify-deploy` branch.
 - Check the whole pipeline [here](https://github.com/tesar-tech/zodoc/blob/master/.github/workflows/publish-zodoc.yml) (mainly the last steps).
 
-## Netlify (Avoiding github actions / pages entirely)
-- This assumes the project is using 'Clean Architecture', the paths can be changed to accomedate other file structures.
+## Netlify (Using Netlify build script to generate the output)
+
+In this scenario, we don|t need GitHub Actions at all. The whole process is handled by Netlify.
+
+See the result: https://blazorstatic.netlify.app/ 
   
-### Step 1. Add a file to the root of the Web folder named 'netlify.build.sh'
+### Step 1. Add the 'netlify.build.sh'
+
+For this example file is placed in `.github/workflows/netlify.build.sh`. This script will be used by Netlify to build the project.
+
 ```
 #!/usr/bin/env bash
 set -e
@@ -46,19 +52,29 @@ pushd /tmp
 wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
 chmod u+x /tmp/dotnet-install.sh
 /tmp/dotnet-install.sh --channel 8.0
+
+## install and run tailwind (if needed)
+wget https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
+chmod +x /tmp/tailwindcss-linux-x64
+popd
+pushd BlazorStaticWebsite
+/tmp/tailwindcss-linux-x64 --input ./wwwroot/app.css  --output ./wwwroot/app.min.css  --minify
 popd
 
-## run the project to build the static files. Ensure launch profile ASPNETCORE_ENVIRONMENT is set to Release!
-dotnet run --launch-profile "netlify" --project ./src/Web/Web.csproj
+## run the project to build the static files. Ensure launch profile ASPNETCORE_ENVIRONMENT is set to Production!
+dotnet run --launch-profile "netlify" --project ./BlazorStaticWebsite/BlazorStaticWebsite.csproj
 ```
 
 ### Step 2. change the permissions for the build script so that netlify can run it.
+
 ```
-git update-index --chmod=+x ./src/Web/netlify.build.sh
+git update-index --chmod=+x ".github/workflows/netlify.build.sh"
 ```
 
 ### Step 3. Add a launch profile to launchSettings.json
+
 -   !!!! Important - ensure the environment is set to Release or netlify will build forever !!!!
+
 ```
  "netlify": {
    "commandName": "Project",
@@ -71,8 +87,18 @@ git update-index --chmod=+x ./src/Web/netlify.build.sh
  }
  ```
 
-### Step 4. Setup the netlify build settings. Adjust these as needed!
-![setup build settings](media/deployement/netlifyBuildSettings.png)
+### Step 4. Setup the netlify build settings.
+
+For this site:
+
+- **Runtime**: Not set
+- **Base directory**: `/`
+- **Package directory**: Not set
+- **Build command**: `./.github/workflows/netlify.build.sh`
+- **Publish directory**: `/BlazorStaticWebsite/output`
+- **Functions directory**: `/netlify/functions`
+
+
 
 ## Azure Static Web Apps
 [**TODO**](https://github.com/tesar-tech/BlazorStatic/issues/1) 
