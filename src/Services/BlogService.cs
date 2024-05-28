@@ -72,8 +72,13 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
         options.AfterBlogParsedAndAddedAction?.Invoke();
         
         string[] GetPostsPath(){
+            EnumerationOptions enumerationOptions = new()
+            {
+                IgnoreInaccessible = true,
+                RecurseSubdirectories = true,
+            };
             string execFolder = Directory.GetParent((Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).Location)!.FullName;//! is ok, null only in empty path or root
-            return Directory.GetFiles(Path.Combine(execFolder, options.ContentPath), options.PostFilePattern);
+            return Directory.GetFiles(Path.Combine(execFolder, options.ContentPath), options.PostFilePattern, enumerationOptions);
         }
     }
 
