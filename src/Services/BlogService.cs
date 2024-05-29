@@ -35,6 +35,7 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
     /// </summary>
    public async Task ParseAndAddBlogPosts()
     {
+        string absContentPath;
         var files = GetPostsPath();
 
         foreach (string file in files)
@@ -48,7 +49,7 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
             Post<TFrontMatter> post = new()
             {
                 FrontMatter = frontMatter,
-                FileNameNoExtension = Path.GetFileNameWithoutExtension(file),
+                FileNameNoExtension = GetRelativePathWithFilename(file),
                 HtmlContent = htmlContent
             };
             options.Posts.Add(post);
@@ -71,14 +72,23 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
         }
         options.AfterBlogParsedAndAddedAction?.Invoke();
         
-        string[] GetPostsPath(){
+        string[]  GetPostsPath(){//retrieves blog post from bin folder, where the app is running
             EnumerationOptions enumerationOptions = new()
             {
                 IgnoreInaccessible = true,
                 RecurseSubdirectories = true,
             };
             string execFolder = Directory.GetParent((Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).Location)!.FullName;//! is ok, null only in empty path or root
-            return Directory.GetFiles(Path.Combine(execFolder, options.ContentPath), options.PostFilePattern, enumerationOptions);
+             absContentPath = Path.Combine(execFolder, options.ContentPath);
+            return Directory.GetFiles(absContentPath, options.PostFilePattern, enumerationOptions);
+        }
+        
+        //ex: file= "C:\Users\user\source\repos\MyBlog\Content\Blog\en\somePost.md"
+        //returns "en/somePost"  
+        string GetRelativePathWithFilename(string file)
+        {
+            string relativePathWithFileName = Path.GetRelativePath(absContentPath, file);
+            return Path.Combine(Path.GetDirectoryName(relativePathWithFileName)!, Path.GetFileNameWithoutExtension(relativePathWithFileName)).Replace("\\","/");
         }
     }
 
