@@ -78,10 +78,11 @@ public class Post<TFrontMatter>
     /// </summary>
     public required TFrontMatter FrontMatter { get; set; }
     /// <summary>
-    /// Name of the blog post file without extension.
-    /// Used as url param "blog/{FileNameNoExtension}".
+    /// The url where the blog post will be generated.
+    /// Processed from the file path (Content/Blog/subfolder/post-in-subfolder.md => blog/subfolder/post-in-subfolder).
+    /// Used as url param "blog/{Url}".
     /// </summary>
-    public required string FileNameNoExtension { get; set; }
+    public required string Url { get; set; }
     /// <summary>
     /// HTML content of the blog post. Parsed from md. Without front matter part.
     /// </summary>

@@ -49,12 +49,12 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
             Post<TFrontMatter> post = new()
             {
                 FrontMatter = frontMatter,
-                FileNameNoExtension = GetRelativePathWithFilename(file),
+                Url = GetRelativePathWithFilename(file),
                 HtmlContent = htmlContent
             };
             options.Posts.Add(post);
 
-            blazorStaticService.Options.PagesToGenerate.Add(new($"{options.BlogPageUrl}/{post.FileNameNoExtension}", Path.Combine("blog", $"{post.FileNameNoExtension}.html")));
+            blazorStaticService.Options.PagesToGenerate.Add(new($"{options.BlogPageUrl}/{post.Url}", Path.Combine("blog", $"{post.Url}.html")));
         }
         
         //copy media folder to output

@@ -1,6 +1,5 @@
 @page "/blog"
-@page "/blog/{*fileName}"
-@using Microsoft.Extensions.Options
+@page "/blog/{*postUrl}"
 @using System.Globalization
 @using BlazorStatic
 @using BlazorStatic.Services
@@ -9,7 +8,7 @@
 
 
 @* No filename -> show latest posts *@
-@if (string.IsNullOrWhiteSpace(FileName))
+@if (string.IsNullOrWhiteSpace(PostUrl))
 {
     <div class="divide-y divide-gray-700">
         <div class="space-y-2 pb-8 pt-6 md:space-y-5">
@@ -88,7 +87,7 @@
                     @((MarkupString)post.HtmlContent)
                 </div>
                 <div class="pb-6 pt-6 text-sm text-gray-300">
-                    <a target="_blank" rel="noopener noreferrer" href="@(WebsiteKeys.BlogPostStorageAddress+FileName+".md")">View on GitHub</a>
+                    <a target="_blank" rel="noopener noreferrer" href="@(WebsiteKeys.BlogPostStorageAddress+PostUrl+".md")">View on GitHub</a>
                 </div>
             </div>
             <footer>
@@ -113,13 +112,13 @@
 
 
 @code{
-    [Parameter] public string? FileName { get; set; }
+    [Parameter] public string? PostUrl { get; set; }
     Post<FrontMatter>? post;
     
     protected override void OnInitialized()
     {
-        if (string.IsNullOrWhiteSpace(FileName)) return;
-        post = BlogService.BlogPosts.FirstOrDefault(x => x.FileNameNoExtension == FileName);
+        if (string.IsNullOrWhiteSpace(PostUrl)) return;
+        post = BlogService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
        
     }
 }
