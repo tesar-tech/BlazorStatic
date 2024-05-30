@@ -10,3 +10,7 @@ authors:
 ---
 
 Yes, it **works**!
+
+And also an image from subfolder:
+
+![Test image](media/subfolder-for-media/image-in-subfolder.webp)

@@ -35,7 +35,7 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
     /// </summary>
    public async Task ParseAndAddBlogPosts()
     {
-        string absContentPath;
+        string absContentPath;//gets initialized in GetPostsPath
         var files = GetPostsPath();
 
         foreach (string file in files)
@@ -71,7 +71,8 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
             }
         }
         options.AfterBlogParsedAndAddedAction?.Invoke();
-        
+        return;
+
         string[]  GetPostsPath(){//retrieves blog post from bin folder, where the app is running
             EnumerationOptions enumerationOptions = new()
             {
