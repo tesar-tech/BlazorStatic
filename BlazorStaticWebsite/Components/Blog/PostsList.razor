@@ -1,5 +1,4 @@
 @using System.Globalization
-@using Markdig
 @using BlazorStatic
 @using BlazorStatic.Services
 @inject BlogService<FrontMatter> BlogService
@@ -25,7 +24,7 @@
                             <div class="space-y-6">
                                 <div>
                                     <h2 class="text-2xl font-bold leading-8 tracking-tight">
-                                        <a class="text-gray-100" href="@BlogService.Options.BlogPageUrl/@(post.FileNameNoExtension)">@post.FrontMatter.Title</a>
+                                        <a class="text-gray-100" href="@BlogService.Options.BlogPageUrl/@(post.Url)">@post.FrontMatter.Title</a>
                                     </h2>
                                     <div class="flex flex-wrap">
                                         @foreach (var tag in post.FrontMatter.Tags)
@@ -39,7 +38,7 @@
                                 </div>
                             </div>
                             <div class="text-base font-medium leading-6">
-                                <a class="text-primary-500 hover:text-primary-400" aria-label='Read "@(post.FrontMatter.Lead)"' href="@BlogService.Options.BlogPageUrl/@(post.FileNameNoExtension)">Read more →</a>
+                                <a class="text-primary-500 hover:text-primary-400" aria-label='Read "@(post.FrontMatter.Lead)"' href="@BlogService.Options.BlogPageUrl/@(post.Url)">Read more →</a>
                             </div>
                         </div>
                     </div>
