@@ -17,7 +17,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
     /// The BlazorStaticOptions used to configure the generation process.
     /// </summary>
     public BlazorStaticOptions Options => options;
-    internal Func<Task>? BlogAction { get; set; }
+    internal List<Func<Task>?> BlogActions { get; set; } = new();
     
     /// <summary>
     /// Generates static pages for the Blazor application. This method performs several key operations:
@@ -32,8 +32,12 @@ public class BlazorStaticService(BlazorStaticOptions options,
     /// <param name="appUrl">The base URL of the application, used for making HTTP requests to fetch page content.</param>
     internal async Task GenerateStaticPages(string appUrl)
     {
-        if (BlogAction is not null)
-            await BlogAction.Invoke();
+        foreach(var action in BlogActions)
+        {
+            if (action is not null)
+                await action.Invoke();
+        }
+
         if (options.SuppressFileGeneration) return;
 
         if (options.AddNonParametrizedRazorPages)
