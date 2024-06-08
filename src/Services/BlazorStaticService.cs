@@ -17,7 +17,6 @@ public class BlazorStaticService(BlazorStaticOptions options,
     /// The BlazorStaticOptions used to configure the generation process.
     /// </summary>
     public BlazorStaticOptions Options => options;
-    internal List<Func<Task>?> BlogActions { get; set; } = new();
     
     /// <summary>
     /// Generates static pages for the Blazor application. This method performs several key operations:
@@ -32,18 +31,15 @@ public class BlazorStaticService(BlazorStaticOptions options,
     /// <param name="appUrl">The base URL of the application, used for making HTTP requests to fetch page content.</param>
     internal async Task GenerateStaticPages(string appUrl)
     {
-        foreach(var action in BlogActions)
-        {
-            if (action is not null)
-                await action.Invoke();
-        }
-
         if (options.SuppressFileGeneration) return;
 
         if (options.AddNonParametrizedRazorPages)
             AddNonParametrizedRazorPages();
-
-        options.BeforeFilesGenerationAction?.Invoke();
+        
+        foreach (Func<Task> action in options.GetBeforeFilesGenerationActions())
+        {
+            await action.Invoke();
+        }
 
         if (Directory.Exists(options.OutputFolderPath))//clear output folder
             Directory.Delete(options.OutputFolderPath, true);
@@ -83,7 +79,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
     }
     /// <summary>
     /// Adds non-parametrized Razor pages to the list of pages to be generated as static content.
-    /// This method scans specified directories for Razor files and identifies those with an @page directive
+    /// This method scans specified directories for Razor files and identifies those with a @page directive
     /// that do not include parameters (i.e., no '{}' in the directive). For each matching file, it constructs
     /// a URL based on the @page directive and determines a corresponding file path for the static HTML output.
     /// The method assumes that each URL path should map to a folder structure with an 'index.html' file in it,
