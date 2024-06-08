@@ -97,8 +97,7 @@ public static class BlazorStaticExtensions
         });
         //
         
-        blazorStaticService.BlogActions.Add(blogService.ParseAndAddBlogPosts); //will run later 
-        //in GenerateStaticPages
+        blazorStaticService.Options.AddBeforeFilesGenerationFunc(blogService.ParseAndAddBlogPosts, isAsFirst:options.IsParsingAsFirstAction); //will run later in GenerateStaticPages
         
     }
     
