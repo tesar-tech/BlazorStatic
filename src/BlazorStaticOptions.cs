@@ -52,29 +52,22 @@ public class BlazorStaticOptions
 
     
     /// <summary>
-    /// Adds a function to the list of actions to be executed before files are generated.
+    /// Adds an async Func to the list of actions to be executed before files are generated.
     /// </summary>
-    /// <param name="func">The function to add.</param>
-    /// <param name="isAsFirst">If true, the function is added to the beginning of the list; otherwise, it is added to the end.</param>
-    public void AddBeforeFilesGenerationFunc(Func<Task> func, bool isAsFirst = false)
-    {
-        if (isAsFirst)
-            _beforeFilesGenerationActions.Insert(0, func);
-        else
-            _beforeFilesGenerationActions.Add(func);
-    }
-    
+    /// <param name="func">The asynchronous function to add.</param>
+    public void AddBeforeFilesGenerationAction(Func<Task> func) => _beforeFilesGenerationActions.Add(func);
+
     /// <summary>
     /// Adds an action to the list of actions to be executed before files are generated.
     /// </summary>
-    /// <param name="action">The action to add.</param>
-    /// <param name="isAsFirst">If true, the action is added to the beginning of the list; otherwise, it is added to the end.</param>
-    public void AddBeforeFilesGenerationAction(Action action, bool isAsFirst = false) =>
-        AddBeforeFilesGenerationFunc(() =>
+    /// <param name="action">The synchronous action to add.</param>
+    public void AddBeforeFilesGenerationAction(Action action) =>
+        AddBeforeFilesGenerationAction(() =>
         {
             action();
             return Task.CompletedTask;
-        }, isAsFirst);
+        });
+
 
 
 
@@ -165,9 +158,4 @@ public class BlogOptions<TFrontMatter>
     /// </summary>
     public Action? AfterBlogParsedAndAddedAction { get; set; }
     
-    /// <summary>
-    /// Allows to run parsing of blog posts as the first action for blazorStaticService.Options.AddBeforeFilesGenerationFunc
-    /// e.g. in a need of affecting the blog post collection in AddBlazorStaticService
-    /// </summary>
-    public bool IsParsingAsFirstAction { get; set; }
 }
