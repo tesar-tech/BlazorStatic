@@ -31,7 +31,6 @@ public class BlazorStaticService(BlazorStaticOptions options,
     /// <param name="appUrl">The base URL of the application, used for making HTTP requests to fetch page content.</param>
     internal async Task GenerateStaticPages(string appUrl)
     {
-        if (options.SuppressFileGeneration) return;
 
         if (options.AddNonParametrizedRazorPages)
             AddNonParametrizedRazorPages();
@@ -40,6 +39,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
         {
             await action.Invoke();
         }
+        if (options.SuppressFileGeneration) return;
 
         if (Directory.Exists(options.OutputFolderPath))//clear output folder
             Directory.Delete(options.OutputFolderPath, true);
