@@ -12,8 +12,9 @@ builder.Services.AddBlazorStaticService(opt => {
     opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });//pre-build version for tailwind
     opt.ContentToCopyToOutput.Add(new("Content/Docs/media", "Content/Docs/media"));
     //add docs pages
-    var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
-        .Where(x => !x.EndsWith("README.md"));//ignore readme, it is handled in Pages/Docs.razor
+    IEnumerable<string> docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
+        .Where(x => !x.EndsWith("README.md"));//ignore readme,        .Where(x => !x.EndsWith("README.md"));//ignore readme, it is handled in Pages/Docs.razor
+
 
     foreach (string? fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
     {
@@ -21,6 +22,7 @@ builder.Services.AddBlazorStaticService(opt => {
     }
 }
 ).AddBlogService<FrontMatter>(opt => {
+
 }
 ).AddBlogService<ProjectFrontMatter>(opt => {
     opt.MediaFolderRelativeToContentPath = null;
