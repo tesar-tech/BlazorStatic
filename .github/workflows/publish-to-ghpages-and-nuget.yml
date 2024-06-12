@@ -30,10 +30,8 @@ jobs:
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
           sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
           
-      - run: dotnet build --configuration Release --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}}
-
       - name: Run webapp and generate static files
-        run: dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}} --no-build --configuration Release
+        run: dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}}  --configuration Release
 
       - name: Upload webapp output artifacts
         uses: actions/upload-artifact@v3
