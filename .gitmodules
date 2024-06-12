@@ -1,0 +1,3 @@
+[submodule "BlazorStaticMinimalBlog"]
+	path = BlazorStaticMinimalBlog
+	url = https://github.com/tesar-tech/BlazorStaticMinimalBlog.git
