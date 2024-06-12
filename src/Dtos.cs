@@ -60,9 +60,9 @@ public class Author
     /// </summary>
     public string? GitHubUserName { get; set; }
     /// <summary>
-    /// Twitter username of the author.
+    /// X username of the author.
     /// </summary>
-    public string? TwitterUserName { get; set; }
+    public string? XUserName { get; set; }
 }
 
 /// <summary>

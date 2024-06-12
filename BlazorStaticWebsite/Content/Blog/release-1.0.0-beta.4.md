@@ -6,7 +6,7 @@ tags: [release]
 authors:
     - name: "Jan Tesař"
       gitHubUserName: "tesar-tech"
-      twitterUserName: "tesar-tech"
+      xUserName: "tesar_tech"
 ---
 
 ## Breaking change:
