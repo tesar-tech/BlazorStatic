@@ -66,7 +66,7 @@ BlazorStatic:
   ```
 
 - Provides `FrontMatter` class for parsing blog post metadata.
-- Allows for custom `IFrontMatter` implementations to suit various markdown (front matter) formats.
+- Allows for custom `IFrontMatter` implementations to suit various markdown (front matter) formats. You can even have multiple sections with multiple `IFrontMatter` classes.
 
 - Facilitates copying necessary files to the output folder:
 
