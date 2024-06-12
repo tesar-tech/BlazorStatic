@@ -145,6 +145,7 @@ public class BlogOptions<TFrontMatter>
     
     /// <summary>
     /// Should correspond to @page "/blog" (here in relative path: "blog")
+    /// This also serves as a generated folder in blog posts
     /// Useful for avoiding magic strings in .razor files
     /// </summary>
     public string BlogPageUrl { get; set; } = "blog";
