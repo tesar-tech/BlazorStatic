@@ -43,7 +43,7 @@ This guide will show you how to create static site using BlazorStatic. It is goo
   authors:
       - name: "Jan Tesař"
         gitHubUserName: "tesar-tech"
-        twitterUserName: "tesar-tech"
+        xUserName: "tesar_tech"
   ---
   ```
 

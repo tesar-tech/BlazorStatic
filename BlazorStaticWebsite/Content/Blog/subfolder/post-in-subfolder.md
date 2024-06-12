@@ -6,7 +6,7 @@ tags: [test]
 authors:
     - name: "Jan Tesař"
       gitHubUserName: "tesar-tech"
-      twitterUserName: "tesar-tech"
+      xUserName: "tesar_tech"
 ---
 
 Yes, it **works**!

@@ -62,9 +62,9 @@
                                         <dt class="sr-only">Name</dt>
                                         <dd class="text-gray-900 dark:text-gray-100 flex gap-1 items-center">
                                             @author.Name
-                                            @if (!string.IsNullOrWhiteSpace(author.TwitterUserName))
+                                            @if (!string.IsNullOrWhiteSpace(author.XUserName))
                                             {
-                                                <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/@author.TwitterUserName" class="flex gap-1 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                                                <a target="_blank" rel="noopener noreferrer" href="https://x.com/@author.XUserName" class="flex gap-1 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
                                                     <Svg SizeClasses="w-4 h-4" Icon="Svg.Icons.X"/>
                                                 </a>
                                             }

@@ -6,7 +6,7 @@ tags: [release]
 authors:
     - name: "Jan Tesař"
       gitHubUserName: "tesar-tech"
-      twitterUserName: "tesar-tech"
+      xUserName: "tesar_tech"
 ---
 
 Of BlazorStatic. Check the nuget package [here](https://www.nuget.org/packages/BlazorStatic/).

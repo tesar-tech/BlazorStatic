@@ -6,7 +6,7 @@ tags: [story]
 authors:
     - name: "Jan Tesař"
       gitHubUserName: "tesar-tech"
-      twitterUserName: "tesar-tech"
+      xUserName: "tesar_tech"
 ---
 
 I first encountered static site generators back in 2018. At that time, the go-to option in the .NET ecosystem was Wyam, which eventually evolved into [Statiq](https://statiq.dev/). With the advent of Blazor, I began exploring the potential of its component model for static site generation. This idea, however, wasn't embraced in the official channels, as seen in this [GitHub issue](https://github.com/dotnet/aspnetcore/issues/28849) .

@@ -3,7 +3,6 @@
 Since the output of BlazorStatic are just plan .html files and assets, you can deploy it fairly easily. You can use GitHub Pages, Azure Static Web Apps, Netlify, ...
 
 ## GitHub Pages
-
 - Build and run the app
 - Use `JamesIves/github-pages-deploy-action@v4` to publish the output folder to GitHub Pages. The way it works is that it will create orphaned branch `gh-pages` and push the content of the output folder there. 
 
@@ -35,13 +34,13 @@ You can use GitHub Actions to build and deploy the app to Netlify.
 
 ## Netlify (Using Netlify build script to generate the output)
 
-In this scenario, we don|t need GitHub Actions at all. The whole process is handled by Netlify.
+In this scenario, we don't need GitHub Actions at all. The whole process is handled by Netlify.
 
 See the result: https://blazorstatic.netlify.app/ 
   
 ### Step 1. Add the 'netlify.build.sh'
 
-For this example file is placed in `.github/workflows/netlify.build.sh`. This script will be used by Netlify to build the project.
+For this example file is placed in [.github/workflows/netlify.build.sh](https://github.com/tesar-tech/BlazorStatic/blob/master/.github/workflows/netlify.build.sh). This script will be used by Netlify to build the project.
 
 ```
 #!/usr/bin/env bash
