@@ -79,7 +79,7 @@ public class BlazorStaticOptions
     /// </summary>
     public List<string> IgnoredPathsOnContentCopy { get; } = [];
     /// <summary>
-    /// Paths (files or dirs) relative to project root, that should be copied to output folder
+    /// Paths (files or dirs) relative to project root, that should be copied to output folder.
     /// Content from RCLs (from _content/) and wwwroot is copied by default
     /// </summary>
     public List<ContentToCopy> ContentToCopyToOutput { get; } = [];
@@ -116,18 +116,20 @@ public class BlogOptions<TFrontMatter>
     public string ContentPath { get; set; } = Path.Combine("Content", "Blog");
     /// <summary>
     /// folder in ContentPath where media files are stored.
-    /// Important for app.UseStaticFiles targeting the correct folder
+    /// Important for app.UseStaticFiles targeting the correct folder.
+    /// Null in case of no media folder
     /// </summary>
-    public string MediaFolderRelativeToContentPath { get; set; } = "media";
+    public string? MediaFolderRelativeToContentPath { get; set; } = "media";
     /// <summary>
     /// URL path for media files for blog posts.
     /// Used in app.UseStaticFiles to target the correct folder
     /// and in ParseBlogPosts to generate correct URLs for images
     /// changes ![alt](media/image.png) to ![alt](Content/Blog/media/image.png
     /// leading slash / is necessary for RequestPath in app.UseStaticFiles,
-    /// is removed in ParseBlogPosts
+    /// is removed in ParseBlogPosts.
+    /// Null in case of no media.
     /// </summary>
-    public string MediaRequestPath => Path.Combine(ContentPath, MediaFolderRelativeToContentPath).Replace(@"\", "/");
+    public string? MediaRequestPath => MediaFolderRelativeToContentPath is null? null: Path.Combine(ContentPath, MediaFolderRelativeToContentPath).Replace(@"\", "/");
     /// <summary>
     /// pattern for blog post files in ContentPath
     /// </summary>

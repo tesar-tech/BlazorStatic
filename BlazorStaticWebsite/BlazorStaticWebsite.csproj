@@ -24,7 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Content/**/*">
+    <None Remove="Content/Projects/README.md" />
+    <None Update="Content/**/*" >
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -1,4 +1,5 @@
 using BlazorStatic;
+using BlazorStaticWebsite;
 using BlazorStaticWebsite.Components;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.FluentUI.AspNetCore.Components;
@@ -12,7 +13,7 @@ builder.Services.AddBlazorStaticService(opt => {
     opt.ContentToCopyToOutput.Add(new("Content/Docs/media", "Content/Docs/media"));
     //add docs pages
     var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
-        .Where(x => !x.EndsWith("README.md"));//ignore readme
+        .Where(x => !x.EndsWith("README.md"));//ignore readme, it is handled in Pages/Docs.razor
 
     foreach (string? fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
     {
@@ -20,9 +21,13 @@ builder.Services.AddBlazorStaticService(opt => {
     }
 }
 ).AddBlogService<FrontMatter>(opt => {
-
 }
-);
+).AddBlogService<ProjectFrontMatter>(opt => {
+    opt.MediaFolderRelativeToContentPath = null;
+    opt.ContentPath = Path.Combine("Content", "Projects");
+    opt.AddTagPagesFromPosts = false;
+    opt.BlogPageUrl = "projects";
+});
 
 
 // Add services to the container.
@@ -57,6 +62,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>();
 
 app.UseBlog<FrontMatter>();
+app.UseBlog<ProjectFrontMatter>();
 app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 
 app.Run();
