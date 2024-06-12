@@ -102,4 +102,11 @@ Contributions are highly encouraged and appreciated. If you find something missi
 - Ask questions or start a discussion on the [Blazor Community Discord server](https://discord.gg/DsAXsMuEbx).
 
 
+The main repo contains the MinimalBlog submodule, after you clone the repo, you can initialize the submodule with:
+
+```shell
+git submodule update --init --recursive
+```
+
+
 
