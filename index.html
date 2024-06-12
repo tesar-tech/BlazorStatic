@@ -71,7 +71,7 @@ app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 </li>
 <li><p>Provides <code>FrontMatter</code> class for parsing blog post metadata.</p>
 </li>
-<li><p>Allows for custom <code>IFrontMatter</code> implementations to suit various markdown (front matter) formats.</p>
+<li><p>Allows for custom <code>IFrontMatter</code> implementations to suit various markdown (front matter) formats. You can even have multiple sections with multiple <code>IFrontMatter</code> classes.</p>
 </li>
 <li><p>Facilitates copying necessary files to the output folder:</p>
 <pre><code class="language-csharp">builder.Services.AddBlazorStaticService(opt =&gt; {
