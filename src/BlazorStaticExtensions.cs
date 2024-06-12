@@ -12,7 +12,6 @@ using Services;
 /// </summary>
 public static class BlazorStaticExtensions
 {
-    
     /// <summary>
     /// Adds a blog service to the specified IServiceCollection. The blog service uses a generic type
     /// for front matter, allowing customization of the metadata format used in blog posts.
@@ -25,7 +24,6 @@ public static class BlazorStaticExtensions
     /// The method configures and registers a singleton instance of BlogOptions`TFrontMatter` and 
     /// BlogService`TFrontMatter` in the service collection.
     /// </remarks>
-    
     public static IServiceCollection AddBlogService<TFrontMatter>(this IServiceCollection services,
         Action<BlogOptions<TFrontMatter>>? configureOptions = null)
         where TFrontMatter : class, IFrontMatter, new()
@@ -52,7 +50,6 @@ public static class BlazorStaticExtensions
     /// of the static generation process. This setup is essential for applications leveraging Blazor for static site generation,
     /// providing customizable options for the generation process.
     /// </remarks>
-    
     public static IServiceCollection AddBlazorStaticService(this IServiceCollection services,
         Action<BlazorStaticOptions>? configureOptions = null)
     {
@@ -66,8 +63,8 @@ public static class BlazorStaticExtensions
 
         return services;
     }
-    
-    
+
+
     /// <summary>
     /// Adds the Blazor static generation service to the specified IServiceCollection.
     /// </summary>
@@ -79,28 +76,41 @@ public static class BlazorStaticExtensions
         var blogService = app.Services.GetRequiredService<BlogService<TFrontMatter>>();
         var options = app.Services.GetRequiredService<BlogOptions<TFrontMatter>>();
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
+        var logger = app.Services.GetRequiredService<ILogger<BlogService<TFrontMatter>>>();
 
-        
+
         //Add static files for media files to be accessible while running the app
-        
-        //StaticFileOptions doesn't like ".." parent dir (e.g "Content/Blog/en/../media")
-        //This converts it to "Content/Blog/media"...
-        string requestPath ="/"+ Path.GetFullPath(options.MediaRequestPath)[Directory.GetCurrentDirectory().Length..]
-            .TrimStart(Path.DirectorySeparatorChar)
-            .Replace("\\", "/");
 
-        app.UseStaticFiles(new StaticFileOptions
+        //StaticFileOptions doesn't like ".." parent dir (e.g "Content/Blog/en/../media")
+        //This converts it to "/Content/Blog/media"...
+
+        if (options.MediaRequestPath is not null && options.MediaFolderRelativeToContentPath is not null)
         {
-            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
-            options.ContentPath,options.MediaFolderRelativeToContentPath)),
-            RequestPath = requestPath
-        });
+            string requestPath = "/" + Path.GetFullPath(options.MediaRequestPath)[Directory.GetCurrentDirectory().Length..]
+                .TrimStart(Path.DirectorySeparatorChar)
+                .Replace("\\", "/");
+
+
+            string realPath = Path.Combine(Directory.GetCurrentDirectory(), options.ContentPath, options.MediaFolderRelativeToContentPath);
+            if (!Directory.Exists(realPath))
+            {
+                logger.LogWarning("folder for media path ({Folder}) doesn't exist", realPath);
+            }
+            else
+            {
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(realPath),
+                    RequestPath = requestPath
+                });
+            }
+        }
         //
-        
-        blazorStaticService.Options.AddBeforeFilesGenerationAction(blogService.ParseAndAddBlogPosts); //will run later in GenerateStaticPages
-        
+
+        blazorStaticService.Options.AddBeforeFilesGenerationAction(blogService.ParseAndAddBlogPosts);//will run later in GenerateStaticPages
+
     }
-    
+
     /// <summary>
     /// Adds the Blazor static generation service to the specified IServiceCollection.
     /// </summary>
@@ -109,7 +119,7 @@ public static class BlazorStaticExtensions
     public static void UseBlazorStaticGenerator(this WebApplication app, bool shutdownApp = false)
     {
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
-        
+
         AddStaticWebAssetsToOutput(app.Environment.WebRootFileProvider, string.Empty, blazorStaticService);
 
         var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();

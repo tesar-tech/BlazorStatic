@@ -1,0 +1,50 @@
+﻿@page "/projects"
+@page "/projects/{*postUrl}"
+@using BlazorStatic
+@using BlazorStatic.Services
+@inject BlogService<ProjectFrontMatter> ProjectsService
+
+@* No filename -> show latest posts *@
+@if (string.IsNullOrWhiteSpace(PostUrl))
+{
+    <div class="prose prose-invert">
+        <ul>
+            @foreach (var post in posts)
+            {
+                <li>
+                    <a  href="@ProjectsService.Options.BlogPageUrl/@(post.Url)">@post.FrontMatter.Name</a>
+                    @post.Url
+                </li>
+            }
+        </ul>
+    </div>
+}
+else if (onePost != null)
+{
+    <div class="prose prose-invert">
+        <h1>@onePost.FrontMatter.Name</h1>
+        <p>@onePost.FrontMatter.Description</p>
+        <p>
+            @((MarkupString)onePost.HtmlContent)
+        </p>
+    </div>
+}
+else
+{
+    <div>Projects not found 🤷 </div>
+}
+
+
+@code {
+    [Parameter] public string? PostUrl { get; set; }
+    Post<ProjectFrontMatter>? onePost;
+    List<Post<ProjectFrontMatter>> posts = [];
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrWhiteSpace(PostUrl))
+            posts = ProjectsService.BlogPosts.OrderByDescending(x => x.FrontMatter.Name).ToList();
+        else
+            onePost = ProjectsService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
+    }
+}

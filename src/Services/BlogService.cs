@@ -15,7 +15,8 @@ using System.Threading.Tasks;
 /// <param name="helpers"></param>
 /// <param name="blazorStaticService"></param>
 /// <typeparam name="TFrontMatter"></typeparam>
-public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
+public class BlogService<TFrontMatter>(
+    BlogOptions<TFrontMatter> options,
     BlazorStaticHelpers helpers,
     BlazorStaticService blazorStaticService)
     where TFrontMatter : class, IFrontMatter, new()
@@ -33,19 +34,22 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
     /// from a specified directory, parses them to extract front matter and content,
     /// and then adds them as blog posts to the options.PagesToGenerate.
     /// </summary>
-   public async Task ParseAndAddBlogPosts()
+    public async Task ParseAndAddBlogPosts()
     {
         string absContentPath;//gets initialized in GetPostsPath
         var files = GetPostsPath();
 
+        (string, string)? mediaPaths =
+            options.MediaFolderRelativeToContentPath == null || options.MediaRequestPath == null
+                ? null
+                : (options.MediaFolderRelativeToContentPath, options.MediaRequestPath);
+
         foreach (string file in files)
         {
-            var (htmlContent, frontMatter) = await helpers.ParseMarkdownFile<TFrontMatter>(file, 
-        
-        (options.MediaFolderRelativeToContentPath, options.MediaRequestPath));
-            
-            if(frontMatter.IsDraft) continue;
-            
+            var (htmlContent, frontMatter) = await helpers.ParseMarkdownFile<TFrontMatter>(file, mediaPaths);
+
+            if (frontMatter.IsDraft) continue;
+
             Post<TFrontMatter> post = new()
             {
                 FrontMatter = frontMatter,
@@ -56,10 +60,13 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
 
             blazorStaticService.Options.PagesToGenerate.Add(new($"{options.BlogPageUrl}/{post.Url}", Path.Combine("blog", $"{post.Url}.html")));
         }
-        
+
         //copy media folder to output
-        string pathWithMedia = Path.Combine(options.ContentPath, options.MediaFolderRelativeToContentPath);
-        blazorStaticService.Options.ContentToCopyToOutput.Add(new(pathWithMedia, pathWithMedia));
+        if (options.MediaFolderRelativeToContentPath!=null)
+        {
+            string pathWithMedia = Path.Combine(options.ContentPath, options.MediaFolderRelativeToContentPath);
+            blazorStaticService.Options.ContentToCopyToOutput.Add(new(pathWithMedia, pathWithMedia));
+        }
 
         //add tags pages
         if (options.AddTagPagesFromPosts)
@@ -80,18 +87,16 @@ public class BlogService<TFrontMatter>(BlogOptions<TFrontMatter> options,
                 RecurseSubdirectories = true,
             };
             string execFolder = Directory.GetParent((Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).Location)!.FullName;//! is ok, null only in empty path or root
-             absContentPath = Path.Combine(execFolder, options.ContentPath);
+            absContentPath = Path.Combine(execFolder, options.ContentPath);
             return Directory.GetFiles(absContentPath, options.PostFilePattern, enumerationOptions);
         }
-        
+
         //ex: file= "C:\Users\user\source\repos\MyBlog\Content\Blog\en\somePost.md"
         //returns "en/somePost"  
         string GetRelativePathWithFilename(string file)
         {
             string relativePathWithFileName = Path.GetRelativePath(absContentPath, file);
-            return Path.Combine(Path.GetDirectoryName(relativePathWithFileName)!, Path.GetFileNameWithoutExtension(relativePathWithFileName)).Replace("\\","/");
+            return Path.Combine(Path.GetDirectoryName(relativePathWithFileName)!, Path.GetFileNameWithoutExtension(relativePathWithFileName)).Replace("\\", "/");
         }
     }
-
-    
 }
