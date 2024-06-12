@@ -3,7 +3,7 @@ name: Build, publish to gh pages and nuget
 
 on:
   push:
-    branches: [ "*" ]
+    branches: ["*","fix/pipeline-proj"] 
 env:
   WEBAPP_PATH: BlazorStaticWebsite
   NUGET_PKG_PATH: src/bin/Release
