@@ -21,7 +21,7 @@ public interface IFrontMatter
 /// <summary>
 /// Showcase of a front matter class. If you have a different front matter format, implement your own class.
 /// </summary>
-public class FrontMatter:IFrontMatter
+public class BlogFrontMatter:IFrontMatter
 {
     /// <summary>
     /// Title of the blog post.

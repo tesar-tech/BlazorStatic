@@ -102,10 +102,11 @@ public class BlazorStaticOptions
 }
 
 /// <summary>
-/// Options for configuring processing of blog posts
+/// Options for configuring processing of md files with front matter.
+/// Default values are set to work with Blog posts.
 /// </summary>
 /// <typeparam name="TFrontMatter"></typeparam>
-public class BlogOptions<TFrontMatter>
+public class BlazorStaticContentOptions<TFrontMatter>
     where TFrontMatter : class, IFrontMatter
 {
     /// <summary>

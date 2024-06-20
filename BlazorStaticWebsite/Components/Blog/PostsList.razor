@@ -1,7 +1,7 @@
 @using System.Globalization
 @using BlazorStatic
 @using BlazorStatic.Services
-@inject BlogService<FrontMatter> BlogService
+@inject BlazorStaticContentService<BlogFrontMatter> BlazorStaticContentService
 @inject BlazorStaticService BlazorStaticService
 
 <ul class="divide-y   divide-gray-700">
@@ -24,12 +24,12 @@
                             <div class="space-y-6">
                                 <div>
                                     <h2 class="text-2xl font-bold leading-8 tracking-tight">
-                                        <a class="text-gray-100" href="@BlogService.Options.BlogPageUrl/@(post.Url)">@post.FrontMatter.Title</a>
+                                        <a class="text-gray-100" href="@BlazorStaticContentService.Options.BlogPageUrl/@(post.Url)">@post.FrontMatter.Title</a>
                                     </h2>
                                     <div class="flex flex-wrap">
                                         @foreach (var tag in post.FrontMatter.Tags)
                                         {
-                                            <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlogService.Options.TagsPageUrl/@tag">@tag</a>
+                                            <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlazorStaticContentService.Options.TagsPageUrl/@tag">@tag</a>
                                         }
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@
                                 </div>
                             </div>
                             <div class="text-base font-medium leading-6">
-                                <a class="text-primary-500 hover:text-primary-400" aria-label='Read "@(post.FrontMatter.Lead)"' href="@BlogService.Options.BlogPageUrl/@(post.Url)">Read more →</a>
+                                <a class="text-primary-500 hover:text-primary-400" aria-label='Read "@(post.FrontMatter.Lead)"' href="@BlazorStaticContentService.Options.BlogPageUrl/@(post.Url)">Read more →</a>
                             </div>
                         </div>
                     </div>
@@ -49,13 +49,13 @@
 
 
 @code {
-    List<Post<FrontMatter>> posts = [];
+    List<Post<BlogFrontMatter>> posts = [];
 
 
-    [Parameter] public List<Post<FrontMatter>>? Posts { get; set; }
+    [Parameter] public List<Post<BlogFrontMatter>>? Posts { get; set; }
     protected override void OnInitialized()
     {
-        posts = Posts ?? BlogService.BlogPosts.OrderByDescending(x=>x.FrontMatter.Published).ToList();
+        posts = Posts ?? BlazorStaticContentService.BlogPosts.OrderByDescending(x=>x.FrontMatter.Published).ToList();
         base.OnInitialized();
     }
 }
