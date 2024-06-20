@@ -13,31 +13,40 @@ using Services;
 public static class BlazorStaticExtensions
 {
     /// <summary>
+    /// holds the actions that will run when UseBlazorStaticGenerator is called.
+    /// Will manage content for every BlazorStaticContentService added.
+    /// </summary>
+    private static List<Action<WebApplication>> staticContentUse { get; set; } = [];
+
+
+    /// <summary>
     /// Adds a blog service to the specified IServiceCollection. The blog service uses a generic type
     /// for front matter, allowing customization of the metadata format used in blog posts.
     /// </summary>
     /// <typeparam name="TFrontMatter">The type of front matter used in the blog posts. Must implement IFrontMatter.</typeparam>
     /// <param name="services">The IServiceCollection to add the blog service to.</param>
-    /// <param name="configureOptions">An optional action to configure the BlogOptions for the blog service.</param>
+    /// <param name="configureOptions">An optional action to configure the BlazorStaticContentOptions for the BlazorStaticConentService.
+    /// Default values are set for Blog content.</param>
     /// <returns>The IServiceCollection, with the blog service added, allowing for method chaining.</returns>
     /// <remarks>
-    /// The method configures and registers a singleton instance of BlogOptions`TFrontMatter` and 
-    /// BlogService`TFrontMatter` in the service collection.
+    /// The method configures and registers a singleton instance of BlazorStaticContentOptions`TFrontMatter` and 
+    /// BlazorStaticContentService`TFrontMatter` in the service collection.
     /// </remarks>
-    public static IServiceCollection AddBlogService<TFrontMatter>(this IServiceCollection services,
-        Action<BlogOptions<TFrontMatter>>? configureOptions = null)
+    public static IServiceCollection AddBlazorStaticContentService<TFrontMatter>(this IServiceCollection services,
+        Action<BlazorStaticContentOptions<TFrontMatter>>? configureOptions = null)
         where TFrontMatter : class, IFrontMatter, new()
     {
-        var options = new BlogOptions<TFrontMatter>();
+        var options = new BlazorStaticContentOptions<TFrontMatter>();
         configureOptions?.Invoke(options);
 
         services.AddSingleton(options);
-        services.AddSingleton<BlogService<TFrontMatter>>();
+        services.AddSingleton<BlazorStaticContentService<TFrontMatter>>();
+        staticContentUse.Add(UseBlazorStaticContent<TFrontMatter>);
 
         return services;
     }
 
-    
+
     /// <summary>
     /// Adds the Blazor static generation service to the specified IServiceCollection.
     /// </summary>
@@ -66,17 +75,16 @@ public static class BlazorStaticExtensions
 
 
     /// <summary>
-    /// Adds the Blazor static generation service to the specified IServiceCollection.
+    /// Runs the actions necessary to generating static content by settings defined in options
     /// </summary>
     /// <param name="app"></param>
     /// <typeparam name="TFrontMatter"></typeparam>
-    public static void UseBlog<TFrontMatter>(this WebApplication app)
+    static void UseBlazorStaticContent<TFrontMatter>(WebApplication app)
         where TFrontMatter : class, IFrontMatter, new()
     {
-        var blogService = app.Services.GetRequiredService<BlogService<TFrontMatter>>();
-        var options = app.Services.GetRequiredService<BlogOptions<TFrontMatter>>();
+        var blogService = app.Services.GetRequiredService<BlazorStaticContentService<TFrontMatter>>();
+        var options = app.Services.GetRequiredService<BlazorStaticContentOptions<TFrontMatter>>();
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
-        var logger = app.Services.GetRequiredService<ILogger<BlogService<TFrontMatter>>>();
 
 
         //Add static files for media files to be accessible while running the app
@@ -94,7 +102,7 @@ public static class BlazorStaticExtensions
             string realPath = Path.Combine(Directory.GetCurrentDirectory(), options.ContentPath, options.MediaFolderRelativeToContentPath);
             if (!Directory.Exists(realPath))
             {
-                logger.LogWarning("folder for media path ({Folder}) doesn't exist", realPath);
+                app.Logger.LogWarning("folder for media path ({Folder}) doesn't exist", realPath);
             }
             else
             {
@@ -118,6 +126,9 @@ public static class BlazorStaticExtensions
     /// <param name="shutdownApp"></param>
     public static void UseBlazorStaticGenerator(this WebApplication app, bool shutdownApp = false)
     {
+        foreach (Action<WebApplication> use in staticContentUse)
+            use.Invoke(app);
+
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
 
         AddStaticWebAssetsToOutput(app.Environment.WebRootFileProvider, string.Empty, blazorStaticService);

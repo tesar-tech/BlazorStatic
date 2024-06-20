@@ -3,7 +3,7 @@
 @using System.Globalization
 @using BlazorStatic
 @using BlazorStatic.Services
-@inject BlogService<FrontMatter> BlogService
+@inject BlazorStaticContentService<BlogFrontMatter> BlazorStaticContentService
 @using BlazorStaticWebsite.Components.Blog
 
 
@@ -97,13 +97,13 @@
                         <div class="flex flex-wrap">
                             @foreach (var tag in post.FrontMatter.Tags)
                             {
-                                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlogService.Options.TagsPageUrl/@tag">@tag</a>
+                                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlazorStaticContentService.Options.TagsPageUrl/@tag">@tag</a>
                             }
                         </div>
                     </div>
                 </div>
                 <div class="pt-4 xl:pt-8">
-                    <a class="text-primary-500 hover:text-primary-400" aria-label="Back to the blog" href="@BlogService.Options.BlogPageUrl">← Back to the blog</a>
+                    <a class="text-primary-500 hover:text-primary-400" aria-label="Back to the blog" href="@BlazorStaticContentService.Options.BlogPageUrl">← Back to the blog</a>
                 </div>
             </footer>
         </div>
@@ -113,12 +113,12 @@
 
 @code{
     [Parameter] public string? PostUrl { get; set; }
-    Post<FrontMatter>? post;
+    Post<BlogFrontMatter>? post;
     
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(PostUrl)) return;
-        post = BlogService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
+        post = BlazorStaticContentService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
        
     }
 }

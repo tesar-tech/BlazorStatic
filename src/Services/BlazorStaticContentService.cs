@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 /// <summary>
-/// The BlogService is responsible for parsing and adding blog posts.
+/// The BlazorStaticContentService is responsible for parsing and adding blog posts.
 /// It adds pages with blog posts to the options.PagesToGenerate list,
 /// that is used later by BlazorStaticService to generate static pages.
 /// </summary>
@@ -14,8 +14,8 @@ using System.Threading.Tasks;
 /// <param name="helpers"></param>
 /// <param name="blazorStaticService"></param>
 /// <typeparam name="TFrontMatter"></typeparam>
-public class BlogService<TFrontMatter>(
-    BlogOptions<TFrontMatter> options,
+public class BlazorStaticContentService<TFrontMatter>(
+    BlazorStaticContentOptions<TFrontMatter> options,
     BlazorStaticHelpers helpers,
     BlazorStaticService blazorStaticService)
     where TFrontMatter : class, IFrontMatter, new()
@@ -25,9 +25,9 @@ public class BlogService<TFrontMatter>(
     /// </summary>
     public List<Post<TFrontMatter>> BlogPosts => options.Posts;
     /// <summary>
-    /// The BlogOptions used to configure the blog service.
+    /// The BlazorStaticContentOptions used to configure the blog service.
     /// </summary>
-    public BlogOptions<TFrontMatter> Options => options;
+    public BlazorStaticContentOptions<TFrontMatter> Options => options;
     /// <summary>
     /// Parses and adds blog posts to the blog service. This method reads markdown files
     /// from a specified directory, parses them to extract front matter and content,

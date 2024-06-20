@@ -22,8 +22,8 @@ builder.Services.AddBlazorStaticService(opt => {
         }
     }
     )
-    .AddBlogService<FrontMatter>()
-    .AddBlogService<ProjectFrontMatter>(opt => {
+    .AddBlazorStaticContentService<BlogFrontMatter>()
+    .AddBlazorStaticContentService<ProjectFrontMatter>(opt => {
         opt.MediaFolderRelativeToContentPath = null;
         opt.ContentPath = Path.Combine("Content", "Projects");
         opt.AddTagPagesFromPosts = false;
@@ -62,8 +62,6 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>();
 
-app.UseBlog<FrontMatter>();
-app.UseBlog<ProjectFrontMatter>();
 app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 
 app.Run();

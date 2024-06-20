@@ -2,7 +2,7 @@
 @page "/projects/{*postUrl}"
 @using BlazorStatic
 @using BlazorStatic.Services
-@inject BlogService<ProjectFrontMatter> ProjectsService
+@inject BlazorStaticContentService<ProjectFrontMatter> ProjectsService
 
 @* No filename -> show latest posts *@
 @if (string.IsNullOrWhiteSpace(PostUrl))
