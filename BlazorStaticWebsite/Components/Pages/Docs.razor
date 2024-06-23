@@ -1,7 +1,7 @@
 @page "/docs"
 @page "/docs/{fileName}"
 @using BlazorStatic
-@inject BlazorStaticHelpers BlazorStaticHelpers
+@inject BlazorStaticHelpers blazorStaticHelpers
 
 @if (htmlContent is null)
 {
@@ -22,6 +22,6 @@
         string file = $"Content/Docs/{(string.IsNullOrWhiteSpace(FileName) ? "README" : FileName)}.md";
         if(file.EndsWith(".md.md"))
             file = file[..^3];
-        htmlContent =  await BlazorStaticHelpers.ParseMarkdownFile(file,("media","Content/Docs/media") );
+        htmlContent =  await blazorStaticHelpers.ParseMarkdownFile(file,("media","Content/Docs/media") );
     }
 }
