@@ -113,6 +113,7 @@ public class BlazorStaticContentOptions<TFrontMatter>
     /// folder relative to project root where blog posts are stored.
     /// Don't forget to copy the content to bin folder (use CopyToOutputDirectory in .csproj),
     /// because that's where the app will look for the files.
+    /// Default is Content/Blog where blog posts are stored.
     /// </summary>
     public string ContentPath { get; set; } = Path.Combine("Content", "Blog");
     /// <summary>
@@ -145,11 +146,13 @@ public class BlazorStaticContentOptions<TFrontMatter>
     public bool AddTagPagesFromPosts { get; set; } = true;
     
     /// <summary>
-    /// Should correspond to @page "/blog" (here in relative path: "blog")
-    /// This also serves as a generated folder in blog posts
+    /// Should correspond to page that keeps the list of content.
+    /// For example: @page "/blog" -> PageUrl="blog"
+    /// This also serves as a generated folder name for the content.
     /// Useful for avoiding magic strings in .razor files
+    /// "blog" as default value
     /// </summary>
-    public string BlogPageUrl { get; set; } = "blog";
+    public string PageUrl { get; set; } = "blog";
     /// <summary>
     /// Should correspond to @page "/tags" (here in relative path: "tags")
     /// Useful for avoiding magic strings in .razor files
