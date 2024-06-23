@@ -2,7 +2,7 @@
 @page "/projects/{*postUrl}"
 @using BlazorStatic
 @using BlazorStatic.Services
-@inject BlazorStaticContentService<ProjectFrontMatter> ProjectsService
+@inject BlazorStaticContentService<ProjectFrontMatter> projectsService
 
 @* No filename -> show latest posts *@
 @if (string.IsNullOrWhiteSpace(PostUrl))
@@ -12,7 +12,7 @@
             @foreach (var post in posts)
             {
                 <li>
-                    <a  href="@ProjectsService.Options.BlogPageUrl/@(post.Url)">@post.FrontMatter.Name</a>
+                    <a  href="@projectsService.Options.PageUrl/@(post.Url)">@post.FrontMatter.Name</a>
                     @post.Url
                 </li>
             }
@@ -43,8 +43,8 @@ else
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(PostUrl))
-            posts = ProjectsService.BlogPosts.OrderByDescending(x => x.FrontMatter.Name).ToList();
+            posts = projectsService.BlogPosts.OrderByDescending(x => x.FrontMatter.Name).ToList();
         else
-            onePost = ProjectsService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
+            onePost = projectsService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
     }
 }

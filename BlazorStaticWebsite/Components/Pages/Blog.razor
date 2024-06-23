@@ -3,8 +3,8 @@
 @using System.Globalization
 @using BlazorStatic
 @using BlazorStatic.Services
-@inject BlazorStaticContentService<BlogFrontMatter> BlazorStaticContentService
 @using BlazorStaticWebsite.Components.Blog
+@inject BlazorStaticContentService<BlogFrontMatter> blazorStaticContentService
 
 
 @* No filename -> show latest posts *@
@@ -97,13 +97,13 @@
                         <div class="flex flex-wrap">
                             @foreach (var tag in post.FrontMatter.Tags)
                             {
-                                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlazorStaticContentService.Options.TagsPageUrl/@tag">@tag</a>
+                                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@blazorStaticContentService.Options.TagsPageUrl/@tag">@tag</a>
                             }
                         </div>
                     </div>
                 </div>
                 <div class="pt-4 xl:pt-8">
-                    <a class="text-primary-500 hover:text-primary-400" aria-label="Back to the blog" href="@BlazorStaticContentService.Options.BlogPageUrl">← Back to the blog</a>
+                    <a class="text-primary-500 hover:text-primary-400" aria-label="Back to the blog" href="@blazorStaticContentService.Options.PageUrl">← Back to the blog</a>
                 </div>
             </footer>
         </div>
@@ -118,7 +118,7 @@
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(PostUrl)) return;
-        post = BlazorStaticContentService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
+        post = blazorStaticContentService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
        
     }
 }
