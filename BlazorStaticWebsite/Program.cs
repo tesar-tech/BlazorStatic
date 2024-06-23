@@ -27,7 +27,7 @@ builder.Services.AddBlazorStaticService(opt => {
         opt.MediaFolderRelativeToContentPath = null;
         opt.ContentPath = Path.Combine("Content", "Projects");
         opt.AddTagPagesFromPosts = false;
-        opt.BlogPageUrl = "projects";
+        opt.PageUrl = "projects";
     });
 
 
