@@ -1,6 +1,6 @@
 # Using BlazorStatic from scratch
 
-This guide will show you how to create static site using BlazorStatic. It is good for understanding how it works, but you can also use the [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) where everything is already set up for you.
+This guide will show you how to create static site using **BlazorStatic**. It is good for understanding how it works, but you can also use the [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) where everything is already set up for you.
 
 ## Create Blazor app
 
@@ -30,7 +30,7 @@ This guide will show you how to create static site using BlazorStatic. It is goo
           └───media
                   programming_bug.jpg
   ```
-  The directory structure can be customized (by BlazorStaticOptions), but for simplicity we will use the default one.
+  The directory structure can be customized (by `BlazorStaticOptions`), but for simplicity we will use the default one.
 
 - The post start with yaml front matter metadata. 
 
@@ -38,7 +38,7 @@ This guide will show you how to create static site using BlazorStatic. It is goo
   ---
   title: First post
   lead: Sample post so you can see how it works
-  published: 2023-11-04
+  published: 2024-06-20
   tags: [tag-001, another-sample-tag]
   authors:
       - name: "Jan Tesař"
@@ -47,7 +47,9 @@ This guide will show you how to create static site using BlazorStatic. It is goo
   ---
   ```
 
-  These metadata has to match C# class (`BlazorStatic.FrontMatter`) that we will use now. You can customize the class to match your own metadata.
+  These metadata has to match C# class (`BlazorStatic.BlogFrontMatter`) that we will use now.
+  You can use your own class, but it has to implement `IFrontMatter` interface.
+  You can also use multiple `IFrontMatter` classes in one web app, see [projects](projects) for more info (and its usage in `Program.cs`).   
 
 - Mark Content folder to copy to the output:
   
@@ -66,7 +68,7 @@ This guide will show you how to create static site using BlazorStatic. It is goo
 
 > dotnet add package BlazorStatic --prerelease
 
-- Turn on `StaticWebAssets`. This will ensure wwwroot and RLCs assets are copied to the output folder. [More info](docs/release-1.0.0-beta.4)
+- Turn on `StaticWebAssets`. This will ensure wwwroot and RLCs assets are copied to the output folder.
   ```csharp
   builder.WebHost.UseStaticWebAssets();
   ```
@@ -76,10 +78,10 @@ This guide will show you how to create static site using BlazorStatic. It is goo
   builder.Services.AddBlazorStaticService(opt => {
       opt.IgnoredPathsOnContentCopy.Add("app.css");//pre-build version for tailwind
   }
-  ).AddBlogService<FrontMatter>();
+  ).AddBlazorStaticContentService<BlogFrontMatter>();
   ```
 
-  `FrontMatter` is the class that will be used to parse the metadata from markdown files. This is part of the BlazorStatic package. It exactly matches the metadata in `first-post.md` and `second-post.md`. Nothing stops you from creating your own class that will match your own metadata. It just needs to implement interface `IFrontMatter`, which has just one property `List<string> Tags { get; set; }`.
+  `BlogFrontMatter` is the class that will be used to parse the metadata from markdown files. This is part of the BlazorStatic package. It exactly matches the metadata in `first-post.md` and `second-post.md`. Nothing stops you from creating your own class that will match your own metadata. It just needs to implement interface `IFrontMatter`, which has just one property `List<string> Tags { get; set; }`.
 
   As you can see `BlazorStaticService` has options you can change. For example you can change the directory structure (where your md files are located), or you can ignore some files (like `app.css` in this case (we have `app.min.css`)).
 
@@ -87,13 +89,11 @@ This guide will show you how to create static site using BlazorStatic. It is goo
   Before running the app we need to tell the service to actually do something:
 
   ```csharp
-  app.UseBlog<FrontMatter>();
   app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
   ```
 
-  `UseBlog` will parse the markdown files and expose them to the app as Post<FrontMatter> through `BlogService`.
-
-  `UseBlazorStaticGenerator` will generate the static files a put them into the `output` folder (also customizable). It will shutdown the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run "forever" in particular job.
+  `UseBlazorStaticGenerator` will parse the markdown files and expose them to the app as Post<BlogFrontMatter> through `BlazorStaticContentService` and
+ will generate the static files a put them into the `output` folder (also customizable). It will shut down the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run "forever" in particular job.
 
 ## Scaffold the UI for blog posts
 
@@ -101,7 +101,7 @@ When you run the app right now, it will output the non-parametrized pages (e.g. 
 
 > File generation is done by using `HttpClient` and saving the result into `.html` file. 
 
-We need to scaffold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you by providing `BlogService<FrontMatter>.Posts` collection where your processed posts live.
+We need to scaffold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you by providing `BlazorStaticContentService<BlogFrontMatter>.Posts` collection where your processed posts live.
 
 You get get some inspiration for th UI. These pages are important:
 
@@ -124,8 +124,8 @@ You get get some inspiration for th UI. These pages are important:
 For posts and tags generation, the directives must match the options, default value are:
 
   ```csharp
-  builder.Services.AddBlogService<FrontMatter>(opt => {
-      opt.BlogPageUrl = "blog";
+  builder.Services.AddBlazorStaticContentService<BlogFrontMatter>(opt => {
+      opt.PageUrl = "blog";
       opt.TagsPageUrl = "tags";
   });
   ```
