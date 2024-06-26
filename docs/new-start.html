@@ -24,7 +24,7 @@
 </script>
 
         <main class="mb-auto"><div class="prose prose-invert"><h1 id="using-blazorstatic-from-scratch">Using BlazorStatic from scratch</h1>
-<p>This guide will show you how to create static site using BlazorStatic. It is good for understanding how it works, but you can also use the <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">BlazorStaticMinimalBlog</a> where everything is already set up for you.</p>
+<p>This guide will show you how to create static site using <strong>BlazorStatic</strong>. It is good for understanding how it works, but you can also use the <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">BlazorStaticMinimalBlog</a> where everything is already set up for you.</p>
 <h2 id="create-blazor-app">Create Blazor app</h2>
 <ul>
 <li><p>Start by creating new Blazor project. <code>Interactivity</code> is set to <code>None</code> since that is not something we need for static site.</p>
@@ -50,13 +50,13 @@
         └───media
                 programming_bug.jpg
 </code></pre>
-<p>The directory structure can be customized (by BlazorStaticOptions), but for simplicity we will use the default one.</p>
+<p>The directory structure can be customized (by <code>BlazorStaticOptions</code>), but for simplicity we will use the default one.</p>
 </li>
 <li><p>The post start with yaml front matter metadata.</p>
 <pre><code class="language-yaml">---
 title: First post
 lead: Sample post so you can see how it works
-published: 2023-11-04
+published: 2024-06-20
 tags: [tag-001, another-sample-tag]
 authors:
     - name: &quot;Jan Tesař&quot;
@@ -64,7 +64,9 @@ authors:
       xUserName: &quot;tesar_tech&quot;
 ---
 </code></pre>
-<p>These metadata has to match C# class (<code>BlazorStatic.FrontMatter</code>) that we will use now. You can customize the class to match your own metadata.</p>
+<p>These metadata has to match C# class (<code>BlazorStatic.BlogFrontMatter</code>) that we will use now.
+You can use your own class, but it has to implement <code>IFrontMatter</code> interface.
+You can also use multiple <code>IFrontMatter</code> classes in one web app, see <a href="projects">projects</a> for more info (and its usage in <code>Program.cs</code>).</p>
 </li>
 <li><p>Mark Content folder to copy to the output:</p>
 <pre><code class="language-xml">&lt;ItemGroup&gt;
@@ -83,7 +85,7 @@ authors:
 <p>dotnet add package BlazorStatic --prerelease</p>
 </blockquote>
 <ul>
-<li><p>Turn on <code>StaticWebAssets</code>. This will ensure wwwroot and RLCs assets are copied to the output folder. <a href="docs/release-1.0.0-beta.4">More info</a></p>
+<li><p>Turn on <code>StaticWebAssets</code>. This will ensure wwwroot and RLCs assets are copied to the output folder.</p>
 <pre><code class="language-csharp">builder.WebHost.UseStaticWebAssets();
 </code></pre>
 </li>
@@ -91,18 +93,17 @@ authors:
 <pre><code class="language-csharp">builder.Services.AddBlazorStaticService(opt =&gt; {
     opt.IgnoredPathsOnContentCopy.Add(&quot;app.css&quot;);//pre-build version for tailwind
 }
-).AddBlogService&lt;FrontMatter&gt;();
+).AddBlazorStaticContentService&lt;BlogFrontMatter&gt;();
 </code></pre>
-<p><code>FrontMatter</code> is the class that will be used to parse the metadata from markdown files. This is part of the BlazorStatic package. It exactly matches the metadata in <code>first-post.md</code> and <code>second-post.md</code>. Nothing stops you from creating your own class that will match your own metadata. It just needs to implement interface <code>IFrontMatter</code>, which has just one property <code>List&lt;string&gt; Tags { get; set; }</code>.</p>
+<p><code>BlogFrontMatter</code> is the class that will be used to parse the metadata from markdown files. This is part of the BlazorStatic package. It exactly matches the metadata in <code>first-post.md</code> and <code>second-post.md</code>. Nothing stops you from creating your own class that will match your own metadata. It just needs to implement interface <code>IFrontMatter</code>, which has just one property <code>List&lt;string&gt; Tags { get; set; }</code>.</p>
 <p>As you can see <code>BlazorStaticService</code> has options you can change. For example you can change the directory structure (where your md files are located), or you can ignore some files (like <code>app.css</code> in this case (we have <code>app.min.css</code>)).</p>
 </li>
 <li><p>Use <code>BlazorStatic</code>
 Before running the app we need to tell the service to actually do something:</p>
-<pre><code class="language-csharp">app.UseBlog&lt;FrontMatter&gt;();
-app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
+<pre><code class="language-csharp">app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 </code></pre>
-<p><code>UseBlog</code> will parse the markdown files and expose them to the app as Post<FrontMatter> through <code>BlogService</code>.</p>
-<p><code>UseBlazorStaticGenerator</code> will generate the static files a put them into the <code>output</code> folder (also customizable). It will shutdown the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run &quot;forever&quot; in particular job.</p>
+<p><code>UseBlazorStaticGenerator</code> will parse the markdown files and expose them to the app as Post<BlogFrontMatter> through <code>BlazorStaticContentService</code> and
+will generate the static files a put them into the <code>output</code> folder (also customizable). It will shut down the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run &quot;forever&quot; in particular job.</p>
 </li>
 </ul>
 <h2 id="scaffold-the-ui-for-blog-posts">Scaffold the UI for blog posts</h2>
@@ -110,7 +111,7 @@ app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 <blockquote>
 <p>File generation is done by using <code>HttpClient</code> and saving the result into <code>.html</code> file.</p>
 </blockquote>
-<p>We need to scaffold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you by providing <code>BlogService&lt;FrontMatter&gt;.Posts</code> collection where your processed posts live.</p>
+<p>We need to scaffold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you by providing <code>BlazorStaticContentService&lt;BlogFrontMatter&gt;.Posts</code> collection where your processed posts live.</p>
 <p>You get get some inspiration for th UI. These pages are important:</p>
 <ul>
 <li><p><a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/Components/Pages/Blog.razor">Blog.razor</a> page which either displays the list of posts or the post itself. It starts with these page directives:</p>
@@ -128,8 +129,8 @@ app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 </li>
 </ul>
 <p>For posts and tags generation, the directives must match the options, default value are:</p>
-<pre><code class="language-csharp">builder.Services.AddBlogService&lt;FrontMatter&gt;(opt =&gt; {
-    opt.BlogPageUrl = &quot;blog&quot;;
+<pre><code class="language-csharp">builder.Services.AddBlazorStaticContentService&lt;BlogFrontMatter&gt;(opt =&gt; {
+    opt.PageUrl = &quot;blog&quot;;
     opt.TagsPageUrl = &quot;tags&quot;;
 });
 </code></pre>
