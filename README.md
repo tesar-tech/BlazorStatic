@@ -49,24 +49,6 @@ Ideally, this command would set up your project automatically. However, this fea
 $ dotnet add package BlazorStatic
 ```
 
-#### Cloning the project
-
-```shell
-$ git clone https://github.com/tesar-tech/BlazorStatic.git --depth 1
-```
-
-The repo also contains a Minimal Blog example (`BlazorStaticMinimalBlog`) as submodule, you can initialize it like so if you wish:
-
-```shell
-git submodule update --init --recursive
-```
-
-Then import it to your project
-
-```shell
-$ dotnet add YOUR_PROJECT_PATH reference BlazorStatic/src/BlazorStatic.csproj
-```
-
 ### 3. Registering Services
 
 ```cs
