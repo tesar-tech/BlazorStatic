@@ -13,13 +13,13 @@ Embrace the capabilities of Blazor on .NET 8 to craft static websites.
 
 Transform your Blazor app into a static site generator.
 
-## How does it work?
+# How does it work?
 
 **BlazorStatic** generates static HTML files by running the app and fetching the pages' HTML with `HttpClient`.
 
 It automatically discovers pages to generate by scanning for the `@page` directive in Razor files, but It only targets non-parametrized pages (e.g., `@page "/mypage"`, not `@page "/mypage/{param}"`).
 
-### Features
+## Features
 
 - Easily parse and consume markdown files.
 - Support for custom YAML front matters.
@@ -27,29 +27,29 @@ It automatically discovers pages to generate by scanning for the `@page` directi
 - Works with all CSS frameworks and themes.
 - Easy to deploy with CI/CD pipeline.
 
-## Getting started
+# Getting started
 
 BlazorStatic is a small library designed to be integrated into Blazor web applications That was mainly created with the intention of making blogs, but it got improved to become a more general tool for creating static sites.
 
 *Note*: You can use [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) as a template if you want something quick and easy.
 
-### 1. Creating project
+## 1. Creating project
 
 *skip this if you already have a blazor project*
 
-#### Using Dotnet new template
+### Using Dotnet new template
 
 Ideally, this command would set up your project automatically. However, this feature is currently a significant **[TODO](https://github.com/tesar-tech/BlazorStatic/issues/2)** awaiting implementation.
 
-### 2. Installation
+## 2. Installation
 
-#### Nuget:
+### Nuget:
 
 ```shell
 $ dotnet add package BlazorStatic
 ```
 
-### 3. Registering Services
+## 3. Registering Services
 
 ```cs
 // Program.cs
@@ -71,19 +71,19 @@ builder.Services.AddBlazorStaticContentService<BlogFrontMatter>(opt => {
 
 // ...
 
-// `shutdownApp` is essential for CI/CD pipelines to prevent indefinite running.
+// `shutdownApp` is essential for CI/CD pipelines to prevent the app from running indefinitely.
 app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 ```
 
-### 4. Running
+## 4. Running
 
 Starting the project will create a folder (`output` by default) which contains the generated static files of your site. (this can be disabled in `AddBlazorStaticService`)
 
-### More in Depth
+## More in Depth
 
 In-depth instructions are available [here](./BlazorStaticWebsite/Content/Docs/new-start.md). These instructions will help you build a project akin to BlazorStaticMinimalBlog and is beneficial for understanding the inner workings of BlazorStatic.
 
-## Samples
+# Samples
 
 | Description                                                  | Source                                                                               | Live                                                          |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
@@ -92,7 +92,7 @@ In-depth instructions are available [here](./BlazorStaticWebsite/Content/Docs/ne
 | Zodoc - image processing and deep learning sample            | [source](https://github.com/tesar-tech/zodoc/)                                       | [live](https://zodoc.tech/)                                   |
 | ❓ Add your page here!!!                                      |                                                                                      |
 
-## Contributions
+# Contributions
 
 Contributions are highly encouraged and appreciated. If you find something missing, unclear, or encounter an issue with the code, I warmly welcome your input. Feel free to:
 
