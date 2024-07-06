@@ -9,104 +9,93 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/4fa2c17a-6385-4cc6-9919-e32c134175d9/deploy-status)](https://app.netlify.com/sites/blazorstatic/deploys)
 
 
-Transform your Blazor app into a static site generator.
-
 Embrace the capabilities of Blazor on .NET 8 to craft static websites.
 
-## How to start: 
+Transform your Blazor app into a static site generator.
 
-BlazorStatic is a small library designed for integration into Blazor applications. Here are a few straightforward methods to get started:
+# How does it work?
 
-### Fork or clone BlazorStaticMinimalBlog
+**BlazorStatic** generates static HTML files by running the app and fetching the pages' HTML with `HttpClient`.
 
-**RECOMMENDED STARTING POINT**: [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) offers a quick and convenient way to deploy your site within minutes.
+It automatically discovers pages to generate by scanning for the `@page` directive in Razor files, but It only targets non-parametrized pages (e.g., `@page "/mypage"`, not `@page "/mypage/{param}"`).
 
+## Features
 
-### Build from Scratch
+- Easily parse and consume markdown files.
+- Support for custom YAML front matters.
+- Ability to add / remove pages as needed.
+- Works with all CSS frameworks and themes.
+- Easy to deploy with CI/CD pipeline.
 
-Begin by creating a Blazor application, then proceed to add content and integrate BlazorStatic. Comprehensive instructions are available [here](./BlazorStaticWebsite/Content/Docs/new-start.md). This approach will help you build a project akin to BlazorStaticMinimalBlog and is beneficial for understanding the inner workings of BlazorStatic.
+# Getting started
 
-### Using dotnet new blazorStatic
+BlazorStatic is a small library designed to be integrated into Blazor web applications That was mainly created with the intention of making blogs, but it got improved to become a more general tool for creating static sites.
+
+*Note*: You can use [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) as a template if you want something quick and easy.
+
+## 1. Creating project
+
+*skip this if you already have a blazor project*
+
+### Using Dotnet new template
 
 Ideally, this command would set up your project automatically. However, this feature is currently a significant **[TODO](https://github.com/tesar-tech/BlazorStatic/issues/2)** awaiting implementation.
 
+## 2. Installation
 
-## How it works? What it does?
+### Nuget:
 
-BlazorStatic:
+```shell
+$ dotnet add package BlazorStatic
+```
 
-- Generates static HTML files by running the app and fetching page HTML with `HttpClient`  
-  - Use the following in your app:: 
-  ```csharp
-  app.UseBlog<FrontMatter>(); //processes markdown files, adds blog and tags pages
-  app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
-  ```
-  - `shutdownApp` is essential for CI/CD pipelines to prevent indefinite running.
+## 3. Registering Services
 
+```cs
+// Program.cs
+using BlazorStatic;
 
-- Automates the discovery of pages to generate by scanning for the `@page` directive in Razor files. It targets only non-parametrized pages (e.g., `@page "/mypage"`, not `@page "/mypage/{param}"`).
+// register blazor static service to generate static files
+builder.Services.AddBlazorStaticService(opt => {
+    // won't copy the `app.css` when generating the static files
+    opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });
+    // choose the output folder for the static files
+    opt.OutputFolderPath = "output";
+});
 
-- Enables adding additional pages for generation using
+// register a service for your blog files
+builder.Services.AddBlazorStaticContentService<BlogFrontMatter>(opt => {
+    // assign where the blog files will be stored
+    opt.ContentPath = Path.Combine("Content", "Blog");
+});
 
-  ```csharp
-  builder.Services.AddBlazorStaticService(opt => {
-    opt.PagesToGenerate.Add(new($"/mypage/paramValue", "paramValue.html"))
-  }); 
-  ```
-  Example [here](https://github.com/tesar-tech/BlazorStatic/blob/master/BlazorStaticWebsite/Program.cs) for adding `docs` pages.   
+// ...
 
-- Simplifies blog post generation from markdown files, respecting a specified folder structure:
-  ```csharp
-  builder.Services.AddBlogService<FrontMatter>(opt => {
-      opt.BlogPageUrl = "blog"; //default value
-      opt.PostFilePattern = "*.md"; //default value
-      opt.ContentPath = Path.Combine("Content", "Blog"); //default path
-      opt.MediaFolderRelativeToContentPath = "media"; //default folder
-  });
-  ```
+// `shutdownApp` is essential for CI/CD pipelines to prevent the app from running indefinitely.
+app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
+```
 
-- Provides `FrontMatter` class for parsing blog post metadata.
-- Allows for custom `IFrontMatter` implementations to suit various markdown (front matter) formats. You can even have multiple sections with multiple `IFrontMatter` classes.
+## 4. Running
 
-- Facilitates copying necessary files to the output folder:
+Starting the project will create a folder (`output` by default) which contains the generated static files of your site. (this can be disabled in `AddBlazorStaticService`)
 
-  ```csharp
-  builder.Services.AddBlazorStaticService(opt => {
-     opt.OutputFolderPath = "output";//root of the output 
-     //wwwroot and _content are copied by default
-     opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" }); //don't copy app.css
-  }); 
-  ```
+## More in Depth
 
+In-depth instructions are available [here](./BlazorStaticWebsite/Content/Docs/new-start.md). These instructions will help you build a project akin to BlazorStaticMinimalBlog and is beneficial for understanding the inner workings of BlazorStatic.
 
+# Samples
 
-- Offers flexibility in CSS frameworks and themes, without locking you into a specific choice. TailwindCSS is used in the default theme, but it's fully customizable. Open to suggestions and contributions for design improvements (do it, I am not the right person).
+| Description                                                  | Source                                                                               | Live                                                          |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| Page about BlazorStatic (this repo contains the code itself) | [source](https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite) | [live](https://tesar-tech.github.io/BlazorStatic/)            |
+| Minimal blog                                                 | [source](https://github.com/tesar-tech/BlazorStaticMinimalBlog)                      | [live](https://tesar-tech.github.io/BlazorStaticMinimalBlog/) |
+| Zodoc - image processing and deep learning sample            | [source](https://github.com/tesar-tech/zodoc/)                                       | [live](https://zodoc.tech/)                                   |
+| ❓ Add your page here!!!                                      |                                                                                      |
 
-- Easy deployment: run your app in a CI/CD pipeline and deploy the generated files to platforms like GitHub Pages, Azure Static Web Apps, Netlify, etc. See [the pipline](https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/.github/workflows/publish-to-gh-pages.yml) for a minimal blog setup or check the [deployment guide](./BlazorStaticWebsite/Content/Docs/deployment.md) for more details
-
-## Samples
-
-| Description | Source | Live |
-| --- | --- | --- |
-|Page about BlazorStatic (this repo contains the code itself)|[source](https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite) | [live](https://tesar-tech.github.io/BlazorStatic/)|
-| Minimal blog  |[source](https://github.com/tesar-tech/BlazorStaticMinimalBlog)|[live](https://tesar-tech.github.io/BlazorStaticMinimalBlog/)|
-|Zodoc - image processing and deep learning sample| [source](https://github.com/tesar-tech/zodoc/)|[live](https://zodoc.tech/)|
-|❓ Add your page here!!!||
-
-## Contributions
+# Contributions
 
 Contributions are highly encouraged and appreciated. If you find something missing, unclear, or encounter an issue with the code, I warmly welcome your input. Feel free to:
 
 - Create a new [issue](https://github.com/tesar-tech/BlazorStatic/issues) or submit a PR.
 - Contact [me](https://github.com/tesar-tech/) directly for any queries or suggestions.
 - Ask questions or start a discussion on the [Blazor Community Discord server](https://discord.gg/DsAXsMuEbx).
-
-
-The main repo contains the MinimalBlog submodule, after you clone the repo, you can initialize the submodule with:
-
-```shell
-git submodule update --init --recursive
-```
-
-
-
