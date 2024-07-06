@@ -31,141 +31,54 @@
 <p>Embrace the capabilities of Blazor on .NET 8 to craft static websites.</p>
 <p>Transform your Blazor app into a static site generator.</p>
 <h1 id="how-does-it-work">How does it work?</h1>
-<p>You have your SSR Blazor app that you can develop, run, and test. You add the <strong>BlazorStatic</strong> package and configure it to specify which URLs convert to HTML files.
-Upon running the app, <strong>BlazorStatic</strong> fetches the pages' HTML with <code>HttpClient</code>, outputs HTML files and assets to the <code>output</code> folder, which you can deploy to any static hosting.</p>
-<p>There are a lot of defaults to keep usage simple, but you can configure it extensively, for example, to match your YAML front matter in markdown files or ignore files in the output.</p>
+<p><strong>BlazorStatic</strong> generates static HTML files by running the app and fetching the pages' HTML with <code>HttpClient</code>.</p>
+<p>It automatically discovers pages to generate by scanning for the <code>@page</code> directive in Razor files, but It only targets non-parametrized pages (e.g., <code>@page &quot;/mypage&quot;</code>, not <code>@page &quot;/mypage/{param}&quot;</code>).</p>
 <h2 id="features">Features</h2>
 <ul>
-<li>Work with Blazor as you are used to.</li>
 <li>Easily parse and consume markdown files.</li>
 <li>Support for custom YAML front matters.</li>
-<li>Automatically discovers pages to generate by scanning for the <code>@page</code> directive in Razor files.</li>
-<li>Ability to add/remove pages as needed.</li>
+<li>Ability to add / remove pages as needed.</li>
 <li>Works with all CSS frameworks and themes.</li>
 <li>Easy to deploy with CI/CD pipeline.</li>
 </ul>
-<h1 id="getting-started">Getting Started</h1>
-<p>You can fork <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">BlazorStaticMinimalBlog</a> as a template if you want something quick and easy to start with. It is ready to work with GitHub Pages, and you can have your static page in a matter of minutes.</p>
-<p>If you want to start from scratch, follow the steps below.</p>
-<h2 id="creating-a-project-if-you-dont-have-one">1. Creating a Project (if you don't have one)</h2>
-<p>Create a new Blazor project with the following command:</p>
-<pre><code class="language-shell">dotnet new blazor --name MyBlazorStaticApp  --interactivity None --empty
-</code></pre>
+<h1 id="getting-started">Getting started</h1>
+<p>BlazorStatic is a small library designed to be integrated into Blazor web applications That was mainly created with the intention of making blogs, but it got improved to become a more general tool for creating static sites.</p>
+<p><em>Note</em>: You can use <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">BlazorStaticMinimalBlog</a> as a template if you want something quick and easy.</p>
+<h2 id="creating-project">1. Creating project</h2>
+<p><em>skip this if you already have a blazor project</em></p>
+<h3 id="using-dotnet-new-template">Using Dotnet new template</h3>
+<p>Ideally, this command would set up your project automatically. However, this feature is currently a significant <strong><a href="https://github.com/tesar-tech/BlazorStatic/issues/2">TODO</a></strong> awaiting implementation.</p>
 <h2 id="installation">2. Installation</h2>
-<p>Just add the <code>BlazorStatic</code> Nuget package to your project:</p>
-<pre><code class="language-shell">cd MyBlazorStaticApp
-</code></pre>
-<pre><code class="language-shell">$ dotnet add package BlazorStatic --prerelease
+<h3 id="nuget">Nuget:</h3>
+<pre><code class="language-shell">$ dotnet add package BlazorStatic
 </code></pre>
 <h2 id="registering-services">3. Registering Services</h2>
-<p>3 lines of code in <code>Program.cs</code> and you are ready to go:</p>
-<pre><code class="language-cs">using BlazorStatic;
+<pre><code class="language-cs">// Program.cs
+using BlazorStatic;
 
-builder.Services.AddBlazorStaticService();
-//...
-app.UseBlazorStaticGenerator();
-</code></pre>
-<h2 id="running">4. Running</h2>
-<p>Run the app as usual (for example, <code>dotnet run</code>), and you will see the static files generated in the <code>output</code> folder.</p>
-<p>You can see similar output in the console:</p>
-<pre><code class="language-shell">Copying C:\PathToRepo\MyBlazorStaticApp\wwwroot\app.css to output\app.css
-Generating into index.html
-</code></pre>
-<p>Inside the <code>output</code> folder, you will find the generated files. It includes the <code>index.html</code> file and <code>app.css</code>, which <strong>BlazorStatic</strong> copied from the <code>wwwroot</code> folder. You can deploy the <code>output</code> folder to any static hosting, and it will just work.</p>
-<p>With this approach, you can add any page to your app, and it will be generated as a static HTML file. <strong>BlazorStatic</strong> isn't a framework or a way to build websites. It is just a tool to generate static HTML files from your existing Blazor app.</p>
-<h1 id="markdown-content">Markdown Content</h1>
-<p>Now you want to add some content to your page. <strong>BlazorStatic</strong> has some tools to handle markdown files.</p>
-<h2 id="create-a-markdown-file">1. Create a Markdown File</h2>
-<ul>
-<li><p>Create a <code>Content/Blog</code> folder in the root of your project. If you don't like the naming, you can change it in the configuration, but for now, let's stick with the default.</p>
-</li>
-<li><p>Create a markdown file in the <code>Content/Blog</code> folder. For example, <code>Content/Blog/first-post.md</code> with the following content:</p>
-<pre><code class="language-markdown">---
-title: First Post
-lead: First post description
-published: 2024-07-07
-tags: [tag1, tag2]
-authors:
-    - name: &quot;Author name&quot;
+// register blazor static service to generate static files
+builder.Services.AddBlazorStaticService(opt =&gt; {
+    // won't copy the `app.css` when generating the static files
+    opt.IgnoredPathsOnContentCopy.AddRange(new[] { &quot;app.css&quot; });
+    // choose the output folder for the static files
+    opt.OutputFolderPath = &quot;output&quot;;
+});
 
----
-
-## I am heading
-
-Here is some **markdown** content. 
-
-</code></pre>
-</li>
-<li><p>Instruct <code>MyBlazorStaticApp.csproj</code> to copy the content to the bin folder:</p>
-<pre><code class="language-xml">&lt;ItemGroup&gt;
-    &lt;Content Include=&quot;Content\**\*&quot; CopyToOutputDirectory=&quot;PreserveNewest&quot; /&gt;
-&lt;/ItemGroup&gt;
-</code></pre>
-</li>
-</ul>
-<h2 id="parsing-markdown">2. Parsing markdown</h2>
-<ul>
-<li><p>As you can see, it uses Front Matter in YAML format. Now we need to instruct <code>BlazorStatic</code> to add the content (parse markdown):</p>
-<pre><code class="language-cs">builder.Services.AddBlazorStaticContentService&lt;BlogFrontMatter&gt;(opt =&gt; {
+// register a service for your blog files
+builder.Services.AddBlazorStaticContentService&lt;BlogFrontMatter&gt;(opt =&gt; {
+    // assign where the blog files will be stored
     opt.ContentPath = Path.Combine(&quot;Content&quot;, &quot;Blog&quot;);
 });
 
+// ...
+
+// `shutdownApp` is essential for CI/CD pipelines to prevent the app from running indefinitely.
+app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 </code></pre>
-<ul>
-<li><code>BlogFrontMatter</code> is a class that matches the front matter in the markdown file. You can create your own class, which implements <code>IFrontMatter</code>.</li>
-<li><code>ContentPath</code> is the path to the folder with markdown files. You can change it to any other path.</li>
-</ul>
-</li>
-<li><p>Now when you run the app it will parse markdown files, but it won't generate any HTML files. You need to add a page that will use the parsed content.</p>
-</li>
-</ul>
-<h2 id="adding-a-page-to-use-the-content">3. Adding a Page to Use the Content</h2>
-<p>Now we need to use the content in a page. This is not something <strong>BlazorStatic</strong> is meant to do. It just makes the content available, and it's up to you how you use it.</p>
-<p>It assumes you will have a &quot;/blog&quot; page available (you can also configure this).</p>
-<p>A simple example of such a page is this:</p>
-<pre><code class="language-razor">@page &quot;/blog&quot;
-@page &quot;/blog/{fileName}&quot;
-@using BlazorStatic
-@using BlazorStatic.Services
-@inject BlazorStaticContentService&lt;BlogFrontMatter&gt; blogService
-
-
-@if (post == null)
-{
-   &lt;div&gt;There is total of @blogService.BlogPosts.Count() blog posts &lt;/div&gt;
-}
-else
-{
-   &lt;div&gt;
-      @post.FrontMatter.Title
-      @((MarkupString)post.HtmlContent)
-   &lt;/div&gt;
-}
-
-@code
-{
-   [Parameter] public string? FileName { get; set; }
-   Post&lt;BlogFrontMatter&gt;? post;
-
-   protected override void OnInitialized()
-   {
-      if (string.IsNullOrWhiteSpace(FileName)) return;
-      post = blogService.BlogPosts.FirstOrDefault(x =&gt; x.Url == FileName);
-   }
-}
-
-</code></pre>
-<p>Now <strong>BlazorStatic</strong> will generate a <code>blog</code> folder with an <code>index.html</code> file where you will see the total number of posts and a <code>first-post.html</code> file where you will see the content of the post we created earlier.</p>
-<p>Check the <code>More In Depth</code> section to see how to configure <strong>BlazorStatic</strong> to match your needs.</p>
-<h2 id="deploying">Deploying</h2>
-<p>You can deploy the <code>output</code> folder to any static hosting service, such as GitHub Pages, Netlify, Vercel, Azure Static Web Apps, etc.</p>
-<p>Detailed instructions are <a href="docs/deployment.md">here</a>.</p>
-<p>Don't forget to shut down the app after the files are generated; otherwise, the pipeline will hang. You can do it like this:</p>
-<pre><code class="language-cs">app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
-</code></pre>
-<h1 id="more-in-depth">More in Depth</h1>
-<p>The best way to see how things work is to check the existing code. For example, this repo contains a feature-rich demonstration of <code>BlazorStatic</code> capabilities.</p>
-<p>You can also see a <a href="docs/new-start.md">different guide</a> for starting. These instructions will help you build a project similar to BlazorStaticMinimalBlog and are beneficial for understanding the inner workings of <strong>BlazorStatic</strong>.</p>
+<h2 id="running">4. Running</h2>
+<p>Starting the project will create a folder (<code>output</code> by default) which contains the generated static files of your site. (this can be disabled in <code>AddBlazorStaticService</code>)</p>
+<h2 id="more-in-depth">More in Depth</h2>
+<p>In-depth instructions are available <a href="docs/new-start.md">here</a>. These instructions will help you build a project akin to BlazorStaticMinimalBlog and is beneficial for understanding the inner workings of BlazorStatic.</p>
 <h1 id="samples">Samples</h1>
 <table>
 <thead>
