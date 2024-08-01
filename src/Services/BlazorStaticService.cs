@@ -57,7 +57,6 @@ public class BlazorStaticService(BlazorStaticOptions options,
 
         foreach (PageToGenerate page in options.PagesToGenerate)
         {
-            if (page is null) continue;
 
             logger.LogInformation("Generating {pageUrl} into {pageOutputFile}", page.Url, page.OutputFile);
             string content;
@@ -87,11 +86,10 @@ public class BlazorStaticService(BlazorStaticOptions options,
     private void RegisterNonTokenizedPages()
     {
         var entryAssembly = Assembly.GetEntryAssembly()!;
-        List<string?> routesToGenerate = RoutesHelper.GetRoutesToRender(entryAssembly);
+        List<string> routesToGenerate = RoutesHelper.GetRoutesToRender(entryAssembly);
 
         foreach (var route in routesToGenerate)
         {
-            if (route is null) continue;
             options.PagesToGenerate.Add(new (route, Path.Combine(route, options.IndexPageHtml)));
         }
     }
