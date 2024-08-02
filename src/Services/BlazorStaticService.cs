@@ -1,7 +1,7 @@
 namespace BlazorStatic.Services;
 
 using Microsoft.Extensions.Logging;
-using System.Text.RegularExpressions;
+using System.Reflection;
 
 /// <summary>
 /// The BlazorStaticService is responsible for generating static pages for a Blazor application.
@@ -33,30 +33,31 @@ public class BlazorStaticService(BlazorStaticOptions options,
     {
 
         if (options.AddNonParametrizedRazorPages)
-            AddNonParametrizedRazorPages();
-        
+            AddPagesWithoutParameters();
+
         foreach (Func<Task> action in options.GetBeforeFilesGenerationActions())
         {
             await action.Invoke();
         }
+
         if (options.SuppressFileGeneration) return;
 
-        if (Directory.Exists(options.OutputFolderPath))//clear output folder
+        if (Directory.Exists(options.OutputFolderPath)) //clear output folder
             Directory.Delete(options.OutputFolderPath, true);
         Directory.CreateDirectory(options.OutputFolderPath);
 
         List<string> ignoredPathsWithOutputFolder = options.IgnoredPathsOnContentCopy.Select(x => Path.Combine(options.OutputFolderPath, x)).ToList();
         foreach (var pathToCopy in options.ContentToCopyToOutput)
         {
-            logger.LogInformation("Copying {sourcePath} to {targetPath}", pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath,  pathToCopy.TargetPath ));
+            logger.LogInformation("Copying {sourcePath} to {targetPath}", pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath, pathToCopy.TargetPath));
             helpers.CopyContent(pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath, pathToCopy.TargetPath), ignoredPathsWithOutputFolder);
         }
-
 
         HttpClient client = new() { BaseAddress = new Uri(appUrl) };
 
         foreach (PageToGenerate page in options.PagesToGenerate)
         {
+
             logger.LogInformation("Generating {pageUrl} into {pageOutputFile}", page.Url, page.OutputFile);
             string content;
             try
@@ -69,57 +70,28 @@ public class BlazorStaticService(BlazorStaticOptions options,
                 continue;
             }
 
-            var outFilePath = Path.Combine(options.OutputFolderPath, page.OutputFile);
+            var outFilePath = Path.Combine(options.OutputFolderPath, page.OutputFile.TrimStart('/'));
 
             string? directoryPath = Path.GetDirectoryName(outFilePath);
-            if (directoryPath != null)
+            if (!string.IsNullOrEmpty(directoryPath))
                 Directory.CreateDirectory(directoryPath);
+
             await File.WriteAllTextAsync(outFilePath, content);
         }
     }
+
     /// <summary>
-    /// Adds non-parametrized Razor pages to the list of pages to be generated as static content.
-    /// This method scans specified directories for Razor files and identifies those with a @page directive
-    /// that do not include parameters (i.e., no '{}' in the directive). For each matching file, it constructs
-    /// a URL based on the @page directive and determines a corresponding file path for the static HTML output.
-    /// The method assumes that each URL path should map to a folder structure with an 'index.html' file in it,
-    /// as specified in options.IndexPageHtml.
+    /// Registers razor pages that have no parameters to be generated as static pages.
+    /// Page is defined by Route parameter: either `@page "Example"` or `@attribute [Route("Example")]`  
     /// </summary>
-    /// <remarks>
-    /// This operation is controlled by the options.AddNonParametrizedRazorPages flag. Only Razor files in
-    /// directories specified in options.RazorPagesPaths are considered. The method employs regular expression
-    /// matching to identify suitable @page directives.
-    /// </remarks>
-    void AddNonParametrizedRazorPages()
+    private void AddPagesWithoutParameters()
     {
-        if (!options.AddNonParametrizedRazorPages) return;
+        var entryAssembly = Assembly.GetEntryAssembly()!;
+        List<string> routesToGenerate = RoutesHelper.GetRoutesToRender(entryAssembly);
 
-        var regex = new Regex("""
-                              @page "/(?!.*\{.*\})(.*?)"
-                              """);// Regular expression to match @page directive, but ignore when {} are present
-
-        var allRazorFilePaths = new List<string>();
-
-        foreach (var path in options.RazorPagesPaths)
+        foreach (var route in routesToGenerate)
         {
-            var filePaths = Directory.GetFiles(path, "*.razor");
-            allRazorFilePaths.AddRange(filePaths);
-        }
-        foreach (var filePath in allRazorFilePaths)
-        {
-            var content = File.ReadAllText(filePath);
-
-            var match = regex.Match(content);
-            if (match is not { Success: true, Groups.Count: > 1 })
-                continue;
-            string url = match.Groups[1].Value;
-            string file = Path.Combine(url, options.IndexPageHtml);//for @page "/blog" generate blog/index.html 
-            options.PagesToGenerate.Add(new($"{url}", file));
+            options.PagesToGenerate.Add(new (route, Path.Combine(route, options.IndexPageHtml)));
         }
     }
 }
-
-
-
-
-

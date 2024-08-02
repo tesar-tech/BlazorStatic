@@ -25,7 +25,7 @@ There are a lot of defaults to keep usage simple, but you can configure it exten
 - Work with Blazor as you are used to.
 - Easily parse and consume markdown files.
 - Support for custom YAML front matters.
-- Automatically discovers pages to generate by scanning for the `@page` directive in Razor files.
+- Automatically discovers pages among Razor files.
 - Ability to add/remove pages as needed.
 - Works with all CSS frameworks and themes.
 - Easy to deploy with CI/CD pipeline.

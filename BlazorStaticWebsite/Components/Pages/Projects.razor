@@ -1,5 +1,10 @@
-﻿@page "/projects"
-@page "/projects/{*postUrl}"
+﻿
+@*instead of @page "/projects"  *@
+@attribute [Route($"/{WebsiteKeys.ProjectsUrl}")] 
+
+@*instead of @page "/projects/{*postUrl}"  *@
+@attribute [Route($"/{WebsiteKeys.ProjectsUrl}/{{*postUrl}}")] 
+
 @using BlazorStatic
 @using BlazorStatic.Services
 @inject BlazorStaticContentService<ProjectFrontMatter> projectsService

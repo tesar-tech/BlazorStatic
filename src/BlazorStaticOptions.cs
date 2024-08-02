@@ -19,7 +19,7 @@ public class BlazorStaticOptions
     public bool SuppressFileGeneration { get; set; }
     
     /// <summary>
-    /// List of pages to generate with url to call and path of .html file to generate.
+    /// List of routes to generate as static html files.
     /// </summary>
     public List<PageToGenerate> PagesToGenerate { get; } = [];
     
