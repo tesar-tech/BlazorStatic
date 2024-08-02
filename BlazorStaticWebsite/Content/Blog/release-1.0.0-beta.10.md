@@ -11,16 +11,14 @@ authors:
   gitHubUserName: "MeltyObserver"
 ---
 
-
-
 ## Breaking Changes
 
-- `RazorPagesPaths` is no longer availabl~~~~e. It was used to get the location of razor pages where to scan for `@page` directive. 
-Since now, it scans the assembly, this is no longer needed.  
+- `RazorPagesPaths` is no longer available. It was used to get the location of razor pages to scan for the `@page` directive.
+  Now, BlazorStatic scans the assembly for all pages.
 
 ## Features
 
-- Now you don't need to use `@page` directive, but you can use `Route` attribute (`@page` directive is translated to that anyway)
+- You no longer need to use the `@page` directive; you can use the `Route` attribute instead (the `@page` directive is translated to that anyway).
 
 Before:
 
@@ -34,9 +32,11 @@ After:
 @attribute [Route("/projects")]*@
 ```
 
-Well - you might say it is uglier now and you would be right. The `@page` directive is there to simplify the `Route` attribute usage.
-But it doesn't support anything else except strings... You might want to (and I recommend) that to avoid magic strings and keep all the
-routes in single place. For example here in BlazorStaticWebsite the `projects` page is defined with:
+
+You might say it is uglier now, and you would be right.
+The `@page` directive simplifies the usage of the `Route` attribute, but it only supports strings.
+To avoid magic strings and keep all routes in a single place, I recommend defining routes centrally.
+For example, in BlazorStaticWebsite, the `projects` page is defined as:
 
 ```
 @attribute [Route($"/{WebsiteKeys.ProjectsUrl}")]

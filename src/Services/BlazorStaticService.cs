@@ -33,7 +33,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
     {
 
         if (options.AddNonParametrizedRazorPages)
-            RegisterNonTokenizedPages();
+            AddPagesWithoutParameters();
 
         foreach (Func<Task> action in options.GetBeforeFilesGenerationActions())
         {
@@ -82,8 +82,9 @@ public class BlazorStaticService(BlazorStaticOptions options,
 
     /// <summary>
     /// Registers razor pages that have no parameters to be generated as static pages.
+    /// Page is defined by Route parameter: either `@page "Example"` or `@attribute [Route("Example")]`  
     /// </summary>
-    private void RegisterNonTokenizedPages()
+    private void AddPagesWithoutParameters()
     {
         var entryAssembly = Assembly.GetEntryAssembly()!;
         List<string> routesToGenerate = RoutesHelper.GetRoutesToRender(entryAssembly);

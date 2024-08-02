@@ -15,17 +15,17 @@ internal static class RoutesHelper
     public static List<string> GetRoutesToRender(Assembly assembly)
     {
         // Get all the components whose base class is ComponentBase
-        var components = assembly
+        IEnumerable<Type> components = assembly
             .ExportedTypes
             .Where(t => t.IsSubclassOf(typeof(ComponentBase)));
 
         // get all the routes that don't contain parameters
-        var routes = components
+        List<string> routes = components
             .Select(GetRouteFromComponent)
             .Where(route => route is not null)
-            .ToList();
+            .ToList()!;//previous null check guarantee not nulls 
 
-        return routes!;
+        return routes;
     }
 
     /// <summary>
@@ -34,28 +34,14 @@ internal static class RoutesHelper
     /// <param name="component"></param>
     /// <returns>
     /// The route of the component.
-    /// Returns null if the component is not a page or the route has parameters.
+    /// Returns null if the component is not a page (doesn't have RouteAttr) or the route has parameters.
     /// </returns>
     private static string? GetRouteFromComponent(Type component)
     {
         var attributes = component.GetCustomAttributes(inherit: true);
 
-        var routeAttribute = attributes.OfType<RouteAttribute>().FirstOrDefault();
-
-        if (routeAttribute is null)
-        {
-            // Only map rout-able components
-            return null;
-        }
-
-        var route = routeAttribute.Template;
-
-        // can't work with parameterized pages
-        if (route.Contains('{'))
-        {
-            return null;
-        }
-
-        return route;
+        // can't work with parameterized pages (such pages has params defined with {paramName})
+        return attributes.OfType<RouteAttribute>()
+            .FirstOrDefault(x=>!x.Template.Contains('{'))?.Template;
     }
 }
