@@ -10,7 +10,7 @@ public interface IFrontMatter
     /// Useful for generating tag pages.
     /// </summary>
     List<string> Tags { get; set; }
-    
+
     /// <summary>
     /// If true, the blog post will not be generated.
     /// </summary>
@@ -102,4 +102,5 @@ public record ContentToCopy(string SourcePath, string TargetPath);
 /// </summary>
 /// <param name="Url"></param>
 /// <param name="OutputFile"></param>
-public record PageToGenerate(string Url, string OutputFile);
+/// <param name="OriginalFile">the full path of the original file</param>
+public record PageToGenerate(string Url, string OutputFile, string? OriginalFile = null);

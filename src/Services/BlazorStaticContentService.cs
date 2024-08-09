@@ -57,7 +57,7 @@ public class BlazorStaticContentService<TFrontMatter>(
             };
             options.Posts.Add(post);
 
-            blazorStaticService.Options.PagesToGenerate.Add(new($"{options.PageUrl}/{post.Url}", Path.Combine(options.PageUrl, $"{post.Url}.html")));
+            blazorStaticService.Options.PagesToGenerate.Add(new($"{options.PageUrl}/{post.Url}", Path.Combine(options.PageUrl, $"{post.Url}.html"), file));
         }
 
         //copy media folder to output
