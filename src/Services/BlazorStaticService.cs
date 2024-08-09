@@ -2,6 +2,7 @@ namespace BlazorStatic.Services;
 
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using System.Xml.Linq;
 
 /// <summary>
 /// The BlazorStaticService is responsible for generating static pages for a Blazor application.
@@ -17,7 +18,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
     /// The BlazorStaticOptions used to configure the generation process.
     /// </summary>
     public BlazorStaticOptions Options => options;
-    
+
     /// <summary>
     /// Generates static pages for the Blazor application. This method performs several key operations:
     /// - Invokes an optional pre-defined blog action.
@@ -53,6 +54,9 @@ public class BlazorStaticService(BlazorStaticOptions options,
             helpers.CopyContent(pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath, pathToCopy.TargetPath), ignoredPathsWithOutputFolder);
         }
 
+        XNamespace xmlns = XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9");
+        List<XElement> xmlUrlList = [];
+
         HttpClient client = new() { BaseAddress = new Uri(appUrl) };
 
         foreach (PageToGenerate page in options.PagesToGenerate)
@@ -77,12 +81,37 @@ public class BlazorStaticService(BlazorStaticOptions options,
                 Directory.CreateDirectory(directoryPath);
 
             await File.WriteAllTextAsync(outFilePath, content);
+
+            if (options.GenerateSitemap)
+            {
+                if (!Uri.TryCreate(new Uri(appUrl), relativeUri: page.Url, out Uri? pageUrl)) continue;
+
+                List<XElement> xElements = [new XElement(xmlns + "loc", pageUrl)];
+
+                if (page.OriginalFile is not null)
+                {
+                    FileInfo fileInfo = new(page.OriginalFile);
+                    xElements.Add(new XElement(xmlns + "lastmod", $"{fileInfo.LastWriteTime:yyyy-MM-dd}"));
+                }
+
+                xmlUrlList.Add(new XElement(xmlns + "url", xElements));
+            }
+        }
+
+        if (options.GenerateSitemap)
+        {
+            XDocument document = new(
+                new XDeclaration("1.0", "UTF-8", null),
+                new XElement(xmlns + "urlset", xmlUrlList)
+            );
+            string xmlFilePath = Path.Combine(options.OutputFolderPath, "sitemap.xml");
+            await File.WriteAllTextAsync(xmlFilePath, document.Declaration + document.ToString());
         }
     }
 
     /// <summary>
     /// Registers razor pages that have no parameters to be generated as static pages.
-    /// Page is defined by Route parameter: either `@page "Example"` or `@attribute [Route("Example")]`  
+    /// Page is defined by Route parameter: either `@page "Example"` or `@attribute [Route("Example")]`
     /// </summary>
     private void AddPagesWithoutParameters()
     {
