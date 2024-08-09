@@ -15,6 +15,7 @@ authors:
 
 - `RazorPagesPaths` is no longer available. It was used to get the location of razor pages to scan for the `@page` directive.
   Now, BlazorStatic scans the assembly for all pages.
+- `AddNonParametrizedRazorPages` was renamed to `AddPagesWithoutParameters` as it clearly describes what it is about.
 
 ## Features
 
