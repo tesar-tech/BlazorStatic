@@ -46,7 +46,13 @@ public class BlazorStaticOptions
     /// The sitemap file follows the google model:<br/>
     /// https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap#xml
     /// </summary>
-    public bool GenerateSitemap { get; set; } = true;
+    public bool ShouldGenerateSitemap { get; set; } = false;
+
+    /// <summary>
+    /// Hostname of your site. Needed to generate the sitemap. <br />
+    /// E.g. 'https://username.github.io'
+    /// </summary>
+    public string? SiteUrl { get; set; }
 
     private readonly List<Func<Task>> _beforeFilesGenerationActions = [];
 

@@ -54,9 +54,6 @@ public class BlazorStaticService(BlazorStaticOptions options,
             helpers.CopyContent(pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath, pathToCopy.TargetPath), ignoredPathsWithOutputFolder);
         }
 
-        XNamespace xmlns = XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9");
-        List<XElement> xmlUrlList = [];
-
         HttpClient client = new() { BaseAddress = new Uri(appUrl) };
 
         foreach (PageToGenerate page in options.PagesToGenerate)
@@ -82,31 +79,48 @@ public class BlazorStaticService(BlazorStaticOptions options,
 
             await File.WriteAllTextAsync(outFilePath, content);
 
-            if (options.GenerateSitemap)
-            {
-                if (!Uri.TryCreate(new Uri(appUrl), relativeUri: page.Url, out Uri? pageUrl)) continue;
-
-                List<XElement> xElements = [new XElement(xmlns + "loc", pageUrl)];
-
-                if (page.OriginalFile is not null)
-                {
-                    FileInfo fileInfo = new(page.OriginalFile);
-                    xElements.Add(new XElement(xmlns + "lastmod", $"{fileInfo.LastWriteTime:yyyy-MM-dd}"));
-                }
-
-                xmlUrlList.Add(new XElement(xmlns + "url", xElements));
-            }
         }
 
-        if (options.GenerateSitemap)
+        if (Options.ShouldGenerateSitemap)
+            await GenerateSitemap();
+    }
+
+    /// <summary>
+    /// Generates an XML sitemap from the registered URLs. <br />
+    /// !requires BlazorStaticOptions.SiteUrl to not be null!
+    /// </summary>
+    private async Task GenerateSitemap()
+    {
+        // todo: should we throw an error here? show a warning and use localhost?
+        if (string.IsNullOrWhiteSpace(Options.SiteUrl)) return;
+
+        XNamespace xmlns = XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9");
+        List<XElement> xmlUrlList = [];
+
+        foreach(PageToGenerate page in options.PagesToGenerate)
         {
-            XDocument document = new(
-                new XDeclaration("1.0", "UTF-8", null),
-                new XElement(xmlns + "urlset", xmlUrlList)
-            );
-            string xmlFilePath = Path.Combine(options.OutputFolderPath, "sitemap.xml");
-            await File.WriteAllTextAsync(xmlFilePath, document.Declaration + document.ToString());
+            if (!Uri.TryCreate(new Uri(Options.SiteUrl), relativeUri: page.Url, out Uri? pageUrl)) continue;
+
+            List<XElement> xElements = [new XElement(xmlns + "loc", pageUrl)];
+
+            // only add a <lastmod> node if the file is a blog post
+            // todo?: should we also check last write time for razor files?
+            if (page.OriginalFile is not null)
+            {
+                FileInfo fileInfo = new(page.OriginalFile);
+                xElements.Add(new XElement(xmlns + "lastmod", $"{fileInfo.LastWriteTime:yyyy-MM-dd}"));
+            }
+
+            xmlUrlList.Add(new XElement(xmlns + "url", xElements));
         }
+
+        XDocument xDocument = new(
+            new XDeclaration("1.0", "UTF-8", null),
+            new XElement(xmlns + "urlset", xmlUrlList)
+        );
+
+        string sitemapPath = Path.Combine(options.OutputFolderPath, "sitemap.xml");
+        await File.WriteAllTextAsync(sitemapPath, xDocument.Declaration + xDocument.ToString());
     }
 
     /// <summary>
