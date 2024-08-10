@@ -3,6 +3,8 @@ namespace BlazorStatic.Services;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Xml.Linq;
+using System.Text;
+using System.Web;
 
 /// <summary>
 /// The BlazorStaticService is responsible for generating static pages for a Blazor application.
@@ -97,11 +99,11 @@ public class BlazorStaticService(BlazorStaticOptions options,
         XNamespace xmlns = XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9");
         List<XElement> xmlUrlList = [];
 
-        foreach(PageToGenerate page in options.PagesToGenerate)
+        foreach (PageToGenerate page in options.PagesToGenerate)
         {
             if (!Uri.TryCreate(new Uri(Options.SiteUrl), relativeUri: page.Url, out Uri? pageUrl)) continue;
 
-            List<XElement> xElements = [new XElement(xmlns + "loc", pageUrl)];
+            List<XElement> xElements = [new XElement(xmlns + "loc", EncodeUrl(pageUrl))];
 
             // only add a <lastmod> node if the file is a blog post
             // todo?: should we also check last write time for razor files?
@@ -121,6 +123,11 @@ public class BlazorStaticService(BlazorStaticOptions options,
 
         string sitemapPath = Path.Combine(options.OutputFolderPath, "sitemap.xml");
         await File.WriteAllTextAsync(sitemapPath, xDocument.Declaration + xDocument.ToString());
+
+        static string EncodeUrl(Uri url)
+        {
+            return HttpUtility.UrlEncode(url.ToString(), Encoding.UTF8).Replace("%2f", "/");
+        }
     }
 
     /// <summary>
@@ -134,7 +141,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
 
         foreach (var route in routesToGenerate)
         {
-            options.PagesToGenerate.Add(new (route, Path.Combine(route, options.IndexPageHtml)));
+            options.PagesToGenerate.Add(new(route, Path.Combine(route, options.IndexPageHtml)));
         }
     }
 }
