@@ -93,8 +93,11 @@ public class BlazorStaticService(BlazorStaticOptions options,
     /// </summary>
     private async Task GenerateSitemap()
     {
-        // todo: should we throw an error here? show a warning and use localhost?
-        if (string.IsNullOrWhiteSpace(Options.SiteUrl)) return;
+        if (string.IsNullOrWhiteSpace(Options.SiteUrl))
+        {
+            logger.LogWarning("'BlazorStaticOptions.SiteUrl' is null or empty! Can't generate Sitemap.");
+            return;
+        }
 
         XNamespace xmlns = XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9");
         List<XElement> xmlUrlList = [];
