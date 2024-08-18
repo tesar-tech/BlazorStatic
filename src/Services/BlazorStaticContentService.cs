@@ -57,7 +57,7 @@ public class BlazorStaticContentService<TFrontMatter>(
             };
             options.Posts.Add(post);
 
-            blazorStaticService.Options.PagesToGenerate.Add(new($"{options.PageUrl}/{post.Url}", Path.Combine(options.PageUrl, $"{post.Url}.html"), file));
+            blazorStaticService.Options.PagesToGenerate.Add(new($"{options.PageUrl}/{post.Url}", Path.Combine(options.PageUrl, $"{post.Url}.html"), post.FrontMatter.AdditionalInfo));
         }
 
         //copy media folder to output
@@ -70,7 +70,7 @@ public class BlazorStaticContentService<TFrontMatter>(
         //add tags pages
         if (options.AddTagPagesFromPosts)
         {
-            // blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));   
+            // blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));
             foreach (var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct())//gather all unique tags from all blog posts
             {
                 blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}/{tag}", Path.Combine(options.TagsPageUrl, $"{tag}.html")));
@@ -91,7 +91,7 @@ public class BlazorStaticContentService<TFrontMatter>(
         }
 
         //ex: file= "C:\Users\user\source\repos\MyBlog\Content\Blog\en\somePost.md"
-        //returns "en/somePost"  
+        //returns "en/somePost"
         string GetRelativePathWithFilename(string file)
         {
             string relativePathWithFileName = Path.GetRelativePath(absContentPath, file);

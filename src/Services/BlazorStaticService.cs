@@ -109,11 +109,9 @@ public class BlazorStaticService(BlazorStaticOptions options,
             List<XElement> xElements = [new XElement(xmlns + "loc", EncodeUrl(pageUrl))];
 
             // only add a <lastmod> node if the file is a blog post
-            // todo?: should we also check last write time for razor files?
-            if (page.OriginalFile is not null)
+            if (page.Info is not null && page.Info.LastMod is not null)
             {
-                FileInfo fileInfo = new(page.OriginalFile);
-                xElements.Add(new XElement(xmlns + "lastmod", $"{fileInfo.LastWriteTime:yyyy-MM-dd}"));
+                xElements.Add(new XElement(xmlns + "lastmod", $"{page.Info.LastMod:yyyy-MM-dd}"));
             }
 
             xmlUrlList.Add(new XElement(xmlns + "url", xElements));

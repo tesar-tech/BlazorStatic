@@ -15,13 +15,18 @@ public interface IFrontMatter
     /// If true, the blog post will not be generated.
     /// </summary>
     bool IsDraft => false;
+
+    /// <summary>
+    /// Optional data for configuring certain parts of the generation process.
+    /// </summary>
+    AdditionalInfo? AdditionalInfo => null;
 }
 
 
 /// <summary>
 /// Showcase of a front matter class. If you have a different front matter format, implement your own class.
 /// </summary>
-public class BlogFrontMatter:IFrontMatter
+public class BlogFrontMatter : IFrontMatter
 {
     /// <summary>
     /// Title of the blog post.
@@ -45,6 +50,10 @@ public class BlogFrontMatter:IFrontMatter
     /// Authors of the blog post.
     /// </summary>
     public List<Author> Authors { get; set; } = [];
+    /// <summary>
+    /// <inheritdoc />
+    /// </summary>
+    public AdditionalInfo? AdditionalInfo => new() { LastMod = Published };
 }
 /// <summary>
 /// Author of a blog post.
@@ -90,6 +99,17 @@ public class Post<TFrontMatter>
 }
 
 /// <summary>
+/// Additional Info related to the page.
+/// </summary>
+public class AdditionalInfo
+{
+    /// <summary>
+    /// The date of last modification of the page.
+    /// </summary>
+    public DateTime? LastMod { get; init; }
+}
+
+/// <summary>
 /// Class for keeping the content to copy properties together.
 /// </summary>
 /// <param name="SourcePath"></param>
@@ -102,5 +122,5 @@ public record ContentToCopy(string SourcePath, string TargetPath);
 /// </summary>
 /// <param name="Url"></param>
 /// <param name="OutputFile"></param>
-/// <param name="OriginalFile">the full path of the original file</param>
-public record PageToGenerate(string Url, string OutputFile, string? OriginalFile = null);
+/// <param name="Info">Additional file properties.</param>
+public record PageToGenerate(string Url, string OutputFile, AdditionalInfo? Info = null);
