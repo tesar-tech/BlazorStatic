@@ -104,9 +104,8 @@ public class BlazorStaticService(BlazorStaticOptions options,
 
         foreach (PageToGenerate page in options.PagesToGenerate)
         {
-            if (!Uri.TryCreate(new Uri(Options.SiteUrl), relativeUri: page.Url, out Uri? pageUrl)) continue;
-
-            List<XElement> xElements = [new XElement(xmlns + "loc", EncodeUrl(pageUrl))];
+            string pageUrl = Options.SiteUrl.TrimEnd('/') + EncodeUrl(page.Url);
+            List<XElement> xElements = [new XElement(xmlns + "loc", pageUrl)];
 
             // only add a <lastmod> node if the file is a blog post
             if (page.Info is not null && page.Info.LastMod is not null)
@@ -125,9 +124,10 @@ public class BlazorStaticService(BlazorStaticOptions options,
         string sitemapPath = Path.Combine(options.OutputFolderPath, "sitemap.xml");
         await File.WriteAllTextAsync(sitemapPath, xDocument.Declaration + xDocument.ToString());
 
-        static string EncodeUrl(Uri url)
+        static string EncodeUrl(string url)
         {
-            return HttpUtility.UrlEncode(url.ToString(), Encoding.UTF8).Replace("%2f", "/");
+            string encodedUrl = HttpUtility.UrlEncode(url.ToString(), Encoding.UTF8).Replace("%2f", "/");
+            return encodedUrl.StartsWith('/') ? encodedUrl : '/' + encodedUrl;
         }
     }
 
