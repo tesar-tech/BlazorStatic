@@ -99,7 +99,8 @@ public class Post<TFrontMatter>
 }
 
 /// <summary>
-/// Additional Info related to the page.
+/// Additional AdditionalInfo related to the page. This info is typically not bounded to FrontMatter, but rather "computed" additionaly.
+/// Currently, it is used to pass LastMod to the node in xml sitemap   
 /// </summary>
 public class AdditionalInfo
 {
@@ -122,5 +123,5 @@ public record ContentToCopy(string SourcePath, string TargetPath);
 /// </summary>
 /// <param name="Url"></param>
 /// <param name="OutputFile"></param>
-/// <param name="Info">Additional file properties.</param>
-public record PageToGenerate(string Url, string OutputFile, AdditionalInfo? Info = null);
+/// <param name="AdditionalInfo">Additional file properties.</param>
+public record PageToGenerate(string Url, string OutputFile, AdditionalInfo? AdditionalInfo = null);

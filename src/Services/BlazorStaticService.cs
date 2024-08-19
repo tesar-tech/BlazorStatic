@@ -48,6 +48,10 @@ public class BlazorStaticService(BlazorStaticOptions options,
         if (Directory.Exists(options.OutputFolderPath)) //clear output folder
             Directory.Delete(options.OutputFolderPath, true);
         Directory.CreateDirectory(options.OutputFolderPath);
+        
+        //sitemap generation has to happen before copying the wwwroot files, because it outputs the sitemap there
+        if (Options.ShouldGenerateSitemap)
+            await TryGenerateSitemap();
 
         List<string> ignoredPathsWithOutputFolder = options.IgnoredPathsOnContentCopy.Select(x => Path.Combine(options.OutputFolderPath, x)).ToList();
         foreach (var pathToCopy in options.ContentToCopyToOutput)
@@ -83,19 +87,20 @@ public class BlazorStaticService(BlazorStaticOptions options,
 
         }
 
-        if (Options.ShouldGenerateSitemap)
-            await GenerateSitemap();
+      
     }
 
     /// <summary>
     /// Generates an XML sitemap from the registered URLs. <br />
     /// !requires BlazorStaticOptions.SiteUrl to not be null!
+    /// Otherwise, returns with warning
     /// </summary>
-    private async Task GenerateSitemap()
+    private async Task TryGenerateSitemap()
     {
         if (string.IsNullOrWhiteSpace(Options.SiteUrl))
         {
-            logger.LogWarning("'BlazorStaticOptions.SiteUrl' is null or empty! Can't generate Sitemap.");
+            logger.LogWarning("'BlazorStaticOptions.SiteUrl' is null or empty! Can't generate Sitemap." +
+            " Either provide the site url or set 'BlazorStaticOptions.ShouldGenerateSitemap' to false");
             return;
         }
 
@@ -108,9 +113,9 @@ public class BlazorStaticService(BlazorStaticOptions options,
             List<XElement> xElements = [new XElement(xmlns + "loc", pageUrl)];
 
             // only add a <lastmod> node if the file is a blog post
-            if (page.Info is not null && page.Info.LastMod is not null)
+            if (page.AdditionalInfo?.LastMod != null)
             {
-                xElements.Add(new XElement(xmlns + "lastmod", $"{page.Info.LastMod:yyyy-MM-dd}"));
+                xElements.Add(new XElement(xmlns + "lastmod", $"{page.AdditionalInfo.LastMod:yyyy-MM-dd}"));
             }
 
             xmlUrlList.Add(new XElement(xmlns + "url", xElements));
@@ -121,12 +126,16 @@ public class BlazorStaticService(BlazorStaticOptions options,
             new XElement(xmlns + "urlset", xmlUrlList)
         );
 
-        string sitemapPath = Path.Combine(options.OutputFolderPath, "sitemap.xml");
+        const string sitemapFileName = "sitemap.xml";
+        string sitemapPath = Path.Combine(options.SitemapOutputFolderPath, sitemapFileName);
         await File.WriteAllTextAsync(sitemapPath, xDocument.Declaration + xDocument.ToString());
+        logger.LogInformation("Sitemap generated into {pageOutputFile}",  sitemapPath);
+        options.ContentToCopyToOutput.Add(new(sitemapPath,sitemapFileName));//it is not copied with wwwroot as 
+        return;
 
         static string EncodeUrl(string url)
         {
-            string encodedUrl = HttpUtility.UrlEncode(url.ToString(), Encoding.UTF8).Replace("%2f", "/");
+            string encodedUrl = HttpUtility.UrlEncode(url, Encoding.UTF8).Replace("%2f", "/");
             return encodedUrl.StartsWith('/') ? encodedUrl : '/' + encodedUrl;
         }
     }

@@ -131,6 +131,7 @@ public static class BlazorStaticExtensions
 
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
 
+        //adds wwwroot files (or any other files that has been added as static content) to the output
         AddStaticWebAssetsToOutput(app.Environment.WebRootFileProvider, string.Empty, blazorStaticService);
 
         var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
@@ -152,6 +153,13 @@ public static class BlazorStaticExtensions
         }
         );
     }
+    
+    /// <summary>
+    /// Takes the provider, search it recursively and add all the files found.
+    /// </summary>
+    /// <param name="fileProvider"></param>
+    /// <param name="subPath"></param>
+    /// <param name="blazorStaticService"></param>
     private static void AddStaticWebAssetsToOutput(IFileProvider fileProvider, string subPath, BlazorStaticService blazorStaticService)
     {
         IDirectoryContents contents = fileProvider.GetDirectoryContents(subPath);

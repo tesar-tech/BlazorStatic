@@ -22,7 +22,7 @@ builder.Services.AddBlazorStaticService(opt => {
         }
         // Must add a site url to generate the Sitemap!
         opt.ShouldGenerateSitemap = true;
-        opt.SiteUrl = "https://tesar-tech.github.io/BlazorStatic";
+        // opt.SiteUrl = WebsiteKeys.SiteUrl;
     }
     )
     .AddBlazorStaticContentService<BlogFrontMatter>()
@@ -78,4 +78,5 @@ public static class WebsiteKeys
 
     public const string ProjectsUrl = "projects";
 
+    public const string SiteUrl = "https://tesar-tech.github.io/BlazorStatic";
 }

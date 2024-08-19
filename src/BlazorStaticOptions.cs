@@ -43,7 +43,7 @@ public class BlazorStaticOptions
 
     /// <summary>
     /// If set to true will generate a `sitemap.xml` file and place it in the root of the output folder.<br/>
-    /// The sitemap file follows the google model:<br/>
+    /// The sitemap file follows the Google model:<br/>
     /// https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap#xml
     /// </summary>
     public bool ShouldGenerateSitemap { get; set; } = false;
@@ -53,6 +53,17 @@ public class BlazorStaticOptions
     /// E.g. 'https://username.github.io'
     /// </summary>
     public string? SiteUrl { get; set; }
+    
+    /// <summary>
+    /// Specifies the output folder for the sitemap.xml file, relative to the project root.
+    /// This folder should be within a static web assets directory (e.g., wwwroot or any 
+    /// folder configured with <c>app.UseStaticFiles</c>), ensuring it is available for the running web application.
+    /// Default value: <c>"wwwroot"</c>.
+    /// </summary>
+    public string SitemapOutputFolderPath { get; set; } = "wwwroot";
+
+
+    
 
     private readonly List<Func<Task>> _beforeFilesGenerationActions = [];
 
