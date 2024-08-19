@@ -35,7 +35,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
     internal async Task GenerateStaticPages(string appUrl)
     {
 
-        if (options.AddNonParametrizedRazorPages)
+        if (options.AddPagesWithoutParameters)
             AddPagesWithoutParameters();
 
         foreach (Func<Task> action in options.GetBeforeFilesGenerationActions())

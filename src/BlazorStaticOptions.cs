@@ -25,17 +25,11 @@ public class BlazorStaticOptions
 
     /// <summary>
     /// Allows to add non-parametrized razor pages to the list of pages to generate.
-    /// </summary>
-    public bool AddNonParametrizedRazorPages { get; set; } = true;
-
-    /// <summary>
-    /// Where to look for non-parametrized razor pages
     /// Non-parametrized razor page: @page "/about"
     /// Parametrized razor page: @page "/docs/{slug}"
-    /// Parametrized razor page should be handled in own way.
-    /// (by calling AddExtraPages)
     /// </summary>
-    public List<string> RazorPagesPaths { get;  } = [Path.Combine("Components", "Pages")];
+    public bool AddPagesWithoutParameters { get; set; } = true;
+    
     /// <summary>
     /// Name of the page used for index. For example @page "/blog" will be generated to blog/index.html
     /// </summary>
