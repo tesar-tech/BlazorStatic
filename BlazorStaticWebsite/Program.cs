@@ -11,7 +11,7 @@ builder.WebHost.UseStaticWebAssets();
 builder.Services.AddBlazorStaticService(opt => {
         opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });//pre-build version for tailwind
         opt.ContentToCopyToOutput.Add(new("Content/Docs/media", "Content/Docs/media"));
-        //add docs pages
+        // add docs pages
         IEnumerable<string> docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
             .Where(x => !x.EndsWith("README.md"));//ignore readme, it is handled in Pages/Docs.razor
 
@@ -20,6 +20,9 @@ builder.Services.AddBlazorStaticService(opt => {
         {
             opt.PagesToGenerate.Add(new($"/docs/{fileName}", Path.Combine("docs", $"{fileName}.html")));
         }
+        // Must add a site url to generate the Sitemap!
+        opt.ShouldGenerateSitemap = true;
+        // opt.SiteUrl = WebsiteKeys.SiteUrl;
     }
     )
     .AddBlazorStaticContentService<BlogFrontMatter>()
@@ -75,4 +78,5 @@ public static class WebsiteKeys
 
     public const string ProjectsUrl = "projects";
 
+    public const string SiteUrl = "https://tesar-tech.github.io/BlazorStatic";
 }

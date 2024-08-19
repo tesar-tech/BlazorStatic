@@ -17,12 +17,12 @@ public class BlazorStaticOptions
     /// Allows to suppress file generation. Useful for website building, when you don't need the static files.
     /// </summary>
     public bool SuppressFileGeneration { get; set; }
-    
+
     /// <summary>
     /// List of routes to generate as static html files.
     /// </summary>
     public List<PageToGenerate> PagesToGenerate { get; } = [];
-    
+
     /// <summary>
     /// Allows to add non-parametrized razor pages to the list of pages to generate.
     /// Non-parametrized razor page: @page "/about"
@@ -31,20 +31,44 @@ public class BlazorStaticOptions
     public bool AddPagesWithoutParameters { get; set; } = true;
     
     /// <summary>
-    /// Name of the page used for index. For example @page "/blog" will be generated to blog/index.html   
+    /// Name of the page used for index. For example @page "/blog" will be generated to blog/index.html
     /// </summary>
     public string IndexPageHtml { get; set; } = "index.html";
+
+    /// <summary>
+    /// If set to true will generate a `sitemap.xml` file and place it in the root of the output folder.<br/>
+    /// The sitemap file follows the Google model:<br/>
+    /// https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap#xml
+    /// </summary>
+    public bool ShouldGenerateSitemap { get; set; } = false;
+
+    /// <summary>
+    /// Hostname of your site. Needed to generate the sitemap. <br />
+    /// E.g. 'https://username.github.io'
+    /// </summary>
+    public string? SiteUrl { get; set; }
     
-    private readonly List<Func<Task>> _beforeFilesGenerationActions = [];
+    /// <summary>
+    /// Specifies the output folder for the sitemap.xml file, relative to the project root.
+    /// This folder should be within a static web assets directory (e.g., wwwroot or any 
+    /// folder configured with <c>app.UseStaticFiles</c>), ensuring it is available for the running web application.
+    /// Default value: <c>"wwwroot"</c>.
+    /// </summary>
+    public string SitemapOutputFolderPath { get; set; } = "wwwroot";
+
 
     
+
+    private readonly List<Func<Task>> _beforeFilesGenerationActions = [];
+
+
     /// <summary>
     /// Iterator for optional actions.
     /// Is called in GenerateStaticPages, after all other pages are added
     /// </summary>
     internal IEnumerable<Func<Task>> GetBeforeFilesGenerationActions() => _beforeFilesGenerationActions;
 
-    
+
     /// <summary>
     /// Adds an async Func to the list of actions to be executed before files are generated.
     /// </summary>
@@ -69,7 +93,7 @@ public class BlazorStaticOptions
     /// Paths (files or dirs) relative to new location of output folder, that shouldn't be copied to output folder
     /// Example: Need to ignore wwwroot/app.css (because "tailwindiezd" app.min.css is used)
     ///         Content to copy is "wwwroot" to -> "" (root of output folder)
-    ///         IgnoredPathsOnContentCopy is "app.css" (this would be the path in output folder) 
+    ///         IgnoredPathsOnContentCopy is "app.css" (this would be the path in output folder)
     /// </summary>
     public List<string> IgnoredPathsOnContentCopy { get; } = [];
     /// <summary>
@@ -77,7 +101,7 @@ public class BlazorStaticOptions
     /// Content from RCLs (from _content/) and wwwroot is copied by default
     /// </summary>
     public List<ContentToCopy> ContentToCopyToOutput { get; } = [];
-    
+
     /// <summary>
     /// Allows to customize YamlDotNet Deserializer used for parsing front matter
     /// </summary>
@@ -85,7 +109,7 @@ public class BlazorStaticOptions
         .WithNamingConvention(CamelCaseNamingConvention.Instance)
         .IgnoreUnmatchedProperties()
         .Build();
-    
+
     /// <summary>
     /// Allows to customize Markdig MarkdownPipeline used for parsing markdown files
     /// </summary>
@@ -138,7 +162,7 @@ public class BlazorStaticContentOptions<TFrontMatter>
     /// tag pages will be generated from all tags found in blog posts
     /// </summary>
     public bool AddTagPagesFromPosts { get; set; } = true;
-    
+
     /// <summary>
     /// Should correspond to page that keeps the list of content.
     /// For example: @page "/blog" -> PageUrl="blog"
@@ -152,11 +176,11 @@ public class BlazorStaticContentOptions<TFrontMatter>
     /// Useful for avoiding magic strings in .razor files
     /// </summary>
     public string TagsPageUrl { get; set; } = "tags";
-    
+
     /// <summary>
     /// Action to run after blog posts are parsed and added to the collection.
     /// Useful for editing data in blog posts. For example changing image paths.
     /// </summary>
     public Action? AfterBlogParsedAndAddedAction { get; set; }
-    
+
 }
