@@ -22,7 +22,7 @@ builder.Services.AddBlazorStaticService(opt => {
         }
         // Must add a site url to generate the Sitemap!
         opt.ShouldGenerateSitemap = true;
-        // opt.SiteUrl = WebsiteKeys.SiteUrl;
+        opt.SiteUrl = WebsiteKeys.SiteUrl;
     }
     )
     .AddBlazorStaticContentService<BlogFrontMatter>()
