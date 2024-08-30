@@ -2,7 +2,7 @@
 title: 1.0.0-beta.10 - XML sitemap and Better way of finding pages
 lead: Sitemap as new feature and no need for magic strings in routes
 published: 2024-08-19
-tags: [release, sitemap, razor-pages]
+tags: [release, sitemap.xml, razor-pages]
 authors:
 - name: "Jan Tesař"
   gitHubUserName: "tesar-tech"

@@ -2,7 +2,7 @@
 title: Release of 1.0.0-beta.4
 lead: Static web assets are always copied. The IsDraft property in the default FrontMatter is now supported. 
 published: 2024-01-20
-tags: [release]
+tags: [release, static-web-assets, style.css,.nojekyll, IsDraft,ignoring files]
 authors:
     - name: "Jan Tesař"
       gitHubUserName: "tesar-tech"

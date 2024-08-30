@@ -2,7 +2,7 @@
 title: Release of 1.0.0-beta.7
 lead: Allows the use of multiple front matter classes
 published: 2024-06-10
-tags: [release]
+tags: [release, multiple contents]
 authors:
 - name: "Jan Tesař"
 gitHubUserName: "tesar-tech"
