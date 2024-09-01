@@ -3,7 +3,7 @@ name: Build, publish to gh pages and nuget
 
 on:
   push:
-    branches: ["*","fix/pipeline-proj"] 
+    branches: ["*"] 
 env:
   WEBAPP_PATH: BlazorStaticWebsite
   NUGET_PKG_PATH: src/bin/Release
@@ -70,7 +70,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: nuget-packages
       - name: Publish to NuGet

@@ -366,6 +366,7 @@ FodyWeavers.xsd
 
 
 BlazorStaticWebsite/output/
+BlazorStaticWebsite/wwwroot/sitemap.xml
 BlazorStaticWebsite/README.md
 BlazorStaticWebsite/wwwroot/app.min.css
 
