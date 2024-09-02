@@ -1,6 +1,8 @@
 namespace BlazorStatic.Services;
 
 using Microsoft.Extensions.Logging;
+using System.Net.Sockets;
+using System.Net;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Text;
@@ -34,6 +36,19 @@ public class BlazorStaticService(BlazorStaticOptions options,
     /// <param name="appUrl">The base URL of the application, used for making HTTP requests to fetch page content.</param>
     internal async Task GenerateStaticPages(string appUrl)
     {
+        if (appUrl.Contains("[::]"))
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            string localip = string.Empty;
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localip = ip.ToString();
+                }
+            }
+            appUrl = appUrl.Replace("[::]", localip);
+        }
 
         if (options.AddPagesWithoutParameters)
             AddPagesWithoutParameters();
@@ -60,7 +75,13 @@ public class BlazorStaticService(BlazorStaticOptions options,
             helpers.CopyContent(pathToCopy.SourcePath, Path.Combine(options.OutputFolderPath, pathToCopy.TargetPath), ignoredPathsWithOutputFolder);
         }
 
-        HttpClient client = new() { BaseAddress = new Uri(appUrl) };
+        var httpClientHandler = new HttpClientHandler();
+        httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+        {
+            return true;
+        };
+
+        HttpClient client = new HttpClient(httpClientHandler) { BaseAddress = new Uri(appUrl) };
 
         foreach (PageToGenerate page in options.PagesToGenerate)
         {
