@@ -6,6 +6,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Services;
+using YamlDotNet.Serialization.NodeTypeResolvers;
 
 /// <summary>
 /// Extension methods for configuring BlazorStatic services in an <see cref="IServiceCollection" />.
@@ -15,8 +16,10 @@ public static class BlazorStaticExtensions
     /// <summary>
     /// holds the actions that will run when UseBlazorStaticGenerator is called.
     /// Will manage content for every BlazorStaticContentService added.
+    /// This makes sure the BlazorStaticService has some connection to BlazorStaticContentService
+    /// We use dictionary for type, because it removes the need for hassling with duplicate (in case of hot reload)
     /// </summary>
-    private static List<Action<WebApplication>> staticContentUse { get; set; } = [];
+    private static Dictionary<Type, Action<WebApplication>> staticContentUse { get; set; } = [];
 
 
     /// <summary>
@@ -41,8 +44,8 @@ public static class BlazorStaticExtensions
 
         services.AddSingleton(options);
         services.AddSingleton<BlazorStaticContentService<TFrontMatter>>();
-        staticContentUse.Add(UseBlazorStaticContent<TFrontMatter>);
-
+        staticContentUse[typeof(TFrontMatter)] = UseBlazorStaticContent<TFrontMatter>;
+        ActionsToConfigureOptions[typeof(TFrontMatter)] = () => configureOptions?.Invoke(options);
         return services;
     }
 
@@ -62,19 +65,22 @@ public static class BlazorStaticExtensions
     public static IServiceCollection AddBlazorStaticService(this IServiceCollection services,
         Action<BlazorStaticOptions>? configureOptions = null)
     {
-
         services.AddSingleton<BlazorStaticHelpers>();
         var options = new BlazorStaticOptions();
         configureOptions?.Invoke(options);
 
         services.AddSingleton(options);
         services.AddSingleton<BlazorStaticService>();
+        ActionsToConfigureOptions[typeof(BlazorStaticService)] = () => configureOptions?.Invoke(options);
 
         return services;
     }
+    
+    private static readonly Dictionary<Type, Action> ActionsToConfigureOptions = new();
 
 
     /// <summary>
+    /// Runs the actions necessary to generating static content by settings defined in options
     /// Runs the actions necessary to generating static content by settings defined in options
     /// </summary>
     /// <param name="app"></param>
@@ -119,6 +125,25 @@ public static class BlazorStaticExtensions
 
     }
 
+    internal static void UseBlazorStaticGeneratorOnHotReload()
+    {
+        if (_app == null) return;
+        var blazorStaticService = _app.Services.GetRequiredService<BlazorStaticService>();
+        //basic clean up
+        blazorStaticService.Options.ClearBeforeFilesGenerationActions();
+        blazorStaticService.Options.PagesToGenerate.Clear();
+        blazorStaticService.Options.ContentToCopyToOutput.Clear();
+        
+        //go through the options (from Program.cs)
+        foreach (KeyValuePair<Type, Action> action in ActionsToConfigureOptions)
+        {
+            action.Value.Invoke();
+        }
+        _app.UseBlazorStaticGenerator();
+    }
+
+    private static WebApplication? _app;
+
     /// <summary>
     /// Adds the Blazor static generation service to the specified IServiceCollection.
     /// </summary>
@@ -126,10 +151,15 @@ public static class BlazorStaticExtensions
     /// <param name="shutdownApp"></param>
     public static void UseBlazorStaticGenerator(this WebApplication app, bool shutdownApp = false)
     {
-        foreach (Action<WebApplication> use in staticContentUse)
-            use.Invoke(app);
+        foreach (KeyValuePair<Type, Action<WebApplication>> use in staticContentUse)
+        {
+            use.Value.Invoke(app);
+        }
 
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
+        if(_app is null && blazorStaticService.Options.HotReloadEnabled)
+            _app = app;
+        HotReloadManager.HotReloadEnabled = blazorStaticService.Options.HotReloadEnabled;
 
         //adds wwwroot files (or any other files that has been added as static content) to the output
         AddStaticWebAssetsToOutput(app.Environment.WebRootFileProvider, string.Empty, blazorStaticService);
@@ -153,7 +183,7 @@ public static class BlazorStaticExtensions
         }
         );
     }
-    
+
     /// <summary>
     /// Takes the provider, search it recursively and add all the files found.
     /// </summary>

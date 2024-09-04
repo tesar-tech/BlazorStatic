@@ -21,16 +21,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Remove="output\**" />
-    <None Update="Content\Blog\release-1.0.0-beta.9.md">
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Content/**/*" >
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Content/Projects/README.md" />
-    <None Update="Content/**/*" >
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Watch Include="Content/**/*" />
   </ItemGroup>
 
   <ItemGroup>
