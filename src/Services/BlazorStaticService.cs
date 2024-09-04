@@ -34,7 +34,6 @@ public class BlazorStaticService(BlazorStaticOptions options,
     /// <param name="appUrl">The base URL of the application, used for making HTTP requests to fetch page content.</param>
     internal async Task GenerateStaticPages(string appUrl)
     {
-
         if (options.AddPagesWithoutParameters)
             AddPagesWithoutParameters();
 
@@ -51,7 +50,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
         
         //sitemap generation has to happen before copying the wwwroot files, because it outputs the sitemap there
         if (Options.ShouldGenerateSitemap)
-            await TryGenerateSitemap();
+            await TryGenerateSitemap(); 
 
         List<string> ignoredPathsWithOutputFolder = options.IgnoredPathsOnContentCopy.Select(x => Path.Combine(options.OutputFolderPath, x)).ToList();
         foreach (var pathToCopy in options.ContentToCopyToOutput)

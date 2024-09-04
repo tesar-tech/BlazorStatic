@@ -85,6 +85,15 @@ public class BlazorStaticOptions
             action();
             return Task.CompletedTask;
         });
+    
+    
+    /// <summary>
+    /// Clears the list. Useful for hot-reload, since we don't want the actions to be there multiple times 
+    /// </summary>
+    internal void ClearBeforeFilesGenerationActions()
+    {
+        _beforeFilesGenerationActions.Clear();   
+    }
 
 
 
@@ -117,6 +126,26 @@ public class BlazorStaticOptions
         .UseAdvancedExtensions()
         .UseYamlFrontMatter()
         .Build();
+    
+    
+    /// <summary>
+    /// Hooks up to the hot reload event to re-generate the outputted pages. It also re-evaluates the options set up in Program.cs.
+    ///
+    /// <para>Works with:</para>
+    /// - Changes in Razor files, C# code, CSS, etc.
+    /// - Changes to .md files, if you set up the watch for them in .csproj, for example:
+    ///
+    /// <para>&#160;</para> 
+    /// &lt;ItemGroup&gt;
+    ///   &lt;Watch Include="Content/**/*" /&gt;
+    /// &lt;/ItemGroup&gt;
+    /// <para>&#160;</para>
+    /// 
+    /// Note: Hot reload re-generation will clear the list of PagesToGenerate and ContentToCopyToOutput, 
+    /// but these lists will be re-populated through the options.
+    /// </summary>
+    public bool HotReloadEnabled { get; set; }
+    
 }
 
 /// <summary>

@@ -9,12 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseStaticWebAssets();
 
 builder.Services.AddBlazorStaticService(opt => {
-        opt.IgnoredPathsOnContentCopy.AddRange(new[] { "app.css" });//pre-build version for tailwind
+        opt.IgnoredPathsOnContentCopy.AddRange(["app.css"]);//pre-build version for tailwind
         opt.ContentToCopyToOutput.Add(new("Content/Docs/media", "Content/Docs/media"));
         // add docs pages
         IEnumerable<string> docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md")
             .Where(x => !x.EndsWith("README.md"));//ignore readme, it is handled in Pages/Docs.razor
-
 
         foreach (string? fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
         {
@@ -23,6 +22,7 @@ builder.Services.AddBlazorStaticService(opt => {
         // Must add a site url to generate the Sitemap!
         opt.ShouldGenerateSitemap = true;
         opt.SiteUrl = WebsiteKeys.SiteUrl;
+        opt.HotReloadEnabled = true;
     }
     )
     .AddBlazorStaticContentService<BlogFrontMatter>()
