@@ -88,7 +88,8 @@ public static class BlazorStaticExtensions
     static void UseBlazorStaticContent<TFrontMatter>(WebApplication app)
         where TFrontMatter : class, IFrontMatter, new()
     {
-        var blogService = app.Services.GetRequiredService<BlazorStaticContentService<TFrontMatter>>();
+        var contentService = app.Services.GetRequiredService<BlazorStaticContentService<TFrontMatter>>();
+        contentService.BlogPosts.Clear();//need to do it here in case of hot reload event
         var options = app.Services.GetRequiredService<BlazorStaticContentOptions<TFrontMatter>>();
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
 
@@ -121,7 +122,7 @@ public static class BlazorStaticExtensions
         }
         //
 
-        blazorStaticService.Options.AddBeforeFilesGenerationAction(blogService.ParseAndAddBlogPosts);//will run later in GenerateStaticPages
+        blazorStaticService.Options.AddBeforeFilesGenerationAction(contentService.ParseAndAddBlogPosts);//will run later in GenerateStaticPages
 
     }
 
