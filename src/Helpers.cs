@@ -135,14 +135,27 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
       //replace the image paths in the markdown content with the correct relative path
       //looks for options.Blog.MediaFolder/fileName nad make it to blogMediaRequestPathRelative/fileName
       //this way the .md file can be edited with images in folder next to them, like users are used to.
-      string ReplaceImagePathsInMarkdown(string markdownContent,(string originalPath ,string newPath )? mediaPaths = default)
+      string ReplaceImagePathsInMarkdown(string markdownContent, (string originalPath, string newPath)? mediaPaths = default)
       {
-          //options.Blog.MediaFolder
           if (mediaPaths == null) return markdownContent;
-          string pattern = $@"!\[(.*?)\]\({mediaPaths.Value.originalPath}\/(.*?)\)";
-          string replacement = $"![$1]({mediaPaths.Value.newPath}/$2)";
-          string modifiedMarkdown = Regex.Replace(markdownContent, pattern, replacement);
+
+          // Pattern for Markdown image syntax: ![alt text](path)
+          string markdownPattern = $@"!\[(.*?)\]\({mediaPaths.Value.originalPath}\/(.*?)\)";
+          string markdownReplacement = $"![$1]({mediaPaths.Value.newPath}/$2)";
+    
+          // Pattern for HTML img tag: <img src="path" .../>
+          string htmlPattern = $"""
+                                <img\s+[^>]*src\s*=\s*"{mediaPaths.Value.originalPath}/(.*?)"
+                                """;
+          string htmlReplacement = $"<img src=\"{mediaPaths.Value.newPath}/$1\"";
+
+          // First, replace the Markdown-style image paths
+          string modifiedMarkdown = Regex.Replace(markdownContent, markdownPattern, markdownReplacement);
+
+          // Then, replace the HTML-style image paths
+          modifiedMarkdown = Regex.Replace(modifiedMarkdown, htmlPattern, htmlReplacement);
 
           return modifiedMarkdown;
       }
+
 }
