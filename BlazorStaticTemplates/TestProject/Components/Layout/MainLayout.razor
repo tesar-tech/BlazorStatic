@@ -1,0 +1,32 @@
+﻿@inherits LayoutComponentBase
+
+<div class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0 ">
+    <div class="flex h-screen flex-col justify-between">
+
+        <NavMenu/>
+
+        <main class="mb-auto">
+            @Body
+        </main>
+
+        <footer>
+            <div class="mt-16 flex flex-col items-center">
+                <div class="mb-3 flex space-x-4">
+                    <a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="@WebsiteKeys.GitHubRepo">
+                        <span class="sr-only">github</span>
+                        <Svg Icon="Svg.Icons.Github"/>
+                    </a>
+                    <a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="@WebsiteKeys.X">
+                        <span class="sr-only">x</span>
+                        <Svg Icon="Svg.Icons.X"/>
+                    </a>
+                </div>
+                <div class="mb-2 flex space-x-2 text-sm text-gray-400">
+                      <a target="_blank" rel="noopener noreferrer" href="https://github.com/tesar-tech/blazorStatic"> Built with Blazor Static</a>
+                    <div>•</div>
+                    <div>© @DateTime.Now.Year</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>

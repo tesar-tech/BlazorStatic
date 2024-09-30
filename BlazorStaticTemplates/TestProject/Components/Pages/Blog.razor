@@ -1,0 +1,122 @@
+﻿@page "/" 
+@page "/blog/{fileName}"
+@using System.Globalization
+@using BlazorStatic
+@using BlazorStatic.Services
+@inject BlazorStaticContentService<BlogFrontMatter> blazorStaticContentService
+
+
+@* No filename -> show latest posts *@
+@if (string.IsNullOrWhiteSpace(FileName))
+{
+    <div class="divide-y divide-gray-700">
+        <div class="space-y-2 pb-8 pt-6 md:space-y-5">
+            <h1 class="font-sans md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl">Latest</h1>
+            <p class="text-lg leading-7 text-gray-400 prose prose-invert">@WebsiteKeys.BlogLead</p>
+        </div>
+    
+        <PostsList  />
+    </div>
+    return;
+}
+
+@* Show specific post by filename param *@
+@if (post == null)
+{
+    <div>Post not found 🤷 </div>
+    return;
+}
+<article>
+    <div class="xl:divide-y  xl:divide-gray-700">
+        <header class="pt-6 xl:pb-6">
+            <div class="space-y-1 text-center">
+                <dl class="space-y-10">
+                    <div>
+                        <dt class="sr-only">Published on</dt>
+                        <dd class="text-base font-medium leading-6 text-gray-400">
+                            <time datetime="@post.FrontMatter.Published.ToString("yyyy-MM-ddTHH:mm:ss.fffK", CultureInfo.InvariantCulture)">
+                                @post.FrontMatter.Published.ToString("MMMM d, yyyy", new CultureInfo("en-US"))
+                            </time>
+                        </dd>
+                    </div>
+                </dl>
+                <div class="prose prose-invert mx-auto">
+                    <h1 class="">@post.FrontMatter.Title</h1>
+                </div>
+            </div>
+        </header>
+        <div class="grid-rows-[auto_1fr] divide-y  pb-8 divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
+
+            <dl class="pb-10 pt-6 xl:border-b  xl:pt-11 xl:border-gray-700">
+                <dt class="sr-only">Authors</dt>
+                <dd>
+                    <ul class="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
+                        @foreach (var author in post.FrontMatter.Authors)
+                        {
+                            <li class="flex items-center space-x-2">
+                                @* <img alt="avatar" loading="lazy" width="38" height="38" decoding="async" data-nimg="1" class="h-10 w-10 rounded-full" srcset="/_next/image?url=%2Fstatic%2Fimages%2Favatar.png&amp;w=48&amp;q=75 1x, /_next/image?url=%2Fstatic%2Fimages%2Favatar.png&amp;w=96&amp;q=75 2x" src="/_next/image?url=%2Fstatic%2Fimages%2Favatar.png&amp;w=96&amp;q=75" style="color: transparent;"/> *@
+                                <dl class="whitespace-nowrap text-sm font-medium leading-5">
+                                    @if (!string.IsNullOrWhiteSpace(author.Name))
+                                    {
+                                        <dt class="sr-only">Name</dt>
+                                        <dd class="text-gray-900 dark:text-gray-100 flex gap-1 items-center">
+                                            @author.Name
+                                            @if (!string.IsNullOrWhiteSpace(author.XUserName))
+                                            {
+                                                <a target="_blank" rel="noopener noreferrer" href="https://x.com/@author.XUserName" class="flex gap-1 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                                                    <Svg SizeClasses="w-4 h-4" Icon="Svg.Icons.X"/>
+                                                </a>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(author.GitHubUserName))
+                                            {
+                                                <a target="_blank" rel="noopener noreferrer" href="https://github.com/@author.GitHubUserName" class="flex gap-1 items-center text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                                                    <Svg SizeClasses="w-4 h-4" Icon="Svg.Icons.Github"/>
+                                                </a>
+                                            }
+                                        </dd>
+                                    }
+                                </dl>
+                            </li>
+                        }
+                    </ul>
+                </dd>
+            </dl>
+            <div class="divide-y  divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
+                <div class="prose prose-invert max-w-none pb-8 pt-10">
+                    @((MarkupString)post.HtmlContent)
+                </div>
+                <div class="pb-6 pt-6 text-sm text-gray-300">
+                    <a target="_blank" rel="noopener noreferrer" href="@($"{WebsiteKeys.BlogPostStorageAddress}/{FileName}")">View on GitHub</a>
+                </div>
+            </div>
+            <footer>
+                <div class=" text-sm font-medium leading-5 divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
+                    <div class="py-4 xl:py-8">
+                        <h2 class="text-xs uppercase tracking-wide text-gray-400">Tags</h2>
+                        <div class="flex flex-wrap">
+                            @foreach (var tag in post.FrontMatter.Tags)
+                            {
+                                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@blazorStaticContentService.Options.TagsPageUrl/@tag">@tag</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-4 xl:pt-8">
+                    <a class="text-primary-500 hover:text-primary-400" aria-label="Back to the home" href="">← Back to the home</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+</article>
+
+
+@code{
+    [Parameter] public string? FileName { get; set; }
+    Post<BlogFrontMatter>? post;
+    
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrWhiteSpace(FileName)) return;
+        post = blazorStaticContentService.BlogPosts.FirstOrDefault(x => x.Url == FileName);
+    }
+}

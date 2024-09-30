@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+
+                    colors: {
+                        primary: tailwind.colors.violet
+                    },
+                },},
+                }
+    </script>
+    
+    
+    <HeadOutlet />
+</head>
+
+<body class="bg-gray-950 font-sans text-gray-200">
+<Routes />
+</body>
+
+</html>

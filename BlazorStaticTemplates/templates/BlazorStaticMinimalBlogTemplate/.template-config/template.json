@@ -21,14 +21,41 @@
           },
           {
             "condition": "true",  
-            "include": [
-              "**/.gitignore"
+            "exclude": [
+              "./BlazorStaticMinimalBlog/.git",
+              ".git"
             ]
           }
         ],
         "source": "./BlazorStaticMinimalBlog"   
       }
-    ]
-    
+    ],
+    "symbols": {
+      "UseInTemplate": {
+        "type": "parameter",
+        "datatype": "bool",
+        "defaultValue": "true",
+        "replaces": "UseInTemplate"
+      }, 
+      "HTTPS_PORT": {
+        "type": "generated",
+        "generator": "random",
+        "parameters": {
+          "low": 7000,
+          "high": 7300
+        },
+        "replaces": "7103"
+      },
+      "HTTP_PORT": {
+        "type": "generated",
+        "generator": "random",
+        "parameters": {
+          "low": 5000,
+          "high": 5300
+        },
+        "replaces": "5077"
+      }
+    }
+  
   }
   
