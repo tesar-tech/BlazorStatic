@@ -67,9 +67,7 @@ From here, you're ready to explore the project, add content, create new pages, a
 
 ## 🏃‍➡️ Quickest Way
 
-Use [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) as template.
-
-![use template](media/README/img.png)  
+Use [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) as template (the big green button).
 
 It will copy all the content and run the GitHub action for you. After it runs, go to settings and turn on GitHub pages:
 

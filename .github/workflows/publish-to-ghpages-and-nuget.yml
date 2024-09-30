@@ -6,7 +6,9 @@ on:
     branches: ["*"] 
 env:
   WEBAPP_PATH: BlazorStaticWebsite
-  NUGET_PKG_PATH: src/bin/Release
+  TEMPLATE_PROJ_PATH: BlazorStaticTemplates/templates/BlazorStatic.Templates.csproj
+  BLAZORSTATIC_NUGET_PKG_PATH: src/bin/Release
+  NUGET_FOLDER: nugetky
   WEBAPP_CSPROJ: BlazorStaticWebsite.csproj
   ASPNETCORE_ENVIRONMENT: Production
 
@@ -25,6 +27,7 @@ jobs:
           chmod +x /usr/local/bin/tailwindcss
           cd ${{ env.WEBAPP_PATH }}
           tailwindcss --input ./wwwroot/app.css  --output ./wwwroot/app.min.css  --minify
+          
       - name: Change <base href="" /> in App.razor to match gh repo name
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
@@ -32,19 +35,28 @@ jobs:
           
       - name: Run webapp and generate static files
         run: dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}}  --configuration Release
+        
 
       - name: Upload webapp output artifacts
         uses: actions/upload-artifact@v4
         with:
             name: static-pages-output
             path: ${{ env.WEBAPP_PATH }}/output
+
+      - name: Copy .nupkg of BlazorStatic to destination folder
+        run: |
+          mkdir -p "${{ env.NUGET_FOLDER }}"  
+          cp ${{ env.BLAZORSTATIC_NUGET_PKG_PATH }}/*.nupkg ${{ env.NUGET_FOLDER }}
     
+      - name: Pack the template project to nuget folder
+        run: dotnet pack ${{ env.TEMPLATE_PROJ_PATH }} --output ${{ env.NUGET_FOLDER }}
+      
       - name: Upload NuGet package artifacts
-        if: github.ref == 'refs/heads/master'
+#        if: github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@v4
         with:
             name: nuget-packages
-            path: ${{ env.NUGET_PKG_PATH }}/*.nupkg
+            path: ${{ env.BLAZORSTATIC_NUGET_PKG_PATH }}/*.nupkg
 
   deploy-to-gh-pages:
     permissions:
