@@ -6,7 +6,7 @@ on:
     branches: ["*"] 
 env:
   WEBAPP_PATH: BlazorStaticWebsite
-  TEMPLATE_PROJ_PATH: BlazorStaticTemplates/templates/BlazorStatic.Templates.csproj
+  TEMPLATE_PROJ_PATH: BlazorStaticTemplates/BlazorStatic.Templates.csproj
   BLAZORSTATIC_NUGET_PKG_PATH: src/bin/Release
   NUGET_FOLDER: nugetky
   WEBAPP_CSPROJ: BlazorStaticWebsite.csproj
