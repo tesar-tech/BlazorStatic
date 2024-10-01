@@ -1,27 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
 
-<!--Copy README.md from repo to here (will be used as index.html)-->
-  <Target Name="CopyReadMe" BeforeTargets="Build">
-    <Copy SourceFiles="../README.md" DestinationFiles="README.md" />
-  </Target>
+
   
   <ItemGroup>
     <!--To showcase it works-->
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.7.2" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <None Update="README.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Remove="output\**" />
+    <ProjectReference Include="..\src\BlazorStatic.csproj" />
   </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="output\**" />
+    </ItemGroup>
 
   <ItemGroup>
     <None Update="Content/**/*" >
@@ -33,24 +31,6 @@
     <Watch Include="Content/**/*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\src\BlazorStatic.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="output\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="output\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="output\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="output\BlazorStaticWebsite.modules.json" />
-  </ItemGroup>
+  
 
 </Project>
