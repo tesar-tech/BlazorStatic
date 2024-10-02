@@ -71,7 +71,7 @@ Use [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalB
 
 It will copy all the content and run the GitHub action for you. After it runs, go to settings and turn on GitHub pages:
 
-![github pages](media/README/img-1.png)
+![github pages](.github/media/README/img-1.png)
 
 Your page is ready now! 
 

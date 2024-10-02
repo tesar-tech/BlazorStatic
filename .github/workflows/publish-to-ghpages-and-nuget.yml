@@ -11,6 +11,7 @@ env:
   NUGET_FOLDER: nugetky
   WEBAPP_CSPROJ: BlazorStaticWebsite.csproj
   ASPNETCORE_ENVIRONMENT: Production
+  is_master_branch: ${{ github.ref == 'refs/heads/master' }}
 
 jobs:
   build:
@@ -44,15 +45,18 @@ jobs:
             path: ${{ env.WEBAPP_PATH }}/output
 
       - name: Copy .nupkg of BlazorStatic to destination folder
+        if: env.is_master_branch
+        
         run: |
           mkdir -p "${{ env.NUGET_FOLDER }}"  
           cp ${{ env.BLAZORSTATIC_NUGET_PKG_PATH }}/*.nupkg ${{ env.NUGET_FOLDER }}
     
       - name: Pack the template project to nuget folder
+        if: env.is_master_branch
         run: dotnet pack ${{ env.TEMPLATE_PROJ_PATH }} --output ${{ env.NUGET_FOLDER }}
       
       - name: Upload NuGet package artifacts
-#        if: github.ref == 'refs/heads/master'
+        if: env.is_master_branch
         uses: actions/upload-artifact@v4
         with:
             name: nuget-packages
@@ -79,7 +83,7 @@ jobs:
   publish-to-nuget:
     needs: build
     runs-on: ubuntu-latest
-#    if: github.ref == 'refs/heads/master'
+    if: env.is_master_branch
     steps:
       - name: Download NuGet package artifacts
         uses: actions/download-artifact@v4
