@@ -44,19 +44,15 @@ jobs:
             name: static-pages-output
             path: ${{ env.WEBAPP_PATH }}/output
 
-      - name: Copy .nupkg of BlazorStatic to destination folder
-        if: env.is_master_branch
-        
+      - name: Copy .nupkg of BlazorStatic to destination folder and pack the template project there too
+        if: ${{ github.ref == 'refs/heads/master' }}
         run: |
           mkdir -p "${{ env.NUGET_FOLDER }}"  
           cp ${{ env.BLAZORSTATIC_NUGET_PKG_PATH }}/*.nupkg ${{ env.NUGET_FOLDER }}
-    
-      - name: Pack the template project to nuget folder
-        if: env.is_master_branch
-        run: dotnet pack ${{ env.TEMPLATE_PROJ_PATH }} --output ${{ env.NUGET_FOLDER }}
+          dotnet pack ${{ env.TEMPLATE_PROJ_PATH }} --output ${{ env.NUGET_FOLDER }}
       
       - name: Upload NuGet package artifacts
-        if: env.is_master_branch
+        if: ${{ github.ref == 'refs/heads/master' }}
         uses: actions/upload-artifact@v4
         with:
             name: nuget-packages
@@ -69,26 +65,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: static-pages-output
           path: output
       - run: touch output/.nojekyll #folder starting with _ are handled as jekyll. This file will prevent that.  
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: ./output
 
   publish-to-nuget:
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}  # cannot use if: env.is_master_branch
+    if: ${{ github.ref == 'refs/heads/master' }} 
     steps:
       - name: Download NuGet package artifacts
         uses: actions/download-artifact@v4
         with:
           name: nuget-packages
-      - name: Publish to NuGet
-        run: |
-          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+      - run: dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
