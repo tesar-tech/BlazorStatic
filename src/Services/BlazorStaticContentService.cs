@@ -23,7 +23,7 @@ public class BlazorStaticContentService<TFrontMatter>(
     /// <summary>
     /// The list of blog posts parsed and added to the blog service.
     /// </summary>
-    public List<Post<TFrontMatter>> BlogPosts => options.Posts;
+    public List<Post<TFrontMatter>> BlogPosts => options.Posts;//todo: rename to Posts
     /// <summary>
     /// The BlazorStaticContentOptions used to configure the blog service.
     /// </summary>
@@ -33,7 +33,7 @@ public class BlazorStaticContentService<TFrontMatter>(
     /// from a specified directory, parses them to extract front matter and content,
     /// and then adds them as blog posts to the options.PagesToGenerate.
     /// </summary>
-    public async Task ParseAndAddBlogPosts()
+    public async Task ParseAndAddBlogPosts()//todo: remove "blog"
     {
         string absContentPath;//gets initialized in GetPostsPath
         var files = GetPostsPath();

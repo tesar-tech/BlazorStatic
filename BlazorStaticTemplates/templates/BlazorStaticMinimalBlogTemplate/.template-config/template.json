@@ -1,0 +1,61 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "tesar.tech",
+    "classifications": ["Web","Blazor", "Static"],
+    "identity": "BlazorStatic.Templates", 
+    "name": "BlazorStatic Minimal Blog Site Template",
+    "shortName": "BlazorStaticMinimalBlog",
+    "tags": {
+      "language": "C#",
+      "type": "project"
+    },
+    "sourceName": "BlazorStaticMinimalBlog",
+    "defaultName": "MyBlazorStaticApp",
+    "preferNameDirectory": true,         
+    "sources": [
+      {
+        "modifiers": [
+          {
+            "condition": "(!Exclude)",
+            "exclude": [ "**/bin/**", "**/obj/**" ]
+          },
+          {
+            "condition": "true",  
+            "exclude": [
+              "./BlazorStaticMinimalBlog/.git",
+              ".git"
+            ]
+          }
+        ],
+        "source": "./BlazorStaticMinimalBlog"   
+      }
+    ],
+    "symbols": {
+      "UseInTemplate": {
+        "type": "parameter",
+        "datatype": "bool",
+        "defaultValue": "true",
+        "replaces": "UseInTemplate"
+      }, 
+      "HTTPS_PORT": {
+        "type": "generated",
+        "generator": "random",
+        "parameters": {
+          "low": 7000,
+          "high": 7300
+        },
+        "replaces": "7103"
+      },
+      "HTTP_PORT": {
+        "type": "generated",
+        "generator": "random",
+        "parameters": {
+          "low": 5000,
+          "high": 5300
+        },
+        "replaces": "5077"
+      }
+    }
+  
+  }
+  
