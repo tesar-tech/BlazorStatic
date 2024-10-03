@@ -21,19 +21,36 @@ public class BlazorStaticContentService<TFrontMatter>(
     where TFrontMatter : class, IFrontMatter, new()
 {
     /// <summary>
-    /// The list of blog posts parsed and added to the blog service.
+    /// The list of posts parsed and added to the BlazorStaticContentService.
     /// </summary>
-    public List<Post<TFrontMatter>> BlogPosts => options.Posts;//todo: rename to Posts
+    public List<Post<TFrontMatter>> Posts => options.Posts;
+
     /// <summary>
-    /// The BlazorStaticContentOptions used to configure the blog service.
+    /// Obsolete property. Use <see cref="Posts"/> instead. This property will be removed in future versions.
+    /// </summary>
+    [Obsolete("Use Posts instead. This property will be removed in future versions.")]
+    public List<Post<TFrontMatter>> BlogPosts => Posts;
+
+    /// <summary>
+    /// The BlazorStaticContentOptions used to configure the BlazorStaticContentService.
     /// </summary>
     public BlazorStaticContentOptions<TFrontMatter> Options => options;
+    
+    
     /// <summary>
-    /// Parses and adds blog posts to the blog service. This method reads markdown files
-    /// from a specified directory, parses them to extract front matter and content,
-    /// and then adds them as blog posts to the options.PagesToGenerate.
+    /// Obsolete method. Use <see cref="ParseAndAddPosts"/> instead. This method will be removed in future versions.
     /// </summary>
-    public async Task ParseAndAddBlogPosts()//todo: remove "blog"
+    [Obsolete("Use ParseAndAddPosts instead. This method will be removed in future versions.")]
+    public async Task ParseAndAddBlogPosts()
+    {
+        await ParseAndAddPosts();
+    }
+    /// <summary>
+    /// Parses and adds posts to the BlazorStaticContentService. This method reads markdown files
+    /// from a specified directory, parses them to extract front matter and content,
+    /// and then adds them as posts to the options.PagesToGenerate.
+    /// </summary>
+    public async Task ParseAndAddPosts()
     {
         string absContentPath;//gets initialized in GetPostsPath
         var files = GetPostsPath();
@@ -71,15 +88,15 @@ public class BlazorStaticContentService<TFrontMatter>(
         if (options.AddTagPagesFromPosts)
         {
             // blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));
-            foreach (var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct())//gather all unique tags from all blog posts
+            foreach (var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct())//gather all unique tags from all posts
             {
                 blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}/{tag}", Path.Combine(options.TagsPageUrl, $"{tag}.html")));
             }
         }
-        options.AfterBlogParsedAndAddedAction?.Invoke();
+        options.AfterContentParsedAndAddedAction?.Invoke();
         return;
 
-        string[]  GetPostsPath(){//retrieves blog post from bin folder, where the app is running
+        string[]  GetPostsPath(){//retrieves post from bin folder, where the app is running
             EnumerationOptions enumerationOptions = new()
             {
                 IgnoreInaccessible = true,

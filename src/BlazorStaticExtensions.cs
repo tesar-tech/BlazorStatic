@@ -23,14 +23,14 @@ public static class BlazorStaticExtensions
 
 
     /// <summary>
-    /// Adds a blog service to the specified IServiceCollection. The blog service uses a generic type
-    /// for front matter, allowing customization of the metadata format used in blog posts.
+    /// Adds a BlazorStaticContentService to the specified IServiceCollection. The BlazorStaticContentService service uses a generic type
+    /// for front matter, allowing customization of the metadata format used in posts.
     /// </summary>
-    /// <typeparam name="TFrontMatter">The type of front matter used in the blog posts. Must implement IFrontMatter.</typeparam>
-    /// <param name="services">The IServiceCollection to add the blog service to.</param>
-    /// <param name="configureOptions">An optional action to configure the BlazorStaticContentOptions for the BlazorStaticConentService.
+    /// <typeparam name="TFrontMatter">The type of front matter used in the posts. Must implement IFrontMatter.</typeparam>
+    /// <param name="services">The IServiceCollection to add the BlazorStaticContentService to.</param>
+    /// <param name="configureOptions">An optional action to configure the BlazorStaticContentOptions for the BlazorStaticContentService.
     /// Default values are set for Blog content.</param>
-    /// <returns>The IServiceCollection, with the blog service added, allowing for method chaining.</returns>
+    /// <returns>The IServiceCollection, with the BlazorStaticContentService added, allowing for method chaining.</returns>
     /// <remarks>
     /// The method configures and registers a singleton instance of BlazorStaticContentOptions`TFrontMatter` and 
     /// BlazorStaticContentService`TFrontMatter` in the service collection.
@@ -89,7 +89,7 @@ public static class BlazorStaticExtensions
         where TFrontMatter : class, IFrontMatter, new()
     {
         var contentService = app.Services.GetRequiredService<BlazorStaticContentService<TFrontMatter>>();
-        contentService.BlogPosts.Clear();//need to do it here in case of hot reload event
+        contentService.Posts.Clear();//need to do it here in case of hot reload event
         var options = app.Services.GetRequiredService<BlazorStaticContentOptions<TFrontMatter>>();
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
 
@@ -122,7 +122,7 @@ public static class BlazorStaticExtensions
         }
         //
 
-        blazorStaticService.Options.AddBeforeFilesGenerationAction(contentService.ParseAndAddBlogPosts);//will run later in GenerateStaticPages
+        blazorStaticService.Options.AddBeforeFilesGenerationAction(contentService.ParseAndAddPosts);//will run later in GenerateStaticPages
 
     }
 

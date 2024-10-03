@@ -1,6 +1,6 @@
 ﻿namespace BlazorStatic;
 /// <summary>
-/// Interface for front matter. Front matter is the metadata of a blog post.
+/// Interface for front matter. FrontMatter is the metadata of a post.
 /// </summary>
 public interface IFrontMatter
 {
@@ -18,6 +18,8 @@ public interface IFrontMatter
 
     /// <summary>
     /// Optional data for configuring certain parts of the generation process.
+    /// Currently used for passing the Date of creation to site.xml.
+    /// (generation process isn't aware of IFrontMatter implementation) 
     /// </summary>
     AdditionalInfo? AdditionalInfo => null;
 }
@@ -75,7 +77,7 @@ public class Author
 }
 
 /// <summary>
-/// BlogPost keeps metadata and html content of a blog post (parsed from md).
+/// Keeps metadata and html content of a post (parsed from md).
 /// </summary>
 /// <typeparam name="TFrontMatter"></typeparam>
 public class Post<TFrontMatter>
@@ -83,17 +85,17 @@ public class Post<TFrontMatter>
 
 {
     /// <summary>
-    /// Front matter of the blog post.
+    /// Front matter of the post.
     /// </summary>
     public required TFrontMatter FrontMatter { get; set; }
     /// <summary>
-    /// The url where the blog post will be generated.
+    /// The url where the post will be generated.
     /// Processed from the file path (Content/Blog/subfolder/post-in-subfolder.md => blog/subfolder/post-in-subfolder).
-    /// Used as url param "blog/{Url}".
+    /// Used as url param e.g.: "blog/{Url}".
     /// </summary>
     public required string Url { get; set; }
     /// <summary>
-    /// HTML content of the blog post. Parsed from md. Without front matter part.
+    /// HTML content of the post. Parsed from md. Without front matter part.
     /// </summary>
     public required string HtmlContent { get; set; }
 }
