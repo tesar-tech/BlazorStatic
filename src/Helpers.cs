@@ -133,7 +133,8 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
     }
       
       //replace the image paths in the markdown content with the correct relative path
-      //looks for options.Blog.MediaFolder/fileName nad make it to blogMediaRequestPathRelative/fileName
+      //e.g.: media/img1.jpg => Content/Blog/media/img1.jpg
+      //Look for BlazorStaticContentOptions.MediaFolderRelativeToContentPath, MediaFolderRelativeToContentPath and ContentPath
       //this way the .md file can be edited with images in folder next to them, like users are used to.
       string ReplaceImagePathsInMarkdown(string markdownContent, (string originalPath, string newPath)? mediaPaths = default)
       {

@@ -10,7 +10,7 @@
 {
     <div class="flex flex-wrap justify-between gap-1">
         @{
-            var tagsWithCount = BlazorStaticContentService.BlogPosts
+            var tagsWithCount = BlazorStaticContentService.Posts
                 .SelectMany(x => x.FrontMatter.Tags)
                 .GroupBy(x => x)
                 .Select(group => new { Tag = group.Key, Count = group.Count() })
@@ -45,7 +45,7 @@
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(TagName)) return;
-        posts =  BlazorStaticContentService.BlogPosts.Where(x => x.FrontMatter.Tags.Contains(TagName)).ToList();
+        posts =  BlazorStaticContentService.Posts.Where(x => x.FrontMatter.Tags.Contains(TagName)).ToList();
     }
     
 }

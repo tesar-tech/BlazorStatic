@@ -150,17 +150,17 @@ public class BlazorStaticOptions
 
 /// <summary>
 /// Options for configuring processing of md files with front matter.
-/// Default values are set to work with Blog posts.
+/// Default values are set to work with posts (<see cref="ContentPath"/> and <see cref="PageUrl"/> ) .
 /// </summary>
 /// <typeparam name="TFrontMatter"></typeparam>
 public class BlazorStaticContentOptions<TFrontMatter>
     where TFrontMatter : class, IFrontMatter
 {
     /// <summary>
-    /// folder relative to project root where blog posts are stored.
+    /// folder relative to project root where posts are stored.
     /// Don't forget to copy the content to bin folder (use CopyToOutputDirectory in .csproj),
     /// because that's where the app will look for the files.
-    /// Default is Content/Blog where blog posts are stored.
+    /// Default is Content/Blog where posts are stored.
     /// </summary>
     public string ContentPath { get; set; } = Path.Combine("Content", "Blog");
     /// <summary>
@@ -170,12 +170,12 @@ public class BlazorStaticContentOptions<TFrontMatter>
     /// </summary>
     public string? MediaFolderRelativeToContentPath { get; set; } = "media";
     /// <summary>
-    /// URL path for media files for blog posts.
+    /// URL path for media files for posts.
     /// Used in app.UseStaticFiles to target the correct folder
-    /// and in ParseBlogPosts to generate correct URLs for images
+    /// and in ParseAndAddPosts to generate correct URLs for images
     /// changes ![alt](media/image.png) to ![alt](Content/Blog/media/image.png
     /// leading slash / is necessary for RequestPath in app.UseStaticFiles,
-    /// is removed in ParseBlogPosts.
+    /// is removed in ParseAndAddPosts.
     /// Null in case of no media.
     /// </summary>
     public string? MediaRequestPath => MediaFolderRelativeToContentPath is null? null: Path.Combine(ContentPath, MediaFolderRelativeToContentPath).Replace(@"\", "/");
@@ -207,9 +207,18 @@ public class BlazorStaticContentOptions<TFrontMatter>
     public string TagsPageUrl { get; set; } = "tags";
 
     /// <summary>
-    /// Action to run after blog posts are parsed and added to the collection.
-    /// Useful for editing data in blog posts. For example changing image paths.
+    /// Action to run after content is parsed and added to the collection.
+    /// Useful for editing data in the posts, such as changing image paths.
     /// </summary>
-    public Action? AfterBlogParsedAndAddedAction { get; set; }
+    public Action? AfterContentParsedAndAddedAction { get; set; }
+
+    /// <summary>
+    /// Obsolete property. Use <see cref="AfterContentParsedAndAddedAction"/> instead. This property will be removed in future versions.
+    /// </summary>
+    [Obsolete("Use AfterContentParsedAction instead. This property will be removed in future versions.")]
+    public Action? AfterBlogParsedAndAddedAction { get => AfterContentParsedAndAddedAction;
+        set => AfterContentParsedAndAddedAction = value;
+    } 
+
 
 }

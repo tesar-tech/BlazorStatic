@@ -48,8 +48,8 @@ else
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(PostUrl))
-            posts = projectsService.BlogPosts.OrderByDescending(x => x.FrontMatter.Name).ToList();
+            posts = projectsService.Posts.OrderByDescending(x => x.FrontMatter.Name).ToList();
         else
-            onePost = projectsService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
+            onePost = projectsService.Posts.FirstOrDefault(x => x.Url == PostUrl);
     }
 }

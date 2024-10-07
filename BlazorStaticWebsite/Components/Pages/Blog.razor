@@ -118,7 +118,7 @@
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(PostUrl)) return;
-        post = blazorStaticContentService.BlogPosts.FirstOrDefault(x => x.Url == PostUrl);
+        post = blazorStaticContentService.Posts.FirstOrDefault(x => x.Url == PostUrl);
        
     }
 }

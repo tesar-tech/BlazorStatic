@@ -23,7 +23,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
 
     /// <summary>
     /// Generates static pages for the Blazor application. This method performs several key operations:
-    /// - Invokes an optional pre-defined blog action.
+    /// - Invokes an optional pre-defined content action.
     /// - Conditionally generates non-parametrized Razor pages based on configuration.
     /// - Clears the existing output folder and creates a fresh one for new content.
     /// - Copies specified content to the output folder.
@@ -111,7 +111,7 @@ public class BlazorStaticService(BlazorStaticOptions options,
             string pageUrl = Options.SiteUrl.TrimEnd('/') + EncodeUrl(page.Url);
             List<XElement> xElements = [new XElement(xmlns + "loc", pageUrl)];
 
-            // only add a <lastmod> node if the file is a blog post
+            // only add a <lastmod> node if the file is a post
             if (page.AdditionalInfo?.LastMod != null)
             {
                 xElements.Add(new XElement(xmlns + "lastmod", $"{page.AdditionalInfo.LastMod:yyyy-MM-dd}"));
