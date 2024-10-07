@@ -51,7 +51,7 @@ dotnet new install BlazorStatic.Templates
 This adds new options to your `dotnet new` template list. Then create a new project using:
 
 ```sh
-dotnet new BlazorStaticMinimalBlogTemplate -o MyBlazorStaticApp 
+dotnet new BlazorStaticMinimalBlog -o MyBlazorStaticApp 
 ```
 
 This creates a `MyBlazorStaticApp` folder and project. It's a standard .NET 8 Blazor app with the BlazorStatic package installed, including a few predefined components, styles, and a blog post with sample data.
