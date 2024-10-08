@@ -30,27 +30,15 @@
 <a href="https://app.netlify.com/sites/blazorstatic/deploys"><img src="https://api.netlify.com/api/v1/badges/4fa2c17a-6385-4cc6-9919-e32c134175d9/deploy-status" alt="Netlify Status" /></a></p>
 <p>Embrace the capabilities of Blazor on .NET 8 to craft static websites.</p>
 <p>Transform your Blazor app into a static site generator.</p>
-<h1 id="how-does-it-work">How does it work?</h1>
+<h1 id="how-does-it-work">🔧 How does it work?</h1>
 <p>Like any .NET Blazor app! That's the main point. If you know how to build a Blazor app, you can transfer it to HTML files easily.
 <strong>BlazorStatic</strong> will help you with that. It can also help with processing markdown files.</p>
 <blockquote>
-<p>Website for BlazorStatic is a feature-rich example of the library. Check the <a href="./BlazorStaticWebsite">source code</a>.</p>
+<p>Website for BlazorStatic is a feature-rich example of the library. Check the <a href="https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite">source code</a>.</p>
 </blockquote>
 <p>Upon running your app, <strong>BlazorStatic</strong> fetches the pages' HTML with <code>HttpClient</code>, outputs HTML files and assets to the <code>output</code> folder, which you can deploy to any static hosting service.</p>
 <p>There are many defaults to keep usage simple, but you can configure it extensively. For example, you can match your YAML front matter in markdown files (which can be reused from other static site generators).</p>
-<h2 id="features">Features</h2>
-<ul>
-<li>Work with Blazor as you are used to.</li>
-<li>Easily parse and consume markdown files.</li>
-<li>Support for custom YAML front matters.</li>
-<li>Automatically discovers pages among Razor files.</li>
-<li>Ability to add/remove pages as needed.</li>
-<li>Works with all CSS frameworks and themes.</li>
-<li>Easy to deploy with CI/CD pipeline.</li>
-<li>Supports HotReload</li>
-<li>Has <code>dotnet new</code> template</li>
-</ul>
-<h1 id="getting-started">Getting Started</h1>
+<h1 id="getting-started">🚀 Getting Started</h1>
 <p>You can start using BlazorStatic in three ways, depending on your setup and intended use.</p>
 <h2 id="recommended-way">👑 Recommended Way</h2>
 <p>Install the BlazorStatic templates:</p>
@@ -66,7 +54,7 @@
 <li>Markdown files are located in the <code>Content/Blog</code> folder.</li>
 <li>A <code>.gitignore</code> file is included with standard .NET recommendations and ignores the <code>output</code> folder.</li>
 <li>The template also includes a <code>.github</code> folder with a GitHub action for building and deploying to GitHub Pages. See the Deploying section below.</li>
-<li>You can customize anything. For further details, see <a href="docs/new-start.md">this document</a>, which explains everything in more depth.</li>
+<li>You can customize anything. For further details, see <a href="docs/new-start">this document</a>, which explains everything in more depth.</li>
 </ul>
 <h2 id="quickest-way">🏃‍➡️ Quickest Way</h2>
 <p>Use <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">BlazorStaticMinimalBlog</a> as template (the big green button).</p>
@@ -74,11 +62,23 @@
 <p><img src="media/README/img-1.png" alt="github pages" /></p>
 <p>Your page is ready now!</p>
 <h2 id="custom-way">🛠️ Custom Way</h2>
-<p>If you want to fully understand how BlazorStatic works or if you have an existing project where you'd like to integrate the BlazorStatic library, start from scratch. Check out <a href="docs/new-start.md">this document</a> for guidance.</p>
-<h1 id="deploying">Deploying</h1>
+<p>If you want to fully understand how BlazorStatic works or if you have an existing project where you'd like to integrate the BlazorStatic library, start from scratch. Check out <a href="docs/new-start">this document</a> for guidance.</p>
+<h1 id="features">🧩 Features</h1>
+<ul>
+<li>Work with Blazor as you are used to.</li>
+<li>Easily parse and consume markdown files.</li>
+<li>Support for custom YAML front matters.</li>
+<li>Automatically discovers pages among Razor files.</li>
+<li>Ability to add/remove pages as needed.</li>
+<li>Works with all CSS frameworks and themes.</li>
+<li>Easy to deploy with CI/CD pipeline.</li>
+<li>Supports HotReload</li>
+<li>Has <code>dotnet new</code> template</li>
+</ul>
+<h1 id="deploying">📦 Deploying</h1>
 <p>You can deploy the <code>output</code> folder to any static hosting service, such as GitHub Pages, Netlify, Vercel, Azure Static Web Apps, etc.</p>
-<p>Detailed instructions are <a href="docs/deployment.md">here</a>.</p>
-<h1 id="samples">Samples</h1>
+<p>Detailed instructions are <a href="docs/deployment">here</a>.</p>
+<h1 id="samples">📊 Samples</h1>
 <table>
 <thead>
 <tr>
@@ -110,7 +110,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="contributions">Contributions</h1>
+<h1 id="contributions">🤝 Contributions</h1>
 <p>Contributions are highly encouraged and appreciated. If you find something missing, unclear, or encounter an issue with the code, I warmly welcome your input. Feel free to:</p>
 <ul>
 <li>Create a new <a href="https://github.com/tesar-tech/BlazorStatic/issues">issue</a> or submit a PR.</li>

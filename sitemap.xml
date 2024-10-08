@@ -39,6 +39,10 @@
     <lastmod>2024-01-20</lastmod>
   </url>
   <url>
+    <loc>https://tesar-tech.github.io/BlazorStatic/blog/release-1.0.0-beta.13</loc>
+    <lastmod>2024-10-08</lastmod>
+  </url>
+  <url>
     <loc>https://tesar-tech.github.io/BlazorStatic/blog/the-origins-of-blazorstatic</loc>
     <lastmod>2023-11-27</lastmod>
   </url>
@@ -75,6 +79,12 @@
   </url>
   <url>
     <loc>https://tesar-tech.github.io/BlazorStatic/tags/ignoring+files</loc>
+  </url>
+  <url>
+    <loc>https://tesar-tech.github.io/BlazorStatic/tags/HotReload</loc>
+  </url>
+  <url>
+    <loc>https://tesar-tech.github.io/BlazorStatic/tags/dotnet+new+template</loc>
   </url>
   <url>
     <loc>https://tesar-tech.github.io/BlazorStatic/tags/story</loc>
