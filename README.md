@@ -13,31 +13,20 @@ Embrace the capabilities of Blazor on .NET 8 to craft static websites.
 
 Transform your Blazor app into a static site generator.
 
-# How does it work?
+# 🔧 How does it work?
 
 Like any .NET Blazor app! That's the main point. If you know how to build a Blazor app, you can transfer it to HTML files easily.
 **BlazorStatic** will help you with that. It can also help with processing markdown files.
 
-> Website for BlazorStatic is a feature-rich example of the library. Check the [source code](./BlazorStaticWebsite). 
+> Website for BlazorStatic is a feature-rich example of the library. Check the [source code](https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite). 
 
 Upon running your app, **BlazorStatic** fetches the pages' HTML with `HttpClient`, outputs HTML files and assets to the `output` folder, which you can deploy to any static hosting service.
 
 There are many defaults to keep usage simple, but you can configure it extensively. For example, you can match your YAML front matter in markdown files (which can be reused from other static site generators).
 
 
-## Features
 
-- Work with Blazor as you are used to.
-- Easily parse and consume markdown files.
-- Support for custom YAML front matters.
-- Automatically discovers pages among Razor files.
-- Ability to add/remove pages as needed.
-- Works with all CSS frameworks and themes.
-- Easy to deploy with CI/CD pipeline.
-- Supports HotReload
-- Has `dotnet new` template 
-
-# Getting Started
+# 🚀 Getting Started
 
 You can start using BlazorStatic in three ways, depending on your setup and intended use. 
 ## 👑 Recommended Way
@@ -79,13 +68,26 @@ Your page is ready now!
 
 If you want to fully understand how BlazorStatic works or if you have an existing project where you'd like to integrate the BlazorStatic library, start from scratch. Check out [this document](./BlazorStaticWebsite/Content/Docs/new-start.md) for guidance.
 
-# Deploying
+# 🧩 Features
+
+- Work with Blazor as you are used to.
+- Easily parse and consume markdown files.
+- Support for custom YAML front matters.
+- Automatically discovers pages among Razor files.
+- Ability to add/remove pages as needed.
+- Works with all CSS frameworks and themes.
+- Easy to deploy with CI/CD pipeline.
+- Supports HotReload
+- Has `dotnet new` template 
+
+
+# 📦 Deploying
 
 You can deploy the `output` folder to any static hosting service, such as GitHub Pages, Netlify, Vercel, Azure Static Web Apps, etc.
 
 Detailed instructions are [here](./BlazorStaticWebsite/Content/Docs/deployment.md).
 
-# Samples
+# 📊 Samples
 
 | Description                                                  | Source                                                                               | Live                                                          |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
@@ -94,7 +96,7 @@ Detailed instructions are [here](./BlazorStaticWebsite/Content/Docs/deployment.m
 | Zodoc - image processing and deep learning sample            | [source](https://github.com/tesar-tech/zodoc/)                                       | [live](https://zodoc.tech/)                                   |
 | ❓ Add your page here!!!                                      |                                                                                      |
 
-# Contributions
+# 🤝 Contributions
 
 Contributions are highly encouraged and appreciated. If you find something missing, unclear, or encounter an issue with the code, I warmly welcome your input. Feel free to:
 

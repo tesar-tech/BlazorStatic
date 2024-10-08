@@ -2,6 +2,8 @@
 @using Markdig
 @using BlazorStatic
 @inject BlazorStaticHelpers blazorStaticHelpers
+@using System.Text.RegularExpressions;
+
 <div class="prose prose-invert 
 [&_img]:inline-block
 [&_#imglogo]:hidden 
@@ -11,11 +13,16 @@
   
 @code{
   string htmlContent = "";
-  protected override async Task OnInitializedAsync()
+
+protected override async Task OnInitializedAsync()
   {
-  htmlContent =  await blazorStaticHelpers.ParseMarkdownFile("../README.md");
-  htmlContent = htmlContent
-    .Replace("./BlazorStaticWebsite/Content/Docs/","docs/")
-    .Replace(".github/media/","media/");
+    htmlContent = await blazorStaticHelpers.ParseMarkdownFile("../README.md");
+    htmlContent = Regex.Replace(
+      htmlContent,
+      @"\./BlazorStaticWebsite/Content/Docs/([\w\-]+)\.md",//remove the md
+      "docs/$1"
+      )
+      .Replace(".github/media/", "media/");
   }
+
 }
