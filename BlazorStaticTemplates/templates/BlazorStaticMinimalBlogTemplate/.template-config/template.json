@@ -16,6 +16,7 @@
   "sourceName": "BlazorStaticMinimalBlog",
   "defaultName": "MyBlazorStaticApp",
   "preferNameDirectory": true,
+  "placeholderFilename":".keepFolder",
   "sources": [
     {
       "modifiers": [
@@ -29,7 +30,8 @@
         {
           "condition": "(ExcludeDefaultPosts)",
           "exclude": [
-            "**/Content/Blog/**"
+            "**/Content/Blog/**/*.md",
+            "**/Content/Blog/media/**"
           ]
         },
         {

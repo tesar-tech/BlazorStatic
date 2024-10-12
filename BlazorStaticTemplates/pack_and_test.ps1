@@ -13,4 +13,4 @@ Write-Host "Removing the old 'TestProject' directory..." -ForegroundColor Cyan
 Remove-Item -Recurse -Force -Path ".\TestProject"
 
 Write-Host "Creating a new project from the 'BlazorStaticMinimalBlog' template..." -ForegroundColor Cyan
-dotnet new BlazorStaticMinimalBlog -o "TestProject" --force
+dotnet new BlazorStaticMinimalBlog -o "TestProject" --force -e
