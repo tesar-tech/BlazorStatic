@@ -14,17 +14,20 @@
 
 
 @code {
-    [Parameter, EditorRequired] public Icons? Icon { get; set; }
+    [Parameter] [EditorRequired] public Icons? Icon { get; set; }
     [Parameter] public string SizeClasses { get; set; } = "h-6 w-6";
-    public enum Icons{
+
+    public enum Icons
+    {
         X,
         Github
     }
-    
+
     string IconToViewBox(Icons? icon) => icon switch
     {
         Icons.X => "0 0 50 50",
         Icons.Github => "0 0 24 24",
         _ => "0 0 24 24"
     };
+
 }

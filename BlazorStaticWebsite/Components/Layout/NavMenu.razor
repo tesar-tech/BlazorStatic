@@ -1,5 +1,4 @@
-﻿@using Microsoft.Extensions.Options
-@inject NavigationManager Nm
+﻿@inject NavigationManager Nm
 
 <header class="flex items-center justify-between py-10">
     <div>
@@ -13,7 +12,7 @@
         </a>
     </div>
     <div class="flex items-center space-x-4 leading-5 sm:space-x-6">
-        @foreach(var item in menuItems)
+        @foreach (var item in menuItems)
         {
             <NavLink ActiveClass="bg-primary-950 px-2 py-1 rounded-xl" class="hidden font-medium text-gray-100 sm:block"
                      Match="@(item.Link == "" ? NavLinkMatch.All : NavLinkMatch.Prefix)" href="@item.Link">
@@ -25,7 +24,7 @@
             </NavLink>
 
             @* <a class="hidden font-medium text-gray-100 sm:block   @(Nm.Uri.EndsWith(item.link)?"":"") " href="@item.link">@item.name</a> *@
-        } 
+        }
         <button id="toggle-button" aria-label="Toggle Menu" class="sm:hidden">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-8 w-8 text-gray-100">
                 <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
@@ -46,7 +45,7 @@
                         <NavLink ActiveClass="underline" class="text-2xl font-bold tracking-widest text-gray-100"
                                  Match="@(item.Link == "" ? NavLinkMatch.All : NavLinkMatch.Prefix)" href="@item.Link">
                             @item.Name
-                            @if(item.Icon != null)
+                            @if (item.Icon != null)
                             {
                                 <Svg Icon="item.Icon"/>
                             }
@@ -60,7 +59,7 @@
 <script>
 //👎 but what can I do? It's a static html. I can't use C# here.
  const toggleMobileMenu = () => document.querySelector('#mobile-menu').classList.toggle('translate-x-full');
- 
+
  document.querySelector('#toggle-button').addEventListener('click', toggleMobileMenu);
  document.querySelector('#close-mobile-menu-button').addEventListener('click', toggleMobileMenu);
 </script>
@@ -68,14 +67,15 @@
 
 @code
 {
-List<MenuItem> menuItems =
-[
-    new("Home", ""),
-    new("Blog", "blog"),
-    new("Tags", "tags"),
-    new("Docs", "docs"),
-    new("", WebsiteKeys.GitHubRepo, Svg.Icons.Github)
-];
+    List<MenuItem> menuItems =
+    [
+        new("Home", ""),
+        new("Blog", "blog"),
+        new("Tags", "tags"),
+        new("Docs", "docs"),
+        new("", WebsiteKeys.GitHubRepo, Svg.Icons.Github)
+    ];
+
     record MenuItem(string Name, string Link, Svg.Icons? Icon = null);
 
 

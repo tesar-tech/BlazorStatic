@@ -1,6 +1,5 @@
 {
   "profiles": {
-
     "httpsWatch": {
       "commandName": "Executable",
       "executablePath": "dotnet",
@@ -41,7 +40,5 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
     }
-    
-
   }
 }

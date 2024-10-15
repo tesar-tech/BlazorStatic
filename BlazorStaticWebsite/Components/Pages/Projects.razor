@@ -1,12 +1,10 @@
-﻿
+﻿@using BlazorStatic
+@using BlazorStatic.Services
 @*instead of @page "/projects"  *@
 @attribute [Route($"/{WebsiteKeys.ProjectsUrl}")] 
 
 @*instead of @page "/projects/{*postUrl}"  *@
 @attribute [Route($"/{WebsiteKeys.ProjectsUrl}/{{*postUrl}}")] 
-
-@using BlazorStatic
-@using BlazorStatic.Services
 @inject BlazorStaticContentService<ProjectFrontMatter> projectsService
 
 @* No filename -> show latest posts *@
@@ -17,7 +15,7 @@
             @foreach (var post in posts)
             {
                 <li>
-                    <a  href="@projectsService.Options.PageUrl/@(post.Url)">@post.FrontMatter.Name</a>
+                    <a href="@projectsService.Options.PageUrl/@(post.Url)">@post.FrontMatter.Name</a>
                     @post.Url
                 </li>
             }
@@ -52,4 +50,5 @@ else
         else
             onePost = projectsService.Posts.FirstOrDefault(x => x.Url == PostUrl);
     }
+
 }

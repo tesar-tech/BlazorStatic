@@ -1,15 +1,13 @@
+using System.Reflection;
+
 namespace BlazorStatic.Services;
 
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
-
 /// <summary>
-/// The BlazorStaticContentService is responsible for parsing and adding blog posts.
-/// It adds pages with blog posts to the options.PagesToGenerate list,
-/// that is used later by BlazorStaticService to generate static pages.
+///     The BlazorStaticContentService is responsible for parsing and adding blog posts.
+///     It adds pages with blog posts to the options.PagesToGenerate list,
+///     that is used later by BlazorStaticService to generate static pages.
 /// </summary>
+/// a
 /// <param name="options"></param>
 /// <param name="helpers"></param>
 /// <param name="blazorStaticService"></param>
@@ -21,38 +19,40 @@ public class BlazorStaticContentService<TFrontMatter>(
     where TFrontMatter : class, IFrontMatter, new()
 {
     /// <summary>
-    /// The list of posts parsed and added to the BlazorStaticContentService.
+    ///     The list of posts parsed and added to the BlazorStaticContentService.
     /// </summary>
     public List<Post<TFrontMatter>> Posts => options.Posts;
 
     /// <summary>
-    /// Obsolete property. Use <see cref="Posts"/> instead. This property will be removed in future versions.
+    ///     Obsolete property. Use <see cref="Posts" /> instead. This property will be removed in future versions.
     /// </summary>
     [Obsolete("Use Posts instead. This property will be removed in future versions.")]
     public List<Post<TFrontMatter>> BlogPosts => Posts;
 
+
     /// <summary>
-    /// The BlazorStaticContentOptions used to configure the BlazorStaticContentService.
+    ///     The BlazorStaticContentOptions used to configure the BlazorStaticContentService.
     /// </summary>
     public BlazorStaticContentOptions<TFrontMatter> Options => options;
-    
-    
+
+
     /// <summary>
-    /// Obsolete method. Use <see cref="ParseAndAddPosts"/> instead. This method will be removed in future versions.
+    ///     Obsolete method. Use <see cref="ParseAndAddPosts" /> instead. This method will be removed in future versions.
     /// </summary>
     [Obsolete("Use ParseAndAddPosts instead. This method will be removed in future versions.")]
     public async Task ParseAndAddBlogPosts()
     {
         await ParseAndAddPosts();
     }
+
     /// <summary>
-    /// Parses and adds posts to the BlazorStaticContentService. This method reads markdown files
-    /// from a specified directory, parses them to extract front matter and content,
-    /// and then adds them as posts to the options.PagesToGenerate.
+    ///     Parses and adds posts to the BlazorStaticContentService. This method reads markdown files
+    ///     from a specified directory, parses them to extract front matter and content,
+    ///     and then adds them as posts to the options.PagesToGenerate.
     /// </summary>
     public async Task ParseAndAddPosts()
     {
-        string absContentPath;//gets initialized in GetPostsPath
+        string absContentPath; //gets initialized in GetPostsPath
         var files = GetPostsPath();
 
         (string, string)? mediaPaths =
@@ -60,11 +60,14 @@ public class BlazorStaticContentService<TFrontMatter>(
                 ? null
                 : (options.MediaFolderRelativeToContentPath, options.MediaRequestPath);
 
-        foreach (string file in files)
+        foreach (var file in files)
         {
             var (htmlContent, frontMatter) = await helpers.ParseMarkdownFile<TFrontMatter>(file, mediaPaths);
 
-            if (frontMatter.IsDraft) continue;
+            if (frontMatter.IsDraft)
+            {
+                continue;
+            }
 
             Post<TFrontMatter> post = new()
             {
@@ -72,37 +75,47 @@ public class BlazorStaticContentService<TFrontMatter>(
                 Url = GetRelativePathWithFilename(file),
                 HtmlContent = htmlContent
             };
+
             options.Posts.Add(post);
 
-            blazorStaticService.Options.PagesToGenerate.Add(new($"{options.PageUrl}/{post.Url}", Path.Combine(options.PageUrl, $"{post.Url}.html"), post.FrontMatter.AdditionalInfo));
+            blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.PageUrl}/{post.Url}",
+                Path.Combine(options.PageUrl, $"{post.Url}.html"), post.FrontMatter.AdditionalInfo));
         }
 
         //copy media folder to output
-        if (options.MediaFolderRelativeToContentPath!=null)
+        if (options.MediaFolderRelativeToContentPath != null)
         {
-            string pathWithMedia = Path.Combine(options.ContentPath, options.MediaFolderRelativeToContentPath);
-            blazorStaticService.Options.ContentToCopyToOutput.Add(new(pathWithMedia, pathWithMedia));
+            var pathWithMedia = Path.Combine(options.ContentPath, options.MediaFolderRelativeToContentPath);
+            blazorStaticService.Options.ContentToCopyToOutput.Add(new ContentToCopy(pathWithMedia, pathWithMedia));
         }
 
         //add tags pages
         if (options.AddTagPagesFromPosts)
         {
             // blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));
-            foreach (var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct())//gather all unique tags from all posts
+            foreach (var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct()) //gather all unique tags from all posts
             {
-                blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}/{tag}", Path.Combine(options.TagsPageUrl, $"{tag}.html")));
+                blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.TagsPageUrl}/{tag}",
+                    Path.Combine(options.TagsPageUrl, $"{tag}.html")));
             }
         }
+
         options.AfterContentParsedAndAddedAction?.Invoke();
         return;
 
-        string[]  GetPostsPath(){//retrieves post from bin folder, where the app is running
+        string[] GetPostsPath()
+        {
+            //retrieves post from bin folder, where the app is running
             EnumerationOptions enumerationOptions = new()
             {
                 IgnoreInaccessible = true,
-                RecurseSubdirectories = true,
+                RecurseSubdirectories = true
             };
-            string execFolder = Directory.GetParent((Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).Location)!.FullName;//! is ok, null only in empty path or root
+
+            var execFolder =
+                Directory.GetParent((Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).Location)!
+                    .FullName; //! is ok, null only in empty path or root
+
             absContentPath = Path.Combine(execFolder, options.ContentPath);
             return Directory.GetFiles(absContentPath, options.PostFilePattern, enumerationOptions);
         }
@@ -111,8 +124,9 @@ public class BlazorStaticContentService<TFrontMatter>(
         //returns "en/somePost"
         string GetRelativePathWithFilename(string file)
         {
-            string relativePathWithFileName = Path.GetRelativePath(absContentPath, file);
-            return Path.Combine(Path.GetDirectoryName(relativePathWithFileName)!, Path.GetFileNameWithoutExtension(relativePathWithFileName)).Replace("\\", "/");
+            var relativePathWithFileName = Path.GetRelativePath(absContentPath, file);
+            return Path.Combine(Path.GetDirectoryName(relativePathWithFileName)!, Path.GetFileNameWithoutExtension(relativePathWithFileName))
+                .Replace("\\", "/");
         }
     }
 }

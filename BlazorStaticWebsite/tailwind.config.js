@@ -25,8 +25,8 @@ module.exports = {
                 'tomorrow': ['Tomorrow', 'sans'],
             },
             colors: {
-               vidaloca,
-                primary:vidaloca,
+                vidaloca,
+                primary: vidaloca,
 
             },
             typography: (theme) => ({
@@ -38,12 +38,13 @@ module.exports = {
                         h3: {color: vidaloca['300'],},
                         h4: {color: vidaloca['400'],},
                         code: {
-                            color: colors.violet['700'], 
+                            color: colors.violet['700'],
                         },
                     }
                 },
             }),
-           
-        },},
+
+        },
+    },
     plugins: [require('@tailwindcss/typography')],
 }

@@ -1,9 +1,12 @@
-﻿[assembly: System.Reflection.Metadata.MetadataUpdateHandler(typeof(BlazorStatic.HotReloadManager))]
+﻿using BlazorStatic;
+using System.Reflection.Metadata;
+
+[assembly: MetadataUpdateHandler(typeof(HotReloadManager))]
 
 namespace BlazorStatic;
 
 /// <summary>
-/// Used for subscribing to the hotReload update event, which re-generates the outputed content.   
+///     Used for subscribing to the hotReload update event, which re-generates the outputed content.
 /// </summary>
 internal sealed class HotReloadManager
 {
@@ -12,6 +15,8 @@ internal sealed class HotReloadManager
     public static void UpdateApplication(Type[]? updatedTypes)
     {
         if (HotReloadEnabled)
+        {
             BlazorStaticExtensions.UseBlazorStaticGeneratorOnHotReload();
+        }
     }
 }

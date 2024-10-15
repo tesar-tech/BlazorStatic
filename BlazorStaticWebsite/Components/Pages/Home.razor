@@ -1,28 +1,27 @@
 ﻿@page "/"
-@using Markdig
 @using BlazorStatic
+@using System.Text.RegularExpressions
 @inject BlazorStaticHelpers blazorStaticHelpers
-@using System.Text.RegularExpressions;
 
 <div class="prose prose-invert 
 [&_img]:inline-block
 [&_#imglogo]:hidden 
 ">
-@((MarkupString)htmlContent)
+    @((MarkupString)htmlContent)
 </div>
-  
-@code{
-  string htmlContent = "";
 
-protected override async Task OnInitializedAsync()
-  {
-    htmlContent = await blazorStaticHelpers.ParseMarkdownFile("../README.md");
-    htmlContent = Regex.Replace(
-      htmlContent,
-      @"\./BlazorStaticWebsite/Content/Docs/([\w\-]+)\.md",//remove the md
-      "docs/$1"
-      )
-      .Replace(".github/media/", "media/");
-  }
+@code{
+    string htmlContent = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        htmlContent = await blazorStaticHelpers.ParseMarkdownFile("../README.md");
+        htmlContent = Regex.Replace(
+                htmlContent,
+                @"\./BlazorStaticWebsite/Content/Docs/([\w\-]+)\.md", //remove the md
+                "docs/$1"
+            )
+            .Replace(".github/media/", "media/");
+    }
 
 }

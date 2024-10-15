@@ -2,7 +2,8 @@
 
 > This page is under construction, it serves more as a showcase of what is possible with BlazorStatic.
 
-- This website and its [source code](https://github.com/tesar-tech/BlazorStatic/) serve as a place for showcasing all the features, even if they don't exactly fit the usage.
+- This website and its [source code](https://github.com/tesar-tech/BlazorStatic/) serve as a place for showcasing all
+  the features, even if they don't exactly fit the usage.
 
 - All new features are documented in [blog posts](blog) with explanations and usage examples.
 
