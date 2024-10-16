@@ -41,7 +41,7 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
     /// <returns></returns>
     public async Task<(string htmlContent, T frontMatter)>
         ParseMarkdownFile<T>(string filePath, (string mediaPathToBeReplaced, string mediaPathNew)? mediaPaths = default,
-            IDeserializer? yamlDeserializer = default) where T : new()
+        IDeserializer? yamlDeserializer = default) where T : new()
     {
         yamlDeserializer ??= options.FrontMatterDeserializer;
         var markdownContent = await File.ReadAllTextAsync(filePath);
@@ -49,7 +49,7 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
 
         var yamlBlock = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
         T frontMatter;
-        if (yamlBlock == null)
+        if(yamlBlock == null)
         {
             //logger.LogWarning("No YAML front matter found in {file}. The default one will be used!", file);
             frontMatter = new T();
@@ -62,11 +62,11 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
             {
                 frontMatter = yamlDeserializer.Deserialize<T>(frontMatterYaml);
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 frontMatter = new T();
                 logger.LogWarning("Cannot deserialize YAML front matter in {file}. The default one will be used! Error: {exceptionMessage}",
-                    filePath, e.Message + e.InnerException?.Message);
+                filePath, e.Message + e.InnerException?.Message);
             }
         }
 
@@ -85,15 +85,15 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
     /// <param name="ignoredPaths">Target (full)paths that gets ignored.</param>
     public void CopyContent(string sourcePath, string targetPath, List<string> ignoredPaths)
     {
-        if (ignoredPaths.Contains(targetPath))
+        if(ignoredPaths.Contains(targetPath))
         {
             return;
         }
 
-        if (File.Exists(sourcePath)) //source path is a file
+        if(File.Exists(sourcePath))//source path is a file
         {
             var dir = Path.GetDirectoryName(targetPath);
-            if (dir == null)
+            if(dir == null)
             {
                 return;
             }
@@ -103,13 +103,13 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
             return;
         }
 
-        if (!Directory.Exists(sourcePath))
+        if(!Directory.Exists(sourcePath))
         {
             logger.LogError("Source path ({sourcePath}) does not exist", sourcePath);
             return;
         }
 
-        if (!Directory.Exists(targetPath))
+        if(!Directory.Exists(targetPath))
         {
             Directory.CreateDirectory(targetPath);
         }
@@ -117,11 +117,11 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
         var ignoredPathsWithTarget = ignoredPaths.Select(x => Path.Combine(targetPath, x)).ToList();
 
 
-        //Now Create all of the directories 
-        foreach (var dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+        //Now Create all of the directories
+        foreach(var dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
         {
             var newDirPath = ChangeRootFolder(dirPath);
-            if (ignoredPathsWithTarget.Contains(newDirPath)) //folder is mentioned in ignoredPaths, don't create it
+            if(ignoredPathsWithTarget.Contains(newDirPath))//folder is mentioned in ignoredPaths, don't create it
             {
                 continue;
             }
@@ -130,11 +130,11 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
         }
 
         //Copy all the files & Replaces any files with the same name
-        foreach (var newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+        foreach(var newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
         {
             var newPathWithNewDir = ChangeRootFolder(newPath);
-            if (ignoredPathsWithTarget.Contains(newPathWithNewDir) //file is mentioned in ignoredPaths
-                || !Directory.Exists(Path.GetDirectoryName(newPathWithNewDir))) //folder where this file resides is mentioned in ignoredPaths
+            if(ignoredPathsWithTarget.Contains(newPathWithNewDir)//file is mentioned in ignoredPaths
+                || !Directory.Exists(Path.GetDirectoryName(newPathWithNewDir)))//folder where this file resides is mentioned in ignoredPaths
             {
                 continue;
             }
@@ -144,7 +144,7 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
 
         return;
 
-        string ChangeRootFolder(string dirPath) //for example  from "wwwroot/imgs" to "output/imgs" (safer string.Replace)
+        string ChangeRootFolder(string dirPath)//for example  from "wwwroot/imgs" to "output/imgs" (safer string.Replace)
         {
             var relativePath = dirPath[sourcePath.Length..].TrimStart(Path.DirectorySeparatorChar);
             return Path.Combine(targetPath, relativePath);
@@ -157,7 +157,7 @@ public class BlazorStaticHelpers(BlazorStaticOptions options, ILogger<BlazorStat
     //this way the .md file can be edited with images in folder next to them, like users are used to.
     private string ReplaceImagePathsInMarkdown(string markdownContent, (string originalPath, string newPath)? mediaPaths = default)
     {
-        if (mediaPaths == null)
+        if(mediaPaths == null)
         {
             return markdownContent;
         }

@@ -5,7 +5,7 @@
 @inject BlazorStaticService blazorStaticService
 
 <ul class="divide-y   divide-gray-700">
-    @foreach (var post in posts)
+    @foreach(var post in posts)
     {
         <li class="py-12">
             <article>
@@ -27,7 +27,7 @@
                                     <a class="text-gray-100" href="@blazorStaticContentService.Options.PageUrl/@(post.Url)">@post.FrontMatter.Title</a>
                                 </h2>
                                 <div class="flex flex-wrap">
-                                    @foreach (string tag in post.FrontMatter.Tags)
+                                    @foreach(string tag in post.FrontMatter.Tags)
                                     {
                                         <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@blazorStaticContentService.Options.TagsPageUrl/@tag">@tag</a>
                                     }

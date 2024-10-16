@@ -3,9 +3,9 @@
 @using System.Text.RegularExpressions
 @inject BlazorStaticHelpers blazorStaticHelpers
 
-<div class="prose prose-invert 
+<div class="prose prose-invert
 [&_img]:inline-block
-[&_#imglogo]:hidden 
+[&_#imglogo]:hidden
 ">
     @((MarkupString)htmlContent)
 </div>
@@ -17,9 +17,9 @@
     {
         htmlContent = await blazorStaticHelpers.ParseMarkdownFile("../README.md");
         htmlContent = Regex.Replace(
-                htmlContent,
-                @"\./BlazorStaticWebsite/Content/Docs/([\w\-]+)\.md", //remove the md
-                "docs/$1"
+            htmlContent,
+            @"\./BlazorStaticWebsite/Content/Docs/([\w\-]+)\.md",//remove the md
+            "docs/$1"
             )
             .Replace(".github/media/", "media/");
     }

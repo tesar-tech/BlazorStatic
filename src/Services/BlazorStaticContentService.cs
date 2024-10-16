@@ -52,7 +52,7 @@ public class BlazorStaticContentService<TFrontMatter>(
     /// </summary>
     public async Task ParseAndAddPosts()
     {
-        string absContentPath; //gets initialized in GetPostsPath
+        string absContentPath;//gets initialized in GetPostsPath
         var files = GetPostsPath();
 
         (string, string)? mediaPaths =
@@ -60,11 +60,11 @@ public class BlazorStaticContentService<TFrontMatter>(
                 ? null
                 : (options.MediaFolderRelativeToContentPath, options.MediaRequestPath);
 
-        foreach (var file in files)
+        foreach(var file in files)
         {
             var (htmlContent, frontMatter) = await helpers.ParseMarkdownFile<TFrontMatter>(file, mediaPaths);
 
-            if (frontMatter.IsDraft)
+            if(frontMatter.IsDraft)
             {
                 continue;
             }
@@ -79,24 +79,24 @@ public class BlazorStaticContentService<TFrontMatter>(
             options.Posts.Add(post);
 
             blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.PageUrl}/{post.Url}",
-                Path.Combine(options.PageUrl, $"{post.Url}.html"), post.FrontMatter.AdditionalInfo));
+            Path.Combine(options.PageUrl, $"{post.Url}.html"), post.FrontMatter.AdditionalInfo));
         }
 
         //copy media folder to output
-        if (options.MediaFolderRelativeToContentPath != null)
+        if(options.MediaFolderRelativeToContentPath != null)
         {
             var pathWithMedia = Path.Combine(options.ContentPath, options.MediaFolderRelativeToContentPath);
             blazorStaticService.Options.ContentToCopyToOutput.Add(new ContentToCopy(pathWithMedia, pathWithMedia));
         }
 
         //add tags pages
-        if (options.AddTagPagesFromPosts)
+        if(options.AddTagPagesFromPosts)
         {
             // blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));
-            foreach (var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct()) //gather all unique tags from all posts
+            foreach(var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct())//gather all unique tags from all posts
             {
                 blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.TagsPageUrl}/{tag}",
-                    Path.Combine(options.TagsPageUrl, $"{tag}.html")));
+                Path.Combine(options.TagsPageUrl, $"{tag}.html")));
             }
         }
 
@@ -114,7 +114,7 @@ public class BlazorStaticContentService<TFrontMatter>(
 
             var execFolder =
                 Directory.GetParent((Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).Location)!
-                    .FullName; //! is ok, null only in empty path or root
+                    .FullName;//! is ok, null only in empty path or root
 
             absContentPath = Path.Combine(execFolder, options.ContentPath);
             return Directory.GetFiles(absContentPath, options.PostFilePattern, enumerationOptions);

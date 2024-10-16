@@ -23,7 +23,7 @@ internal static class RoutesHelper
         List<string> routes = components
             .Select(GetRouteFromComponent)
             .Where(route => route is not null)
-            .ToList()!; //previous null check guarantee not nulls 
+            .ToList()!;//previous null check guarantee not nulls 
 
         return routes;
     }

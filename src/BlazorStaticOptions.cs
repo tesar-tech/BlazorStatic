@@ -123,8 +123,7 @@ public class BlazorStaticOptions
     /// </summary>
     /// <param name="action">The synchronous action to add.</param>
     public void AddBeforeFilesGenerationAction(Action action) =>
-        AddBeforeFilesGenerationAction(() =>
-        {
+        AddBeforeFilesGenerationAction(() => {
             action();
             return Task.CompletedTask;
         });

@@ -14,7 +14,7 @@ internal sealed class HotReloadManager
 
     public static void UpdateApplication(Type[]? updatedTypes)
     {
-        if (HotReloadEnabled)
+        if(HotReloadEnabled)
         {
             BlazorStaticExtensions.UseBlazorStaticGeneratorOnHotReload();
         }

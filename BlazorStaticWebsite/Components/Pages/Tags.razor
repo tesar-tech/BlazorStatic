@@ -16,7 +16,7 @@
                 .Select(group => new { Tag = group.Key, Count = group.Count() })
                 .OrderByDescending(x => x.Count);
 
-            foreach (var tag in tagsWithCount)
+            foreach(var tag in tagsWithCount)
             {
                 <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlazorStaticContentService.Options.TagsPageUrl/@WebUtility.HtmlEncode(tag.Tag)">@tag.Tag (@tag.Count)</a>
             }

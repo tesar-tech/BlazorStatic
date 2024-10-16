@@ -93,7 +93,7 @@ public static class BlazorStaticExtensions
         where TFrontMatter : class, IFrontMatter, new()
     {
         var contentService = app.Services.GetRequiredService<BlazorStaticContentService<TFrontMatter>>();
-        contentService.Posts.Clear(); //need to do it here in case of hot reload event
+        contentService.Posts.Clear();//need to do it here in case of hot reload event
         var options = app.Services.GetRequiredService<BlazorStaticContentOptions<TFrontMatter>>();
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
 
@@ -103,7 +103,7 @@ public static class BlazorStaticExtensions
         //StaticFileOptions doesn't like ".." parent dir (e.g "Content/Blog/en/../media")
         //This converts it to "/Content/Blog/media"...
 
-        if (options.MediaRequestPath is not null && options.MediaFolderRelativeToContentPath is not null)
+        if(options.MediaRequestPath is not null && options.MediaFolderRelativeToContentPath is not null)
         {
             var requestPath = "/" + Path.GetFullPath(options.MediaRequestPath)[Directory.GetCurrentDirectory().Length..]
                 .TrimStart(Path.DirectorySeparatorChar)
@@ -111,7 +111,7 @@ public static class BlazorStaticExtensions
 
 
             var realPath = Path.Combine(Directory.GetCurrentDirectory(), options.ContentPath, options.MediaFolderRelativeToContentPath);
-            if (!Directory.Exists(realPath))
+            if(!Directory.Exists(realPath))
             {
                 app.Logger.LogWarning("folder for media path ({Folder}) doesn't exist", realPath);
             }
@@ -126,12 +126,12 @@ public static class BlazorStaticExtensions
         }
         //
 
-        blazorStaticService.Options.AddBeforeFilesGenerationAction(contentService.ParseAndAddPosts); //will run later in GenerateStaticPages
+        blazorStaticService.Options.AddBeforeFilesGenerationAction(contentService.ParseAndAddPosts);//will run later in GenerateStaticPages
     }
 
     internal static void UseBlazorStaticGeneratorOnHotReload()
     {
-        if (_app == null)
+        if(_app == null)
         {
             return;
         }
@@ -143,7 +143,7 @@ public static class BlazorStaticExtensions
         blazorStaticService.Options.ContentToCopyToOutput.Clear();
 
         //go through the options (from Program.cs)
-        foreach (var action in ActionsToConfigureOptions)
+        foreach(var action in ActionsToConfigureOptions)
         {
             action.Value.Invoke();
         }
@@ -158,13 +158,13 @@ public static class BlazorStaticExtensions
     /// <param name="shutdownApp"></param>
     public static void UseBlazorStaticGenerator(this WebApplication app, bool shutdownApp = false)
     {
-        foreach (var use in staticContentUse)
+        foreach(var use in staticContentUse)
         {
             use.Value.Invoke(app);
         }
 
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
-        if (_app is null && blazorStaticService.Options.HotReloadEnabled)
+        if(_app is null && blazorStaticService.Options.HotReloadEnabled)
         {
             _app = app;
         }
@@ -179,21 +179,20 @@ public static class BlazorStaticExtensions
         var logger = app.Services.GetRequiredService<ILogger<BlazorStaticService>>();
 
         lifetime.ApplicationStarted.Register(
-            async () =>
+        async () => {
+            try
             {
-                try
+                await blazorStaticService.GenerateStaticPages(app.Urls.First()).ConfigureAwait(false);
+                if(shutdownApp)
                 {
-                    await blazorStaticService.GenerateStaticPages(app.Urls.First()).ConfigureAwait(false);
-                    if (shutdownApp)
-                    {
-                        lifetime.StopApplication();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "An error occurred while generating static pages: {ErrorMessage}", ex.Message);
+                    lifetime.StopApplication();
                 }
             }
+            catch(Exception ex)
+            {
+                logger.LogError(ex, "An error occurred while generating static pages: {ErrorMessage}", ex.Message);
+            }
+        }
         );
     }
 
@@ -207,16 +206,16 @@ public static class BlazorStaticExtensions
     {
         var contents = fileProvider.GetDirectoryContents(subPath);
 
-        foreach (var item in contents)
+        foreach(var item in contents)
         {
             var fullPath = $"{subPath}{item.Name}";
-            if (item.IsDirectory)
+            if(item.IsDirectory)
             {
                 AddStaticWebAssetsToOutput(fileProvider, $"{fullPath}/", blazorStaticService);
             }
             else
             {
-                if (item.PhysicalPath is not null)
+                if(item.PhysicalPath is not null)
                 {
                     blazorStaticService.Options.ContentToCopyToOutput.Add(new ContentToCopy(item.PhysicalPath, fullPath));
                 }

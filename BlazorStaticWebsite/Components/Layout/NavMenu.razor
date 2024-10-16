@@ -12,7 +12,7 @@
         </a>
     </div>
     <div class="flex items-center space-x-4 leading-5 sm:space-x-6">
-        @foreach (var item in menuItems)
+        @foreach(var item in menuItems)
         {
             <NavLink ActiveClass="bg-primary-950 px-2 py-1 rounded-xl" class="hidden font-medium text-gray-100 sm:block"
                      Match="@(item.Link == "" ? NavLinkMatch.All : NavLinkMatch.Prefix)" href="@item.Link">
@@ -39,7 +39,7 @@
                 </button>
             </div>
             <nav class="fixed mt-8 h-full">
-                @foreach (var item in menuItems)
+                @foreach(var item in menuItems)
                 {
                     <div class="px-12 py-4">
                         <NavLink ActiveClass="underline" class="text-2xl font-bold tracking-widest text-gray-100"
