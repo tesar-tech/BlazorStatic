@@ -2,13 +2,13 @@
 <html lang="en"><head><title>Blazor Static</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="/BlazorStatic/">
+    <base href="/">
     <link rel="stylesheet" href="app.min.css">
     <link rel="icon" type="image/png" href="imgs/blazor-static_200px.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css">
     </head>
 
 <body class="bg-gray-950 font-tomorrow text-gray-200 "><div class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0 "><div class="flex h-screen flex-col justify-between"><header class="flex items-center justify-between py-10"><div><a aria-label="BlazorStatic" href><div class="flex items-center justify-between"><div class="mr-3"><img class="w-72" src="imgs/logo.png" alt="logo"></div></div></a></div>
@@ -18,16 +18,19 @@
 <script>
 //👎 but what can I do? It's a static html. I can't use C# here.
  const toggleMobileMenu = () => document.querySelector('#mobile-menu').classList.toggle('translate-x-full');
- 
+
  document.querySelector('#toggle-button').addEventListener('click', toggleMobileMenu);
  document.querySelector('#close-mobile-menu-button').addEventListener('click', toggleMobileMenu);
 </script>
 
         <main class="mb-auto"><div class="prose prose-invert"><h1 id="using-blazorstatic-from-scratch">Using BlazorStatic from scratch</h1>
-<p>This guide will show you how to create static site using <strong>BlazorStatic</strong>. It is good for understanding how it works, but you can also use the <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">BlazorStaticMinimalBlog</a> where everything is already set up for you.</p>
+<p>This guide will show you how to create static site using <strong>BlazorStatic</strong>. It is good for understanding how it works,
+but you can also use the <a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog">BlazorStaticMinimalBlog</a> where
+everything is already set up for you.</p>
 <h2 id="create-blazor-app">Create Blazor app</h2>
 <ul>
-<li><p>Start by creating new Blazor project. <code>Interactivity</code> is set to <code>None</code> since that is not something we need for static site.</p>
+<li><p>Start by creating new Blazor project. <code>Interactivity</code> is set to <code>None</code> since that is not something we need for static
+site.</p>
 <blockquote>
 <p><code>dotnet new blazor --name BlazorStaticMinimalBlog --output BlazorStaticMinimalBlog --interactivity None --empty</code></p>
 </blockquote>
@@ -37,7 +40,8 @@
 <li><p>Make necessary changes to your layout. I am using tailwindcss, so everything is accommodated to that.</p>
 </li>
 <li><p>When you run <code>dotnet watch</code> your app should be running.</p>
-<p>(if you are also using tailwind, you need to run <code>tailwindcss -i .\wwwroot\app.css -o .\wwwroot\app.min.css -w</code> or npm command )</p>
+<p>(if you are also using tailwind, you need to run <code>tailwindcss -i .\wwwroot\app.css -o .\wwwroot\app.min.css -w</code> or npm
+command )</p>
 </li>
 </ul>
 <h2 id="add-content">Add content</h2>
@@ -66,7 +70,8 @@ authors:
 </code></pre>
 <p>These metadata has to match C# class (<code>BlazorStatic.BlogFrontMatter</code>) that we will use now.
 You can use your own class, but it has to implement <code>IFrontMatter</code> interface.
-You can also use multiple <code>IFrontMatter</code> classes in one web app, see <a href="projects">projects</a> for more info (and its usage in <code>Program.cs</code>).</p>
+You can also use multiple <code>IFrontMatter</code> classes in one web app, see <a href="projects">projects</a> for more info (and its usage
+in <code>Program.cs</code>).</p>
 </li>
 <li><p>Mark Content folder to copy to the output:</p>
 <pre><code class="language-xml">&lt;ItemGroup&gt;
@@ -95,35 +100,49 @@ You can also use multiple <code>IFrontMatter</code> classes in one web app, see 
 }
 ).AddBlazorStaticContentService&lt;BlogFrontMatter&gt;();
 </code></pre>
-<p><code>BlogFrontMatter</code> is the class that will be used to parse the metadata from markdown files. This is part of the BlazorStatic package. It exactly matches the metadata in <code>first-post.md</code> and <code>second-post.md</code>. Nothing stops you from creating your own class that will match your own metadata. It just needs to implement interface <code>IFrontMatter</code>, which has just one property <code>List&lt;string&gt; Tags { get; set; }</code>.</p>
-<p>As you can see <code>BlazorStaticService</code> has options you can change. For example you can change the directory structure (where your md files are located), or you can ignore some files (like <code>app.css</code> in this case (we have <code>app.min.css</code>)).</p>
+<p><code>BlogFrontMatter</code> is the class that will be used to parse the metadata from markdown files. This is part of the
+BlazorStatic package. It exactly matches the metadata in <code>first-post.md</code> and <code>second-post.md</code>. Nothing stops you from
+creating your own class that will match your own metadata. It just needs to implement interface <code>IFrontMatter</code>, which
+has just one property <code>List&lt;string&gt; Tags { get; set; }</code>.</p>
+<p>As you can see <code>BlazorStaticService</code> has options you can change. For example you can change the directory structure (
+where your md files are located), or you can ignore some files (like <code>app.css</code> in this case (we have <code>app.min.css</code>)).</p>
 </li>
 <li><p>Use <code>BlazorStatic</code>
 Before running the app we need to tell the service to actually do something:</p>
 <pre><code class="language-csharp">app.UseBlazorStaticGenerator(shutdownApp: !app.Environment.IsDevelopment());
 </code></pre>
-<p><code>UseBlazorStaticGenerator</code> will parse the markdown files and expose them to the app as Post<BlogFrontMatter> through <code>BlazorStaticContentService</code> and
-will generate the static files a put them into the <code>output</code> folder (also customizable). It will shut down the app outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run &quot;forever&quot; in particular job.</p>
+<p><code>UseBlazorStaticGenerator</code> will parse the markdown files and expose them to the app as Post<BlogFrontMatter> through
+<code>BlazorStaticContentService</code> and
+will generate the static files a put them into the <code>output</code> folder (also customizable). It will shut down the app
+outside of development environment. This is meant for CI/CD pipelines, otherwise the app would run &quot;forever&quot; in
+particular job.</p>
 </li>
 </ul>
 <h2 id="scaffold-the-ui-for-blog-posts">Scaffold the UI for blog posts</h2>
-<p>When you run the app right now, it will output the non-parametrized pages (e.g. <code>@page &quot;/&quot;</code> into <code>index.html</code>) and will copy content of <code>wwwroot</code> into the <code>output</code>. You can set where to look for non-parametrized pages by <code>opt.RazorPagesPaths</code> (default is <code>Components/Pages</code> folder).</p>
+<p>When you run the app right now, it will output the non-parametrized pages (e.g. <code>@page &quot;/&quot;</code> into <code>index.html</code>) and will
+copy content of <code>wwwroot</code> into the <code>output</code>. You can set where to look for non-parametrized pages by
+<code>opt.RazorPagesPaths</code> (default is <code>Components/Pages</code> folder).</p>
 <blockquote>
 <p>File generation is done by using <code>HttpClient</code> and saving the result into <code>.html</code> file.</p>
 </blockquote>
-<p>We need to scaffold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you by providing <code>BlazorStaticContentService&lt;BlogFrontMatter&gt;.Posts</code> collection where your processed posts live.</p>
+<p>We need to scaffold the UI for blog posts. BlazorStatic doesn't force you to use any particular UI, but it will help you
+by providing <code>BlazorStaticContentService&lt;BlogFrontMatter&gt;.Posts</code> collection where your processed posts live.</p>
 <p>You get get some inspiration for th UI. These pages are important:</p>
 <ul>
-<li><p><a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/Components/Pages/Blog.razor">Blog.razor</a> page which either displays the list of posts or the post itself. It starts with these page directives:</p>
-<pre><code class="language-razor">@page &quot;/blog&quot; 
+<li><p><a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/Components/Pages/Blog.razor">Blog.razor</a> page which
+either displays the list of posts or the post itself. It starts with these page directives:</p>
+<pre><code class="language-razor">@page &quot;/blog&quot;
 @page &quot;/blog/{fileName}&quot;
 </code></pre>
-<p>First will display the list of posts, second will display the post itself. The list of post is in <code>PostList.razor</code> component.</p>
+<p>First will display the list of posts, second will display the post itself. The list of post is in <code>PostList.razor</code>
+component.</p>
 </li>
-<li><p><a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/Components/PostsList.razor">PostsList.razor</a> component, which is used in Blog.razor and Tags.razor pages to display the list of posts.</p>
+<li><p><a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/Components/PostsList.razor">PostsList.razor</a>
+component, which is used in Blog.razor and Tags.razor pages to display the list of posts.</p>
 </li>
-<li><p><a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/Components/Pages/Tags.razor">Tags.razor</a> page, which either displays the tags cloud or the list of posts with particular tag. It have these page directives:</p>
-<pre><code class="language-razor">@page &quot;/tags&quot; 
+<li><p><a href="https://github.com/tesar-tech/BlazorStaticMinimalBlog/blob/master/Components/Pages/Tags.razor">Tags.razor</a> page,
+which either displays the tags cloud or the list of posts with particular tag. It have these page directives:</p>
+<pre><code class="language-razor">@page &quot;/tags&quot;
 @page &quot;/tags/{tagName}&quot;
 </code></pre>
 </li>
@@ -135,12 +154,15 @@ will generate the static files a put them into the <code>output</code> folder (a
 });
 </code></pre>
 <h2 id="run-and-see">Run and see</h2>
-<p>Now, when you run the app it outputs the static website into the <code>output</code> folder. When you open them the links and images will not work. But it is fine. For debugging purposes you just run the app and don't care about the output. You can even suppress the output by <code>opt.SuppressFileGeneration = true;</code> (default is <code>false</code>) and turn it on only for CI/CD pipeline.</p>
+<p>Now, when you run the app it outputs the static website into the <code>output</code> folder. When you open them the links and
+images will not work. But it is fine. For debugging purposes you just run the app and don't care about the output. You
+can even suppress the output by <code>opt.SuppressFileGeneration = true;</code> (default is <code>false</code>) and turn it on only for CI/CD
+pipeline.</p>
 </div></main>
 
         <footer><div class="mt-16 flex flex-col items-center"><div class="mb-3 flex space-x-4"><a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="https://github.com/tesar-tech/BlazorStatic/"><span class="sr-only">github</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="hover:text-primary-400 h-6 w-6 fill-current text-gray-200"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg></a>
-                   
+
                     <a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="https://x.com/tesar-tech"><span class="sr-only">x</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="hover:text-primary-400 h-6 w-6 fill-current text-gray-200"><path d="M 5.9199219 6 L 20.582031 27.375 L 6.2304688 44 L 9.4101562 44 L 21.986328 29.421875 L 31.986328 44 L 44 44 L 28.681641 21.669922 L 42.199219 6 L 39.029297 6 L 27.275391 19.617188 L 17.933594 6 L 5.9199219 6 z M 9.7167969 8 L 16.880859 8 L 40.203125 42 L 33.039062 42 L 9.7167969 8 z"></path></svg></a></div>
                 <div class="mb-2 flex space-x-2 text-sm text-gray-400"><a target="_blank" rel="noopener noreferrer" href="https://github.com/tesar-tech/BlazorStatic">Blazor Static</a>
