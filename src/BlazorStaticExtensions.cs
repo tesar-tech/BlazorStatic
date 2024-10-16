@@ -1,39 +1,44 @@
-﻿namespace BlazorStatic;
-
+﻿using BlazorStatic.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Services;
-using YamlDotNet.Serialization.NodeTypeResolvers;
+
+namespace BlazorStatic;
 
 /// <summary>
-/// Extension methods for configuring BlazorStatic services in an <see cref="IServiceCollection" />.
+///     Extension methods for configuring BlazorStatic services in an <see cref="IServiceCollection" />.
 /// </summary>
 public static class BlazorStaticExtensions
 {
+    private static readonly Dictionary<Type, Action> ActionsToConfigureOptions = new();
+
+    private static WebApplication? _app;
     /// <summary>
-    /// holds the actions that will run when UseBlazorStaticGenerator is called.
-    /// Will manage content for every BlazorStaticContentService added.
-    /// This makes sure the BlazorStaticService has some connection to BlazorStaticContentService
-    /// We use dictionary for type, because it removes the need for hassling with duplicate (in case of hot reload)
+    ///     holds the actions that will run when UseBlazorStaticGenerator is called.
+    ///     Will manage content for every BlazorStaticContentService added.
+    ///     This makes sure the BlazorStaticService has some connection to BlazorStaticContentService
+    ///     We use dictionary for type, because it removes the need for hassling with duplicate (in case of hot reload)
     /// </summary>
-    private static Dictionary<Type, Action<WebApplication>> staticContentUse { get; set; } = [];
+    private static Dictionary<Type, Action<WebApplication>> staticContentUse { get; } = [];
 
 
     /// <summary>
-    /// Adds a BlazorStaticContentService to the specified IServiceCollection. The BlazorStaticContentService service uses a generic type
-    /// for front matter, allowing customization of the metadata format used in posts.
+    ///     Adds a BlazorStaticContentService to the specified IServiceCollection. The BlazorStaticContentService service uses
+    ///     a generic type
+    ///     for front matter, allowing customization of the metadata format used in posts.
     /// </summary>
     /// <typeparam name="TFrontMatter">The type of front matter used in the posts. Must implement IFrontMatter.</typeparam>
     /// <param name="services">The IServiceCollection to add the BlazorStaticContentService to.</param>
-    /// <param name="configureOptions">An optional action to configure the BlazorStaticContentOptions for the BlazorStaticContentService.
-    /// Default values are set for Blog content.</param>
+    /// <param name="configureOptions">
+    ///     An optional action to configure the BlazorStaticContentOptions for the BlazorStaticContentService.
+    ///     Default values are set for Blog content.
+    /// </param>
     /// <returns>The IServiceCollection, with the BlazorStaticContentService added, allowing for method chaining.</returns>
     /// <remarks>
-    /// The method configures and registers a singleton instance of BlazorStaticContentOptions`TFrontMatter` and 
-    /// BlazorStaticContentService`TFrontMatter` in the service collection.
+    ///     The method configures and registers a singleton instance of BlazorStaticContentOptions`TFrontMatter` and
+    ///     BlazorStaticContentService`TFrontMatter` in the service collection.
     /// </remarks>
     public static IServiceCollection AddBlazorStaticContentService<TFrontMatter>(this IServiceCollection services,
         Action<BlazorStaticContentOptions<TFrontMatter>>? configureOptions = null)
@@ -51,16 +56,17 @@ public static class BlazorStaticExtensions
 
 
     /// <summary>
-    /// Adds the Blazor static generation service to the specified IServiceCollection.
+    ///     Adds the Blazor static generation service to the specified IServiceCollection.
     /// </summary>
     /// <param name="services">The IServiceCollection to add the Blazor static service to.</param>
     /// <param name="configureOptions">An optional action to configure the BlazorStaticOptions for the service.</param>
     /// <returns>The IServiceCollection, with the Blazor static service added, allowing for method chaining.</returns>
     /// <remarks>
-    /// The method registers a singleton instance of BlazorStaticHelpers and BlazorStaticService in the service collection.
-    /// Additionally, it creates and configures an instance of BlazorStaticOptions, which is used to control the behavior
-    /// of the static generation process. This setup is essential for applications leveraging Blazor for static site generation,
-    /// providing customizable options for the generation process.
+    ///     The method registers a singleton instance of BlazorStaticHelpers and BlazorStaticService in the service collection.
+    ///     Additionally, it creates and configures an instance of BlazorStaticOptions, which is used to control the behavior
+    ///     of the static generation process. This setup is essential for applications leveraging Blazor for static site
+    ///     generation,
+    ///     providing customizable options for the generation process.
     /// </remarks>
     public static IServiceCollection AddBlazorStaticService(this IServiceCollection services,
         Action<BlazorStaticOptions>? configureOptions = null)
@@ -75,17 +81,15 @@ public static class BlazorStaticExtensions
 
         return services;
     }
-    
-    private static readonly Dictionary<Type, Action> ActionsToConfigureOptions = new();
 
 
     /// <summary>
-    /// Runs the actions necessary to generating static content by settings defined in options
-    /// Runs the actions necessary to generating static content by settings defined in options
+    ///     Runs the actions necessary to generating static content by settings defined in options
+    ///     Runs the actions necessary to generating static content by settings defined in options
     /// </summary>
     /// <param name="app"></param>
     /// <typeparam name="TFrontMatter"></typeparam>
-    static void UseBlazorStaticContent<TFrontMatter>(WebApplication app)
+    private static void UseBlazorStaticContent<TFrontMatter>(WebApplication app)
         where TFrontMatter : class, IFrontMatter, new()
     {
         var contentService = app.Services.GetRequiredService<BlazorStaticContentService<TFrontMatter>>();
@@ -99,15 +103,15 @@ public static class BlazorStaticExtensions
         //StaticFileOptions doesn't like ".." parent dir (e.g "Content/Blog/en/../media")
         //This converts it to "/Content/Blog/media"...
 
-        if (options.MediaRequestPath is not null && options.MediaFolderRelativeToContentPath is not null)
+        if(options.MediaRequestPath is not null && options.MediaFolderRelativeToContentPath is not null)
         {
-            string requestPath = "/" + Path.GetFullPath(options.MediaRequestPath)[Directory.GetCurrentDirectory().Length..]
+            var requestPath = "/" + Path.GetFullPath(options.MediaRequestPath)[Directory.GetCurrentDirectory().Length..]
                 .TrimStart(Path.DirectorySeparatorChar)
                 .Replace("\\", "/");
 
 
-            string realPath = Path.Combine(Directory.GetCurrentDirectory(), options.ContentPath, options.MediaFolderRelativeToContentPath);
-            if (!Directory.Exists(realPath))
+            var realPath = Path.Combine(Directory.GetCurrentDirectory(), options.ContentPath, options.MediaFolderRelativeToContentPath);
+            if(!Directory.Exists(realPath))
             {
                 app.Logger.LogWarning("folder for media path ({Folder}) doesn't exist", realPath);
             }
@@ -123,43 +127,48 @@ public static class BlazorStaticExtensions
         //
 
         blazorStaticService.Options.AddBeforeFilesGenerationAction(contentService.ParseAndAddPosts);//will run later in GenerateStaticPages
-
     }
 
     internal static void UseBlazorStaticGeneratorOnHotReload()
     {
-        if (_app == null) return;
+        if(_app == null)
+        {
+            return;
+        }
+
         var blazorStaticService = _app.Services.GetRequiredService<BlazorStaticService>();
         //basic clean up
         blazorStaticService.Options.ClearBeforeFilesGenerationActions();
         blazorStaticService.Options.PagesToGenerate.Clear();
         blazorStaticService.Options.ContentToCopyToOutput.Clear();
-        
+
         //go through the options (from Program.cs)
-        foreach (KeyValuePair<Type, Action> action in ActionsToConfigureOptions)
+        foreach(var action in ActionsToConfigureOptions)
         {
             action.Value.Invoke();
         }
+
         _app.UseBlazorStaticGenerator();
     }
 
-    private static WebApplication? _app;
-
     /// <summary>
-    /// Adds the Blazor static generation service to the specified IServiceCollection.
+    ///     Adds the Blazor static generation service to the specified IServiceCollection.
     /// </summary>
     /// <param name="app"></param>
     /// <param name="shutdownApp"></param>
     public static void UseBlazorStaticGenerator(this WebApplication app, bool shutdownApp = false)
     {
-        foreach (KeyValuePair<Type, Action<WebApplication>> use in staticContentUse)
+        foreach(var use in staticContentUse)
         {
             use.Value.Invoke(app);
         }
 
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
         if(_app is null && blazorStaticService.Options.HotReloadEnabled)
+        {
             _app = app;
+        }
+
         HotReloadManager.HotReloadEnabled = blazorStaticService.Options.HotReloadEnabled;
 
         //adds wwwroot files (or any other files that has been added as static content) to the output
@@ -174,10 +183,12 @@ public static class BlazorStaticExtensions
             try
             {
                 await blazorStaticService.GenerateStaticPages(app.Urls.First()).ConfigureAwait(false);
-                if (shutdownApp)
+                if(shutdownApp)
+                {
                     lifetime.StopApplication();
+                }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 logger.LogError(ex, "An error occurred while generating static pages: {ErrorMessage}", ex.Message);
             }
@@ -186,26 +197,28 @@ public static class BlazorStaticExtensions
     }
 
     /// <summary>
-    /// Takes the provider, search it recursively and add all the files found.
+    ///     Takes the provider, search it recursively and add all the files found.
     /// </summary>
     /// <param name="fileProvider"></param>
     /// <param name="subPath"></param>
     /// <param name="blazorStaticService"></param>
     private static void AddStaticWebAssetsToOutput(IFileProvider fileProvider, string subPath, BlazorStaticService blazorStaticService)
     {
-        IDirectoryContents contents = fileProvider.GetDirectoryContents(subPath);
+        var contents = fileProvider.GetDirectoryContents(subPath);
 
-        foreach (var item in contents)
+        foreach(var item in contents)
         {
-            string fullPath = $"{subPath}{item.Name}";
-            if (item.IsDirectory)
+            var fullPath = $"{subPath}{item.Name}";
+            if(item.IsDirectory)
             {
                 AddStaticWebAssetsToOutput(fileProvider, $"{fullPath}/", blazorStaticService);
             }
             else
             {
-                if (item.PhysicalPath is not null)
-                    blazorStaticService.Options.ContentToCopyToOutput.Add(new(item.PhysicalPath, fullPath));
+                if(item.PhysicalPath is not null)
+                {
+                    blazorStaticService.Options.ContentToCopyToOutput.Add(new ContentToCopy(item.PhysicalPath, fullPath));
+                }
             }
         }
     }

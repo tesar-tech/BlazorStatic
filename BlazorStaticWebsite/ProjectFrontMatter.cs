@@ -1,11 +1,10 @@
-﻿namespace BlazorStaticWebsite;
+﻿using BlazorStatic;
 
-using BlazorStatic;
+namespace BlazorStaticWebsite;
 
-public class ProjectFrontMatter:IFrontMatter
+public class ProjectFrontMatter : IFrontMatter
 {
-    public List<string> Tags { get; set; } = [];
-    public string Name  { get; set; } = "";
+    public string Name { get; set; } = "";
     public string Description { get; set; } = "";
+    public List<string> Tags { get; set; } = [];
 }
-

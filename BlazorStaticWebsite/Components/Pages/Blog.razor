@@ -1,9 +1,9 @@
 @page "/blog"
 @page "/blog/{*postUrl}"
-@using System.Globalization
 @using BlazorStatic
 @using BlazorStatic.Services
 @using BlazorStaticWebsite.Components.Blog
+@using System.Globalization
 @inject BlazorStaticContentService<BlogFrontMatter> blazorStaticContentService
 
 
@@ -15,8 +15,8 @@
             <h1 class="font-sans md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl">Latest</h1>
             <p class="text-lg leading-7 text-gray-400">posts about BlazorStatic</p>
         </div>
-    
-        <PostsList  />
+
+        <PostsList/>
     </div>
     return;
 }
@@ -52,7 +52,7 @@
                 <dt class="sr-only">Authors</dt>
                 <dd>
                     <ul class="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
-                        @foreach (var author in post.FrontMatter.Authors)
+                        @foreach(var author in post.FrontMatter.Authors)
                         {
                             <li class="flex items-center space-x-2">
                                 @* <img alt="avatar" loading="lazy" width="38" height="38" decoding="async" data-nimg="1" class="h-10 w-10 rounded-full" srcset="/_next/image?url=%2Fstatic%2Fimages%2Favatar.png&amp;w=48&amp;q=75 1x, /_next/image?url=%2Fstatic%2Fimages%2Favatar.png&amp;w=96&amp;q=75 2x" src="/_next/image?url=%2Fstatic%2Fimages%2Favatar.png&amp;w=96&amp;q=75" style="color: transparent;"/> *@
@@ -87,7 +87,7 @@
                     @((MarkupString)post.HtmlContent)
                 </div>
                 <div class="pb-6 pt-6 text-sm text-gray-300">
-                    <a target="_blank" rel="noopener noreferrer" href="@(WebsiteKeys.BlogPostStorageAddress+PostUrl+".md")">View on GitHub</a>
+                    <a target="_blank" rel="noopener noreferrer" href="@(WebsiteKeys.BlogPostStorageAddress + PostUrl + ".md")">View on GitHub</a>
                 </div>
             </div>
             <footer>
@@ -95,7 +95,7 @@
                     <div class="py-4 xl:py-8">
                         <h2 class="text-xs uppercase tracking-wide text-gray-400">Tags</h2>
                         <div class="flex flex-wrap">
-                            @foreach (var tag in post.FrontMatter.Tags)
+                            @foreach(string tag in post.FrontMatter.Tags)
                             {
                                 <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@blazorStaticContentService.Options.TagsPageUrl/@tag">@tag</a>
                             }
@@ -114,11 +114,11 @@
 @code{
     [Parameter] public string? PostUrl { get; set; }
     Post<BlogFrontMatter>? post;
-    
+
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(PostUrl)) return;
         post = blazorStaticContentService.Posts.FirstOrDefault(x => x.Url == PostUrl);
-       
     }
+
 }
