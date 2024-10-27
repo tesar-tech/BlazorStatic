@@ -3,7 +3,7 @@ name: Build, publish to gh pages and nuget
 
 on:
   push:
-    branches: ["*"]
+    branches: ["master"]
 env:
   WEBAPP_PATH: BlazorStaticWebsite
   TEMPLATE_PROJ_PATH: BlazorStaticTemplates/BlazorStatic.Templates.csproj

@@ -18,7 +18,7 @@
 
             foreach(var tag in tagsWithCount)
             {
-                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlazorStaticContentService.Options.TagsPageUrl/@WebUtility.HtmlEncode(tag.Tag)">@tag.Tag (@tag.Count)</a>
+                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlazorStaticContentService.Options.TagsPageUrl/@BlazorStaticContentService.Options.TagEncodeFunc(tag.Tag)"> @tag.Tag (@tag.Count)</a>
             }
         }
     </div>
