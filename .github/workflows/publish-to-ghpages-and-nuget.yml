@@ -34,7 +34,6 @@ jobs:
       - name: Run webapp and generate static files
         run: dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}}  --configuration Release
 
-
       - name: Upload webapp output artifacts
         uses: actions/upload-artifact@v4
         with:
