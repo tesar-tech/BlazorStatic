@@ -31,11 +31,6 @@ jobs:
           cd ${{ env.WEBAPP_PATH }}
           tailwindcss --input ./wwwroot/app.css  --output ./wwwroot/app.min.css  --minify
 
-      - name: Change <base href="" /> in App.razor to match gh repo name
-        run: |
-          REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
-          sed -i 's/<base href="\/"*\/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
-
       - name: Run webapp and generate static files
         run: dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}}  --configuration Release
 
