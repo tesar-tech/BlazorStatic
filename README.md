@@ -9,18 +9,17 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/4fa2c17a-6385-4cc6-9919-e32c134175d9/deploy-status)](https://app.netlify.com/sites/blazorstatic/deploys)
 
 
-Embrace the capabilities of Blazor on .NET 8 to craft static websites.
+Harness the power of [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor) to craft static websites.
 
-Transform your Blazor app into a static site generator.
+Transform your Blazor app into a static site.
 
 # 🔧 How does it work?
 
-Like any .NET Blazor app! That's the main point. If you know how to build a Blazor app, you can transfer it to HTML files easily.
-**BlazorStatic** will help you with that. It can also help with processing markdown files.
+**BlazorStatic** aims to be intuitive and easy to use for most developers who have worked with any kind of front-end framework, especially if you already work with Blazor.
 
-> Website for BlazorStatic is a feature-rich example of the library. Check the [source code](https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite). 
+> The site for BlazorStatic is a feature-rich example of the library. Check the [source code](https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite). 
 
-Upon running your app, **BlazorStatic** fetches the pages' HTML with `HttpClient`, outputs HTML files and assets to the `output` folder, which you can deploy to any static hosting service.
+Upon running your app, **BlazorStatic** fetches the pages' HTML with `HttpClient`, outputs HTML files and assets to the `output` folder, and from there you can deploy to any standard HTTP server or hosting service.
 
 There are many defaults to keep usage simple, but you can configure it extensively. For example, you can match your YAML front matter in markdown files (which can be reused from other static site generators).
 
@@ -28,7 +27,7 @@ There are many defaults to keep usage simple, but you can configure it extensive
 
 # 🚀 Getting Started
 
-You can start using BlazorStatic in three ways, depending on your setup and intended use. 
+You can start using BlazorStatic in three ways, depending on your setup and intended use. You'll need [.NET SDK 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) or higher to get started.
 ## 👑 Recommended Way
 
 Install the BlazorStatic templates:
@@ -43,7 +42,7 @@ This adds new options to your `dotnet new` template list. Then create a new proj
 dotnet new BlazorStaticMinimalBlog -o MyBlazorStaticApp 
 ```
 
-This creates a `MyBlazorStaticApp` folder and project. It's a standard .NET 8 Blazor app with the BlazorStatic package installed, including a few predefined components, styles, and a blog post with sample data.
+This creates a `MyBlazorStaticApp` folder and project. It's a standard .NET Blazor app with the BlazorStatic package installed, including a few predefined components, styles, and a blog post with example content.
 
 Run the app using `dotnet watch`. This will launch the app, allowing you to view it live, while also generating static HTML files in the `output` folder.
 
@@ -70,7 +69,7 @@ If you want to fully understand how BlazorStatic works or if you have an existin
 
 # 🧩 Features
 
-- Work with Blazor as you are used to.
+- Leverage your existing Blazor experience.
 - Easily parse and consume markdown files.
 - Support for custom YAML front matters.
 - Automatically discovers pages among Razor files.

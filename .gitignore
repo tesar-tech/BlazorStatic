@@ -372,3 +372,5 @@ BlazorStaticWebsite/wwwroot/app.min.css
 
 .idea/
 BlazorStaticTemplates/TestProject
+
+.DS_Store
