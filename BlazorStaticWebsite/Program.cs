@@ -78,11 +78,11 @@ app.Run();
 
 public static class WebsiteKeys
 {
-    public const string BlogPostStorageAddress = "https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite/Content/Blog/";
+    public const string BlogPostStorageAddress = $"{GitHubRepo}tree/master/BlazorStaticWebsite/Content/Blog/";
 
-    public const string GitHubRepo = "https://github.com/tesar-tech/BlazorStatic/";
+    public const string GitHubRepo = "https://github.com/BlazorStatic/BlazorStatic/";
 
     public const string ProjectsUrl = "projects";
 
-    public const string SiteUrl = "https://tesar-tech.github.io/BlazorStatic";
+    public const string SiteUrl = "https://blazorstatic.net";
 }
