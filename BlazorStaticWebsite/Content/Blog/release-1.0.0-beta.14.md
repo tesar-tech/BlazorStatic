@@ -7,6 +7,9 @@ authors:
   - name: "Jan Tesař"
     gitHubUserName: "tesar-tech"
     xUserName: "tesar_tech"
+  - name: "Patrick T Coakley"
+    gitHubUserName: "patricktcoakley"
+
 ---
 
 ## Breaking Changes
