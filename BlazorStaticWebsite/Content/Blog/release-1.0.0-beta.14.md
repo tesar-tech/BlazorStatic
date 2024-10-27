@@ -11,19 +11,10 @@ authors:
 
 ## Breaking Changes
 
--
-
-## HotReload
-
-The previous version introduced HotReload, enhancing the development experience when building the site locally. With
-HotReload, every time you update your source code or .md file, BlazorStatic automatically refreshes the post list and
-regenerates all content. Learn more about HotReload [here](docs/hotreload).
-
 ## tags have encoders
-
 
 ### Feedback
 
 Try out the template and let me know if it meets your expectations or if you need any adjustments.
-Share your feedback [by creating an issue](https://github.com/tesar-tech/BlazorStatic/issues/new) or join the
+Share your feedback [by creating an issue](https://github.com/BlazorStatic/BlazorStatic/issues/new) or join the
 conversation in the [Discord server](https://discord.gg/DsAXsMuEbx).
