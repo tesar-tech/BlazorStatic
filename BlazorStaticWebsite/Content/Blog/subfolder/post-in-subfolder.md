@@ -2,7 +2,7 @@
 title: Test post for subfolder
 lead: Just testing if post in subfolder works
 published: 2024-05-29
-tags: [test]
+tags: [test, ci/cd, ci.cd, two words, .net/C#]
 authors:
     - name: "Jan Tesař"
       gitHubUserName: "tesar-tech"
