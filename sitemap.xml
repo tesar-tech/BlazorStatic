@@ -47,6 +47,10 @@
     <lastmod>2024-01-20</lastmod>
   </url>
   <url>
+    <loc>https://blazorstatic.net/blog/release-1.0.0-beta.14</loc>
+    <lastmod>2024-10-30</lastmod>
+  </url>
+  <url>
     <loc>https://blazorstatic.net/blog/release-1.0.0-beta.11</loc>
     <lastmod>2024-09-03</lastmod>
   </url>
@@ -66,7 +70,7 @@
     <loc>https://blazorstatic.net/tags/release</loc>
   </url>
   <url>
-    <loc>https://blazorstatic.net/tags/multiple+contents</loc>
+    <loc>https://blazorstatic.net/tags/multiple%2bcontents</loc>
   </url>
   <url>
     <loc>https://blazorstatic.net/tags/story</loc>
@@ -90,19 +94,40 @@
     <loc>https://blazorstatic.net/tags/IsDraft</loc>
   </url>
   <url>
-    <loc>https://blazorstatic.net/tags/ignoring+files</loc>
+    <loc>https://blazorstatic.net/tags/ignoring%2bfiles</loc>
   </url>
   <url>
-    <loc>https://blazorstatic.net/tags/hot+reload</loc>
+    <loc>https://blazorstatic.net/tags/tag%2bencoder</loc>
+  </url>
+  <url>
+    <loc>https://blazorstatic.net/tags/blazorstatic.net</loc>
+  </url>
+  <url>
+    <loc>https://blazorstatic.net/tags/BlazorStatic%2borganization</loc>
+  </url>
+  <url>
+    <loc>https://blazorstatic.net/tags/dotnet%2bnew%2btemplate</loc>
+  </url>
+  <url>
+    <loc>https://blazorstatic.net/tags/hot%2breload</loc>
   </url>
   <url>
     <loc>https://blazorstatic.net/tags/HotReload</loc>
   </url>
   <url>
-    <loc>https://blazorstatic.net/tags/dotnet+new+template</loc>
+    <loc>https://blazorstatic.net/tags/test</loc>
   </url>
   <url>
-    <loc>https://blazorstatic.net/tags/test</loc>
+    <loc>https://blazorstatic.net/tags/ci%252Fcd</loc>
+  </url>
+  <url>
+    <loc>https://blazorstatic.net/tags/ci.cd</loc>
+  </url>
+  <url>
+    <loc>https://blazorstatic.net/tags/two%2bwords</loc>
+  </url>
+  <url>
+    <loc>https://blazorstatic.net/tags/.net%252FC%2523</loc>
   </url>
   <url>
     <loc>https://blazorstatic.net/projects/README</loc>
