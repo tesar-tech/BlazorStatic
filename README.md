@@ -5,7 +5,7 @@
 [![Discord](https://img.shields.io/discord/798312431893348414?style=flat&logo=discord&logoColor=white&label=Blazor%20Community%2F%23BlazorStatic&labelColor=5865f2&color=gray)
 ](https://discord.gg/DsAXsMuEbx)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/BlazorStatic)](https://www.nuget.org/packages/BlazorStatic/)
-[![Build, publish to gh pages anN nuget](https://github.com/tesar-tech/BlazorStatic/actions/workflows/publish-to-ghpages-and-nuget.yml/badge.svg)](https://github.com/tesar-tech/BlazorStatic/actions/workflows/publish-to-ghpages-and-nuget.yml)
+[![Build, publish to gh pages anN nuget](https://github.com/BlazorStatic/BlazorStatic/actions/workflows/publish-to-ghpages-and-nuget.yml/badge.svg)](https://github.com/BlazorStatic/BlazorStatic/actions/workflows/publish-to-ghpages-and-nuget.yml)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/4fa2c17a-6385-4cc6-9919-e32c134175d9/deploy-status)](https://app.netlify.com/sites/blazorstatic/deploys)
 
 
@@ -17,7 +17,7 @@ Transform your Blazor app into a static site.
 
 **BlazorStatic** aims to be intuitive and easy to use for most developers who have worked with any kind of front-end framework, especially if you already work with Blazor.
 
-> The site for BlazorStatic is a feature-rich example of the library. Check the [source code](https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite). 
+> The site for BlazorStatic is a feature-rich example of the library. Check the [source code](https://github.com/BlazorStatic/BlazorStatic/tree/master/BlazorStaticWebsite). 
 
 Upon running your app, **BlazorStatic** fetches the pages' HTML with `HttpClient`, outputs HTML files and assets to the `output` folder, and from there you can deploy to any standard HTTP server or hosting service.
 
@@ -55,7 +55,7 @@ From here, you're ready to explore the project, add content, create new pages, a
 
 ## 🏃‍➡️ Quickest Way
 
-Use [BlazorStaticMinimalBlog](https://github.com/tesar-tech/BlazorStaticMinimalBlog) as template (the big green button).
+Use [BlazorStaticMinimalBlog](https://github.com/BlazorStatic/BlazorStaticMinimalBlog) as template (the big green button).
 
 It will copy all the content and run the GitHub action for you. After it runs, go to settings and turn on GitHub pages:
 
@@ -88,17 +88,17 @@ Detailed instructions are [here](./BlazorStaticWebsite/Content/Docs/deployment.m
 
 # 📊 Samples
 
-| Description                                                  | Source                                                                               | Live                                                          |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| Page about BlazorStatic (this repo contains the code itself) | [source](https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite) | [live](https://tesar-tech.github.io/BlazorStatic/)            |
-| Minimal blog                                                 | [source](https://github.com/tesar-tech/BlazorStaticMinimalBlog)                      | [live](https://tesar-tech.github.io/BlazorStaticMinimalBlog/) |
-| Zodoc - image processing and deep learning sample            | [source](https://github.com/tesar-tech/zodoc/)                                       | [live](https://zodoc.tech/)                                   |
-| ❓ Add your page here!!!                                      |                                                                                      |
+| Description                                                  | Source                                                                                 | Live                                                            |
+| ------------------------------------------------------------ |----------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| Page about BlazorStatic (this repo contains the code itself) | [source](https://github.com/BlazorStatic/BlazorStatic/tree/master/BlazorStaticWebsite) | [live](https://blazorstatic.github.io/BlazorStatic/)            |
+| Minimal blog                                                 | [source](https://github.com/BlazorStatic/BlazorStaticMinimalBlog)                      | [live](https://blazorstatic.github.io/BlazorStaticMinimalBlog/) |
+| Zodoc - image processing and deep learning sample            | [source](https://github.com/tesar-tech/zodoc/)                                         | [live](https://zodoc.tech/)                                     |
+| ❓ Add your page here!!!                                      |                                                                                        |
 
 # 🤝 Contributions
 
 Contributions are highly encouraged and appreciated. If you find something missing, unclear, or encounter an issue with the code, I warmly welcome your input. Feel free to:
 
-- Create a new [issue](https://github.com/tesar-tech/BlazorStatic/issues) or submit a PR.
+- Create a new [issue](https://github.com/BlazorStatic/BlazorStatic/issues) or submit a PR.
 - Contact [me](https://github.com/tesar-tech/) directly for any queries or suggestions.
 - Ask questions or start a discussion on the [Blazor Community Discord server](https://discord.gg/DsAXsMuEbx).
