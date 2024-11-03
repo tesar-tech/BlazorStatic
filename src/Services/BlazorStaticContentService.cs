@@ -2,6 +2,9 @@ using System.Reflection;
 
 namespace BlazorStatic.Services;
 
+using System.Text.Encodings.Web;
+using System.Web;
+
 /// <summary>
 ///     The BlazorStaticContentService is responsible for parsing and adding blog posts.
 ///     It adds pages with blog posts to the options.PagesToGenerate list,
@@ -88,15 +91,15 @@ public class BlazorStaticContentService<TFrontMatter>(
             var pathWithMedia = Path.Combine(options.ContentPath, options.MediaFolderRelativeToContentPath);
             blazorStaticService.Options.ContentToCopyToOutput.Add(new ContentToCopy(pathWithMedia, pathWithMedia));
         }
-
         //add tags pages
         if(options.AddTagPagesFromPosts)
         {
             // blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));
             foreach(var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct())//gather all unique tags from all posts
             {
-                blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.TagsPageUrl}/{tag}",
-                Path.Combine(options.TagsPageUrl, $"{tag}.html")));
+                var encodedTag = options.TagEncodeFunc(tag);
+                blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.TagsPageUrl}/{encodedTag}",
+                Path.Combine(options.TagsPageUrl, $"{encodedTag}.html")));
             }
         }
 

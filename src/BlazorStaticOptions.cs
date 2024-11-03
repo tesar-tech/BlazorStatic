@@ -4,6 +4,8 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace BlazorStatic;
 
+using System.Net;
+
 /// <summary>
 ///     Options for configuring the BlazorStatic generation process.
 /// </summary>
@@ -185,6 +187,15 @@ public class BlazorStaticContentOptions<TFrontMatter>
     ///     tag pages will be generated from all tags found in blog posts
     /// </summary>
     public bool AddTagPagesFromPosts { get; set; } = true;
+
+    /// <summary>
+    /// Func to convert tag string to file-name/url.
+    /// You might want to change this if you don't like non-alphanumerical chars in your url (like tags/.net%2FC%23)
+    /// The default is WebUtility.UrlEncode, which makes changes, like:
+    /// "nice tag" -> "nice+tag", "ci/cd" -> "ci%2Fcd", ".net/C# " -> ".net%2FC%23".
+    /// Also don't forget to use the same encoder while creating tag links
+    /// </summary>
+    public Func<string,string> TagEncodeFunc { get; set; } = WebUtility.UrlEncode;
 
     /// <summary>
     ///     Should correspond to page that keeps the list of content.

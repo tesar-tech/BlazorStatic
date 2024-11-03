@@ -3,7 +3,7 @@ name: Build, publish to gh pages and nuget
 
 on:
   push:
-    branches: ["*"] 
+    branches: ["master"]
 env:
   WEBAPP_PATH: BlazorStaticWebsite
   TEMPLATE_PROJ_PATH: BlazorStaticTemplates/BlazorStatic.Templates.csproj
@@ -30,15 +30,9 @@ jobs:
           chmod +x /usr/local/bin/tailwindcss
           cd ${{ env.WEBAPP_PATH }}
           tailwindcss --input ./wwwroot/app.css  --output ./wwwroot/app.min.css  --minify
-          
-      - name: Change <base href="" /> in App.razor to match gh repo name
-        run: |
-          REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
-          sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}/Components/App.razor
-          
+
       - name: Run webapp and generate static files
         run: dotnet run --project ${{ env.WEBAPP_PATH }}/${{env.WEBAPP_CSPROJ}}  --configuration Release
-        
 
       - name: Upload webapp output artifacts
         uses: actions/upload-artifact@v4
@@ -49,10 +43,10 @@ jobs:
       - name: Copy .nupkg of BlazorStatic to destination folder and pack the template project there too
         if: ${{ github.ref == 'refs/heads/master' }}
         run: |
-          mkdir -p "${{ env.NUGET_FOLDER }}"  
+          mkdir -p "${{ env.NUGET_FOLDER }}"
           cp ${{ env.BLAZORSTATIC_NUGET_PKG_PATH }}/*.nupkg ${{ env.NUGET_FOLDER }}
           dotnet pack ${{ env.TEMPLATE_PROJ_PATH }} --output ${{ env.NUGET_FOLDER }}
-      
+
       - name: Upload NuGet package artifacts
         if: ${{ github.ref == 'refs/heads/master' }}
         uses: actions/upload-artifact@v4
@@ -62,7 +56,7 @@ jobs:
 
   deploy-to-gh-pages:
     permissions:
-      contents: write 
+      contents: write
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -71,7 +65,7 @@ jobs:
         with:
           name: static-pages-output
           path: output
-      - run: touch output/.nojekyll #folder starting with _ are handled as jekyll. This file will prevent that.  
+      - run: touch output/.nojekyll #folder starting with _ are handled as jekyll. This file will prevent that.
       - uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: ./output
@@ -79,7 +73,7 @@ jobs:
   publish-to-nuget:
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }} 
+    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
       - name: Download NuGet package artifacts
         uses: actions/download-artifact@v4

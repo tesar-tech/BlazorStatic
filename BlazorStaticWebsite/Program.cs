@@ -9,29 +9,30 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseStaticWebAssets();
 
 builder.Services.AddBlazorStaticService(opt => {
-    opt.IgnoredPathsOnContentCopy.AddRange(["app.css"]);//pre-build version for tailwind
+        opt.IgnoredPathsOnContentCopy.AddRange(["app.css"]);//pre-build version for tailwind
 
-    opt.ContentToCopyToOutput.Add(new ContentToCopy("../.github/media", "media"));
-    opt.ContentToCopyToOutput.Add(new ContentToCopy("Content/Docs/media", "Content/Docs/media"));
+        opt.ContentToCopyToOutput.Add(new ContentToCopy("../.github/media", "media"));
+        opt.ContentToCopyToOutput.Add(new ContentToCopy("Content/Docs/media", "Content/Docs/media"));
 
-    // add docs pages
-    var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md").Where(x => !x.EndsWith("README.md"));//ignore readme, it is handled in Pages/Docs.razor
+        // add docs pages
+        var docsFiles = Directory.GetFiles(Path.Combine("Content", "Docs"), "*.md").Where(x => !x.EndsWith("README.md"));//ignore readme, it is handled in Pages/Docs.razor
 
-    foreach(var fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
-    {
-        opt.PagesToGenerate.Add(new PageToGenerate($"/docs/{fileName}", Path.Combine("docs", $"{fileName}.html")));
-    }
+        foreach(var fileName in docsFiles.Select(Path.GetFileNameWithoutExtension))
+        {
+            opt.PagesToGenerate.Add(new PageToGenerate($"/docs/{fileName}", Path.Combine("docs", $"{fileName}.html")));
+        }
 
-    // Must add a site url to generate the Sitemap!
-    opt.ShouldGenerateSitemap = true;
-    opt.SiteUrl = WebsiteKeys.SiteUrl;
-    opt.HotReloadEnabled = true;
-}).AddBlazorStaticContentService<BlogFrontMatter>().AddBlazorStaticContentService<ProjectFrontMatter>(opt => {
-    opt.MediaFolderRelativeToContentPath = null;
-    opt.ContentPath = Path.Combine("Content", "Projects");
-    opt.AddTagPagesFromPosts = false;
-    opt.PageUrl = WebsiteKeys.ProjectsUrl;
-});
+        // Must add a site url to generate the Sitemap!
+        opt.ShouldGenerateSitemap = true;
+        opt.SiteUrl = WebsiteKeys.SiteUrl;
+        opt.HotReloadEnabled = true;
+    }).AddBlazorStaticContentService<BlogFrontMatter>()
+    .AddBlazorStaticContentService<ProjectFrontMatter>(opt => {
+        opt.MediaFolderRelativeToContentPath = null;
+        opt.ContentPath = Path.Combine("Content", "Projects");
+        opt.AddTagPagesFromPosts = false;
+        opt.PageUrl = WebsiteKeys.ProjectsUrl;
+    });
 
 
 // Add services to the container.
@@ -78,11 +79,11 @@ app.Run();
 
 public static class WebsiteKeys
 {
-    public const string BlogPostStorageAddress = "https://github.com/tesar-tech/BlazorStatic/tree/master/BlazorStaticWebsite/Content/Blog/";
+    public const string BlogPostStorageAddress = $"{GitHubRepo}tree/master/BlazorStaticWebsite/Content/Blog/";
 
-    public const string GitHubRepo = "https://github.com/tesar-tech/BlazorStatic/";
+    public const string GitHubRepo = "https://github.com/BlazorStatic/BlazorStatic/";
 
     public const string ProjectsUrl = "projects";
 
-    public const string SiteUrl = "https://tesar-tech.github.io/BlazorStatic";
+    public const string SiteUrl = "https://blazorstatic.net";
 }
