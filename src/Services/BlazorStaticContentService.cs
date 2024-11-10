@@ -10,8 +10,6 @@ using Microsoft.Extensions.Logging;
 ///     that is used later by BlazorStaticService to generate static pages.
 /// </summary>
 /// /// <typeparam name="TFrontMatter"></typeparam>
-/// <typeparam name="TBlazorStaticContentOptions"></typeparam>
-/// <typeparam name="TPost"></typeparam>
 public class BlazorStaticContentService<TFrontMatter>(
     BlazorStaticContentOptions<TFrontMatter> options,
     BlazorStaticHelpers helpers,
@@ -62,7 +60,7 @@ public class BlazorStaticContentService<TFrontMatter>(
             Posts.Add(post);
 
             blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.PageUrl}/{post.Url}",
-            Path.Combine(options.PageUrl, $"{post.Url}.html"), options.GetAdditionalInfoFromFrontMatter?.Invoke(post.FrontMatter)));
+            Path.Combine(options.PageUrl, $"{post.Url}.html"), post.FrontMatter.AdditionalInfo));
         }
 
         //copy media folder to output

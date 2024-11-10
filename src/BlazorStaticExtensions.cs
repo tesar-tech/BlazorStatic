@@ -106,10 +106,8 @@ public static class BlazorStaticExtensions
     /// </summary>
     /// <param name="app"></param>
     /// <typeparam name="TFrontMatter"></typeparam>
-    /// <typeparam name="TBlazorStaticContentOptions"></typeparam>
     private static void UseBlazorStaticContent<TFrontMatter>(WebApplication app)
         where TFrontMatter : class, IFrontMatter, new()
-
     {
         var contentService = app.Services.GetRequiredService<BlazorStaticContentService<TFrontMatter>>();
         contentService.Posts.Clear();//need to do it here in case of hot reload event

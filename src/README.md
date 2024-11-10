@@ -1,3 +1,3 @@
 ﻿# BlazorStatic
 
-Source code for BlazorStatic library. 
+Source code for BlazorStatic library. ~~~~

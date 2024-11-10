@@ -218,15 +218,35 @@ public class BlazorStaticContentOptions<TFrontMatter>
             throw new InvalidOperationException("PageUrl must be set and cannot be null or empty.");
     }
 
-    public Func<TFrontMatter, AdditionalInfo>? GetAdditionalInfoFromFrontMatter { get; set; }
 
+    /// <summary>
+    /// Options related to tags
+    /// </summary>
     public TagsOptions Tags { get; set; } = new();
 }
 
+/// <summary>
+/// Options related to tags
+/// </summary>
 public class TagsOptions
 {
+    /// <summary>
+    ///     tag pages will be generated from all tags found in blog posts
+    /// </summary>
     public bool AddTagPagesFromPosts { get; set; } = true;
-    public string? TagsPageUrl { get; set; } = "tags";
+    /// <summary>
+    ///     Should correspond to @page "/tags" (here in relative path: "tags")
+    ///     Useful for avoiding magic strings in .razor files
+    /// </summary>
+    public string TagsPageUrl { get; set; } = "tags";
+
+    /// <summary>
+    /// Func to convert tag string to file-name/url.
+    /// You might want to change this if you don't like non-alphanumerical chars in your url (like tags/.net%2FC%23)
+    /// The default is WebUtility.UrlEncode, which makes changes, like:
+    /// "nice tag" -> "nice+tag", "ci/cd" -> "ci%2Fcd", ".net/C# " -> ".net%2FC%23".
+    /// Also don't forget to use the same encoder while creating tag links
+    /// </summary>
     public Func<string, string> TagEncodeFunc { get; set; } = WebUtility.UrlEncode;
 
 }

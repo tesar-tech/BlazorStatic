@@ -1,9 +1,9 @@
 ---
-title: "1.0.0-beta.14 - Tags have encoder, welcome to blazorstatic.net, new BlazorStatic organization, templates are fixed for green button"
-lead: ""
+title: "1.0.0-beta.14 - Enhanced Tag Support and New BlazorStatic Domain"
+lead: "The 1.0.0-beta.14 release brings major updates to BlazorStatic, with enhanced tag encoding, reorganized options, and a dedicated new GitHub organization and domain."
 isDraft: true
-published: 2024-10-30
-tags: [release, tag encoder, blazorstatic.net , BlazorStatic organization, dotnet new template]
+published: 2024-11-11
+tags: [release, tag encoder, blazorstatic.net , BlazorStatic organization]
 authors:
   - name: "Jan Tesař"
     gitHubUserName: "tesar-tech"
@@ -13,44 +13,38 @@ authors:
 
 ---
 
-## Major changes
-The way how BlazorStatic services work has been adjusted. Mainly which service is responsible for what. This resulted in total separation of
-`Blog` related stuff into separated folder (and namespace `BlazorStatic.Blog`). Now that's kind of recepie how to broathen the functionality of
-BlazorStatic.
+## Changes and Breaking Changes
 
-The main reason for this was the work with Tags. Previously the tags were part of `IFrontMatter`, that's not the case anymore, but new interface has appeared
-called `IBlogFrontMatter:IFrontMatter`. In similar manner all other service and options has been adjusted.
+- In `BlazorStaticContentOptions`, tag-related options have been moved to a new class, `TagsOptions`:
 
-- In `Program.cs`: `.AddBlazorStaticContentService<MyFrontMatter>` becomes eitrher stays the same or becomes `.AddBlogService<MyFrontMatter>`. In the later chase the `MyFrontMatter` needs to implement `IBlogFrontMatter`
-(which makes the tags available).
-- You also change this when injectiong the service (typicaly in `.razor`). `@inject BlazorStaticContentService<BlogFrontMatter> blazorStaticContentService
-` => `@inject BlogService<BlogFrontMatter> blogService`
+    ```csharp
+    opt.AddTagPagesFromPosts = true // old
+    opt.Tags.AddTagPagesFromPosts = true // new
+    ```
 
-Why the tags were the reason for this change? Because it's a Blog thing, not static content thing. You can imagine static content area without tags.
-Having just tags there wouldn't be a problem, but what about future categories? what if we want to extend the tags with some computation logic?
-Where do you draw the line between what is and what is not supposed to be as a part of static content? Now check the line is really about
-"what will be part of every static content" (media, posts, url. See BlazorStaticContentOptions) vs "blog related stuff" (now just the tags. See BlogOptions).
+- **Tags now work with encoding**, ensuring URLs function correctly with tags like `c#`, `something with spaces`, etc.
+    - A new option has been added: `opt.Tags.TagEncodeFunc`, which defaults to `WebUtility.UrlEncode`.
+    - A new `Tag` class has been introduced with properties `Name` (the plain string as presented in front matter) and `EncodedName` (used in URLs and filenames).
+    - Tags are now a property within the `Post` class, with `BlazorStaticContentService` handling encoding. Use this property instead of `Tags` in `FrontMatter`.
 
-Also I've implemented the interface for options (IBlazorStaticContentOptions) with few required properties and methods including `CheckOptions` that will check if
-the necessary properties are set up. You cannot really do this with `required` keyword, because it would make the service setup impossible. I mean this:
+- Tags are no longer enforced through `IFrontMatter`. To use tags, your `FrontMatter` class must implement `IFrontMatterWithTags`.
+    - `BlazorStatic` will use the `List<string> Tags` in your `FrontMatter` and encode them accordingly. Each `Post` now contains a `List<Tag>`.
+    - Use `Post.Tags` instead of `Post.FrontMatter.Tags`, as the former provides both `Name` and `EncodedName` properties.
 
-```csharp
-  .AddBlazorStaticContentService<ProjectFrontMatter>(opt=> {
-        opt.ContentPath = Path.Combine("Content", "Projects");//opt has to be created before here
-        opt.PageUrl = WebsiteKeys.ProjectsUrl;
-    });
-```
+- To access all unique tags, use the `BlazorStaticContentService.AllTags` property.
 
 
+## New Domain and GitHub Organization
 
-## Breaking Changes
+BlazorStatic has moved to its own GitHub organization. The repository links are now:
 
-- The services setup is broken, but it will tell you and fix is easy..
+- [github.com/BlazorStatic/BlazorStatic](https://github.com/BlazorStatic/BlazorStatic) (instead of the previous user-based URL)
 
-## tags have encoders
+The project homepage also has its own second-level domain:
 
-### Feedback
+- [BlazorStatic.net](https://blazorstatic.net) — the .net domain is a fitting choice for a .NET-based project.
 
-Try out the template and let me know if it meets your expectations or if you need any adjustments.
-Share your feedback [by creating an issue](https://github.com/BlazorStatic/BlazorStatic/issues/new) or join the
-conversation in the [Discord server](https://discord.gg/DsAXsMuEbx).
+## Feedback
+
+Share your feedback by [creating an issue](https://github.com/BlazorStatic/BlazorStatic/issues/new) or join the conversation on the [Discord server](https://discord.gg/DsAXsMuEbx).
+
