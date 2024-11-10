@@ -140,13 +140,28 @@ public class BlazorStaticOptions
     }
 }
 
+
+
+/// <summary>
+/// Options for configuring processing of md files with front matter. Uses Post class
+/// </summary>
+/// <typeparam name="TFrontMatter">Any front matter type that inherits from IFrontMatter </typeparam>
+public interface IBlazorStaticContentOptions<TFrontMatter>: IBlazorStaticContentOptions<TFrontMatter,Post<TFrontMatter>>
+    where TFrontMatter : class, IFrontMatter, new()
+{
+
+}
+
 /// <summary>
 ///     Options for configuring processing of md files with front matter.
 ///     Default values are set to work with posts (<see cref="ContentPath" /> and <see cref="PageUrl" /> ) .
 /// </summary>
 /// <typeparam name="TFrontMatter"></typeparam>
-public interface IBlazorStaticContentOptions<TFrontMatter>
+/// <typeparam name="TPost"></typeparam>
+public interface IBlazorStaticContentOptions<TFrontMatter,TPost>
     where TFrontMatter : class, IFrontMatter
+    where TPost : IPost<TFrontMatter>
+
 {
     /// <summary>
     /// Folder relative to project root where posts are stored.
@@ -184,7 +199,7 @@ public interface IBlazorStaticContentOptions<TFrontMatter>
     /// <summary>
     /// Place where processed blog posts live (their HTML and front matter).
     /// </summary>
-    List<Post<TFrontMatter>> Posts { get; }
+    List<TPost> Posts { get; }
 
     /// <summary>
     /// Should correspond to page that keeps the list of content.
@@ -217,11 +232,17 @@ public interface IBlazorStaticContentOptions<TFrontMatter>
             throw new InvalidOperationException("PageUrl must be set and cannot be null or empty.");
     }
 
+    Func<TFrontMatter, AdditionalInfo>? GetAdditionalInfoFromFrontMatter => null;
+
 }
 
+public class BlazorStaticContentOptions<TFrontMatter> : BlazorStaticContentOptions<TFrontMatter, Post<TFrontMatter>>
+    where TFrontMatter : class, IFrontMatter, new();
+
 /// <inheritdoc />
-public class BlazorStaticContentOptions<TFrontMatter> : IBlazorStaticContentOptions<TFrontMatter>
+public class BlazorStaticContentOptions<TFrontMatter, TPost> : IBlazorStaticContentOptions<TFrontMatter, TPost>
     where TFrontMatter : class, IFrontMatter
+where TPost : IPost<TFrontMatter>
 {
     /// <inheritdoc />
     public string ContentPath { get; set; } = null!;//is checked in "check opiton"
@@ -238,13 +259,14 @@ public class BlazorStaticContentOptions<TFrontMatter> : IBlazorStaticContentOpti
     public string PostFilePattern { get; set; } = "*.md";
 
     /// <inheritdoc />
-    public List<Post<TFrontMatter>> Posts { get; } = new();
+    public List<TPost> Posts { get; } = new();
 
     /// <inheritdoc />
     public string PageUrl { get; set; } = null!;//is checked in check options
 
     /// <inheritdoc />
     public Action<BlazorStaticService>? AfterContentParsedAndAddedAction { get; set; }
+    public Func<TFrontMatter, AdditionalInfo>? GetAdditionalInfoFromFrontMatter { get; set; }
 }
 
 

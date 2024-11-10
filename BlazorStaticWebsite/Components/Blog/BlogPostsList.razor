@@ -25,9 +25,9 @@
                                     <a class="text-gray-100" href="@blazorStaticContentService.Options.PageUrl/@(post.Url)">@post.FrontMatter.Title</a>
                                 </h2>
                                 <div class="flex flex-wrap">
-                                    @foreach(string tag in post.FrontMatter.Tags)
+                                    @foreach(Tag tag in post.Tags)
                                     {
-                                        <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@blazorStaticContentService.Options.TagsPageUrl/@blazorStaticContentService.Options.TagEncodeFunc(tag)">@tag</a>
+                                        <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@($"{blazorStaticContentService.Options.TagsPageUrl}/{tag.EncodedName}")">@tag.Name</a>
                                     }
                                 </div>
                             </div>
@@ -47,10 +47,10 @@
 
 
 @code {
-    List<Post<BlogFrontMatter>> posts = [];
+    List<BlogPost<BlogFrontMatter>> posts = [];
 
 
-    [Parameter] public List<Post<BlogFrontMatter>>? Posts { get; set; }
+    [Parameter] public List<BlogPost<BlogFrontMatter>>? Posts { get; set; }
 
     protected override void OnInitialized()
     {

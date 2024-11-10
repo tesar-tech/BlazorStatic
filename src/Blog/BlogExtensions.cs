@@ -20,7 +20,7 @@ public static class BlogExtensions
         Action<BlogOptions<TBlogFrontMatter>>? configureOptions = null)
         where TBlogFrontMatter : class, IBlogFrontMatter, new()
     {
-        services.AddBlazorStaticContentService<TBlogFrontMatter, BlogOptions<TBlogFrontMatter>>(configureOptions);
+        services.AddBlazorStaticContentService<TBlogFrontMatter,BlogPost<TBlogFrontMatter>,BlogOptions<TBlogFrontMatter>>(configureOptions);
         services.AddSingleton<BlogService<TBlogFrontMatter>>();
         return services;
     }

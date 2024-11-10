@@ -24,6 +24,33 @@ public static class BlazorStaticExtensions
     private static Dictionary<Type, Action<WebApplication>> staticContentUse { get; } = [];
 
 
+
+
+
+    public static IServiceCollection AddBlazorStaticContentService<TFrontMatter,TPost, TBlazorStaticContentOptions>(this IServiceCollection services,
+        Action<TBlazorStaticContentOptions>? configureOptions)
+        where TFrontMatter : class, IFrontMatter, new()
+        where TPost: class, IPost<TFrontMatter>, new()
+        where TBlazorStaticContentOptions : class, IBlazorStaticContentOptions<TFrontMatter, TPost>, new()
+    {
+        TBlazorStaticContentOptions options = new();
+        ConfigureOptions();
+
+        services.AddSingleton(options);
+        services.AddSingleton<BlazorStaticContentService<TFrontMatter,TPost, TBlazorStaticContentOptions>>();
+
+        staticContentUse[typeof(TFrontMatter)] = UseBlazorStaticContent<TFrontMatter,TPost, TBlazorStaticContentOptions>;
+        s_actionsToConfigureOptions[typeof(TFrontMatter)] = ConfigureOptions;
+        return services;
+
+        void ConfigureOptions()
+        {
+            configureOptions?.Invoke(options);
+            options.CheckOptions();
+        }
+    }
+
+
     /// <summary>
     ///     Adds a BlazorStaticContentService to the specified IServiceCollection. The BlazorStaticContentService service uses
     ///     a generic type
@@ -33,6 +60,7 @@ public static class BlazorStaticExtensions
     /// <typeparam name="TBlazorStaticContentOptions">If you have your own IBlazorStaticContentOptions, here is the place. Otherwise
     /// (if you are fine with BlazorStaticContentOptions) use the other overload (AddBlazorStaticContentService`TFrontMatter)
     /// </typeparam>
+    /// <typeparam name="TPost"></typeparam>
     /// <param name="services">The IServiceCollection to add the BlazorStaticContentService to.</param>
     /// <param name="configureOptions">
     ///     An optional action to configure the BlazorStaticContentOptions for the BlazorStaticContentService.
@@ -43,27 +71,18 @@ public static class BlazorStaticExtensions
     ///     The method configures and registers a singleton instance of BlazorStaticContentOptions`TFrontMatter` and
     ///     BlazorStaticContentService`TFrontMatter` in the service collection.
     /// </remarks>
-    public static IServiceCollection AddBlazorStaticContentService<TFrontMatter, TBlazorStaticContentOptions>(this IServiceCollection services,
-        Action<TBlazorStaticContentOptions>? configureOptions)
+    public static IServiceCollection AddBlazorStaticContentService<TFrontMatter, TPost>(this IServiceCollection services,
+        Action<BlazorStaticContentOptions<TFrontMatter, TPost>>? configureOptions)
         where TFrontMatter : class, IFrontMatter, new()
-        where TBlazorStaticContentOptions : class, IBlazorStaticContentOptions<TFrontMatter>, new()
+        where TPost : class, IPost<TFrontMatter>, new()
     {
-        TBlazorStaticContentOptions options = new();
-        ConfigureOptions();
+        AddBlazorStaticContentService<TFrontMatter, TPost, BlazorStaticContentOptions<TFrontMatter,TPost>>(services, configureOptions);
 
-        services.AddSingleton(options);
-        services.AddSingleton<BlazorStaticContentService<TFrontMatter, TBlazorStaticContentOptions>>();
+        services.AddSingleton<BlazorStaticContentService<TFrontMatter, TPost>>();
 
-        staticContentUse[typeof(TFrontMatter)] = UseBlazorStaticContent<TFrontMatter, TBlazorStaticContentOptions>;
-        s_actionsToConfigureOptions[typeof(TFrontMatter)] = ConfigureOptions;
         return services;
-
-        void ConfigureOptions()
-        {
-            configureOptions?.Invoke(options);
-            options.CheckOptions();
-        }
     }
+
 
 
     /// <summary>
@@ -83,10 +102,11 @@ public static class BlazorStaticExtensions
     ///     BlazorStaticContentService`TFrontMatter` in the service collection.
     /// </remarks>
     public static IServiceCollection AddBlazorStaticContentService<TFrontMatter>(this IServiceCollection services,
-        Action<BlazorStaticContentOptions<TFrontMatter>>? configureOptions)
+        Action<BlazorStaticContentOptions<TFrontMatter, Post<TFrontMatter>>>? configureOptions)
         where TFrontMatter : class, IFrontMatter, new()
     {
-        AddBlazorStaticContentService<TFrontMatter, BlazorStaticContentOptions<TFrontMatter>>(services, configureOptions);
+
+        AddBlazorStaticContentService<TFrontMatter, Post<TFrontMatter>>(services, configureOptions);
         services.AddSingleton<BlazorStaticContentService<TFrontMatter>>();
 
         return services;
@@ -130,12 +150,13 @@ public static class BlazorStaticExtensions
     /// <param name="app"></param>
     /// <typeparam name="TFrontMatter"></typeparam>
     /// <typeparam name="TBlazorStaticContentOptions"></typeparam>
-    private static void UseBlazorStaticContent<TFrontMatter, TBlazorStaticContentOptions>(WebApplication app)
+    private static void UseBlazorStaticContent<TFrontMatter,TPost, TBlazorStaticContentOptions>(WebApplication app)
         where TFrontMatter : class, IFrontMatter, new()
-        where TBlazorStaticContentOptions : class, IBlazorStaticContentOptions<TFrontMatter>, new()
+        where TPost: class, IPost<TFrontMatter>, new()
+        where TBlazorStaticContentOptions : class, IBlazorStaticContentOptions<TFrontMatter,TPost>, new()
 
     {
-        var contentService = app.Services.GetRequiredService<BlazorStaticContentService<TFrontMatter, TBlazorStaticContentOptions>>();
+        var contentService = app.Services.GetRequiredService<BlazorStaticContentService<TFrontMatter,TPost, TBlazorStaticContentOptions>>();
         contentService.Posts.Clear();//need to do it here in case of hot reload event
         var options = app.Services.GetRequiredService<TBlazorStaticContentOptions>();
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();

@@ -11,6 +11,6 @@ using Services;
 /// <param name="blazorStaticService"></param>
 /// <typeparam name="TBlogFrontMatter"></typeparam>
 public class BlogService<TBlogFrontMatter>(BlogOptions<TBlogFrontMatter> options, BlazorStaticHelpers helpers, BlazorStaticService blazorStaticService)
-    : BlazorStaticContentService<TBlogFrontMatter, BlogOptions<TBlogFrontMatter>>(options, helpers, blazorStaticService)
+    : BlazorStaticContentService<TBlogFrontMatter,BlogPost<TBlogFrontMatter>, BlogOptions<TBlogFrontMatter>>(options, helpers, blazorStaticService)
     where TBlogFrontMatter : class, IBlogFrontMatter, new();
 

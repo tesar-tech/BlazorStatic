@@ -2,6 +2,8 @@ using System.Reflection;
 
 namespace BlazorStatic.Services;
 
+using Blog;
+
 /// <summary>
 ///     The BlazorStaticContentService is responsible for parsing and adding blog posts.
 ///     It adds pages with blog posts to the options.PagesToGenerate list,
@@ -9,24 +11,19 @@ namespace BlazorStatic.Services;
 /// </summary>
 /// /// <typeparam name="TFrontMatter"></typeparam>
 /// <typeparam name="TBlazorStaticContentOptions"></typeparam>
-public class BlazorStaticContentService<TFrontMatter, TBlazorStaticContentOptions>(
+/// <typeparam name="TPost"></typeparam>
+public class BlazorStaticContentService<TFrontMatter, TPost, TBlazorStaticContentOptions>(
     TBlazorStaticContentOptions options,
     BlazorStaticHelpers helpers,
     BlazorStaticService blazorStaticService)
     where TFrontMatter : class, IFrontMatter, new()
-    where  TBlazorStaticContentOptions: IBlazorStaticContentOptions<TFrontMatter>
+    where TPost : class, IPost<TFrontMatter>, new()
+    where TBlazorStaticContentOptions : IBlazorStaticContentOptions<TFrontMatter, TPost>
 {
-     /// <summary>
+    /// <summary>
     ///     The list of posts parsed and added to the BlazorStaticContentService.
     /// </summary>
-    public List<Post<TFrontMatter>> Posts => options.Posts;
-
-    /// <summary>
-    ///     Obsolete property. Use <see cref="Posts" /> instead. This property will be removed in future versions.
-    /// </summary>
-    [Obsolete("Use Posts instead. This property will be removed in future versions.")]
-    public List<Post<TFrontMatter>> BlogPosts => Posts;
-
+    public List<TPost> Posts => options.Posts;
 
     /// <summary>
     ///     The BlazorStaticContentOptions used to configure the BlazorStaticContentService.
@@ -66,8 +63,7 @@ public class BlazorStaticContentService<TFrontMatter, TBlazorStaticContentOption
             {
                 continue;
             }
-
-            Post<TFrontMatter> post = new()
+            TPost post = new()
             {
                 FrontMatter = frontMatter,
                 Url = GetRelativePathWithFilename(file),
@@ -77,7 +73,7 @@ public class BlazorStaticContentService<TFrontMatter, TBlazorStaticContentOption
             options.Posts.Add(post);
 
             blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.PageUrl}/{post.Url}",
-            Path.Combine(options.PageUrl, $"{post.Url}.html"), post.FrontMatter.AdditionalInfo));
+            Path.Combine(options.PageUrl, $"{post.Url}.html"), options.GetAdditionalInfoFromFrontMatter?.Invoke(post.FrontMatter)));
         }
 
         //copy media folder to output
@@ -117,12 +113,18 @@ public class BlazorStaticContentService<TFrontMatter, TBlazorStaticContentOption
     }
 }
 
-/// <inheritdoc />
-public class BlazorStaticContentService<TFrontMatter>(
-    BlazorStaticContentOptions<TFrontMatter> options,
+public class BlazorStaticContentService<TFrontMatter, TPost>(
+    BlazorStaticContentOptions<TFrontMatter, TPost> options,
     BlazorStaticHelpers helpers,
     BlazorStaticService blazorStaticService)
-    : BlazorStaticContentService<TFrontMatter, BlazorStaticContentOptions<TFrontMatter>>(options, helpers, blazorStaticService)
+    : BlazorStaticContentService<TFrontMatter, TPost, BlazorStaticContentOptions<TFrontMatter,TPost>>(options, helpers, blazorStaticService)
+    where TFrontMatter : class, IFrontMatter, new()
+    where TPost : class, IPost<TFrontMatter>, new();
+
+/// <inheritdoc />
+public class BlazorStaticContentService<TFrontMatter>(
+    BlazorStaticContentOptions<TFrontMatter,Post<TFrontMatter>> options,
+    BlazorStaticHelpers helpers,
+    BlazorStaticService blazorStaticService)
+    : BlazorStaticContentService<TFrontMatter, Post<TFrontMatter>>(options, helpers, blazorStaticService)
     where TFrontMatter : class, IFrontMatter, new();
-
-
