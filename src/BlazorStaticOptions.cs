@@ -4,6 +4,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace BlazorStatic;
 
+using System.Net;
 using Services;
 
 /// <summary>
@@ -141,27 +142,14 @@ public class BlazorStaticOptions
 }
 
 
-
 /// <summary>
 /// Options for configuring processing of md files with front matter. Uses Post class
 /// </summary>
 /// <typeparam name="TFrontMatter">Any front matter type that inherits from IFrontMatter </typeparam>
-public interface IBlazorStaticContentOptions<TFrontMatter>: IBlazorStaticContentOptions<TFrontMatter,Post<TFrontMatter>>
+
+
+public class BlazorStaticContentOptions<TFrontMatter>
     where TFrontMatter : class, IFrontMatter, new()
-{
-
-}
-
-/// <summary>
-///     Options for configuring processing of md files with front matter.
-///     Default values are set to work with posts (<see cref="ContentPath" /> and <see cref="PageUrl" /> ) .
-/// </summary>
-/// <typeparam name="TFrontMatter"></typeparam>
-/// <typeparam name="TPost"></typeparam>
-public interface IBlazorStaticContentOptions<TFrontMatter,TPost>
-    where TFrontMatter : class, IFrontMatter
-    where TPost : IPost<TFrontMatter>
-
 {
     /// <summary>
     /// Folder relative to project root where posts are stored.
@@ -169,14 +157,14 @@ public interface IBlazorStaticContentOptions<TFrontMatter,TPost>
     /// because that's where the app will look for the files.
     /// Default is Content/Blog where posts are stored.
     /// </summary>
-    string ContentPath { get; set; }
+    public string ContentPath { get; set; } = Path.Combine("Content", "Blog");
 
     /// <summary>
     /// Folder in ContentPath where media files are stored.
     /// Important for app.UseStaticFiles targeting the correct folder.
     /// Null in case of no media folder.
     /// </summary>
-    string? MediaFolderRelativeToContentPath { get; set; }
+    public string? MediaFolderRelativeToContentPath { get; set; }
 
 
     /// <summary>
@@ -187,19 +175,17 @@ public interface IBlazorStaticContentOptions<TFrontMatter,TPost>
     /// Leading slash / is necessary for RequestPath in app.UseStaticFiles,
     /// and is removed in ParseAndAddPosts. Null in case of no media.
     /// </summary>
-    string? MediaRequestPath  => MediaFolderRelativeToContentPath is null
+    public string? MediaRequestPath  => MediaFolderRelativeToContentPath is null
         ? null
         : Path.Combine(ContentPath, MediaFolderRelativeToContentPath).Replace(@"\", "/");
 
     /// <summary>
     /// Pattern for blog post files in ContentPath.
+    /// Default is
     /// </summary>
-    string PostFilePattern { get; set; }
+    public string PostFilePattern { get; set; } = "*.md";
 
-    /// <summary>
-    /// Place where processed blog posts live (their HTML and front matter).
-    /// </summary>
-    List<TPost> Posts { get; }
+
 
     /// <summary>
     /// Should correspond to page that keeps the list of content.
@@ -208,13 +194,13 @@ public interface IBlazorStaticContentOptions<TFrontMatter,TPost>
     /// Useful for avoiding magic strings in .razor files.
     /// Default is "blog".
     /// </summary>
-    string PageUrl { get; set; }
+    public string PageUrl { get; set; } = "blog";
 
     /// <summary>
     /// Action to run after content is parsed and added to the collection.
     /// Useful for editing data in the posts, such as changing image paths.
     /// </summary>
-    Action<BlazorStaticService>? AfterContentParsedAndAddedAction { get; set; }
+    public Action<BlazorStaticService, BlazorStaticContentService<TFrontMatter>>? AfterContentParsedAndAddedAction { get; set; }
 
     /// <summary>
     /// Validates the configuration properties to ensure required fields are set correctly.
@@ -223,7 +209,7 @@ public interface IBlazorStaticContentOptions<TFrontMatter,TPost>
     /// <exception cref="InvalidOperationException">
     /// Thrown if <see cref="ContentPath"/> or <see cref="PageUrl"/> are null or empty.
     /// </exception>
-    void CheckOptions()
+    public void CheckOptions()
     {
         if (string.IsNullOrWhiteSpace(ContentPath))
             throw new InvalidOperationException("ContentPath must be set and cannot be null or empty.");
@@ -232,41 +218,17 @@ public interface IBlazorStaticContentOptions<TFrontMatter,TPost>
             throw new InvalidOperationException("PageUrl must be set and cannot be null or empty.");
     }
 
-    Func<TFrontMatter, AdditionalInfo>? GetAdditionalInfoFromFrontMatter => null;
+    public Func<TFrontMatter, AdditionalInfo>? GetAdditionalInfoFromFrontMatter { get; set; }
 
+    public TagsOptions Tags { get; set; } = new();
 }
 
-public class BlazorStaticContentOptions<TFrontMatter> : BlazorStaticContentOptions<TFrontMatter, Post<TFrontMatter>>
-    where TFrontMatter : class, IFrontMatter, new();
-
-/// <inheritdoc />
-public class BlazorStaticContentOptions<TFrontMatter, TPost> : IBlazorStaticContentOptions<TFrontMatter, TPost>
-    where TFrontMatter : class, IFrontMatter
-where TPost : IPost<TFrontMatter>
+public class TagsOptions
 {
-    /// <inheritdoc />
-    public string ContentPath { get; set; } = null!;//is checked in "check opiton"
+    public bool AddTagPagesFromPosts { get; set; } = true;
+    public string? TagsPageUrl { get; set; } = "tags";
+    public Func<string, string> TagEncodeFunc { get; set; } = WebUtility.UrlEncode;
 
-    /// <inheritdoc />
-    public string? MediaFolderRelativeToContentPath { get; set; }
-
-    /// <inheritdoc />
-    public string? MediaRequestPath => MediaFolderRelativeToContentPath is null
-        ? null
-        : Path.Combine(ContentPath, MediaFolderRelativeToContentPath).Replace(@"\", "/");
-
-    /// <inheritdoc />
-    public string PostFilePattern { get; set; } = "*.md";
-
-    /// <inheritdoc />
-    public List<TPost> Posts { get; } = new();
-
-    /// <inheritdoc />
-    public string PageUrl { get; set; } = null!;//is checked in check options
-
-    /// <inheritdoc />
-    public Action<BlazorStaticService>? AfterContentParsedAndAddedAction { get; set; }
-    public Func<TFrontMatter, AdditionalInfo>? GetAdditionalInfoFromFrontMatter { get; set; }
 }
 
 

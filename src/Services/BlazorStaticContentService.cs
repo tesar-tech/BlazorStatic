@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace BlazorStatic.Services;
 
-using Blog;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 ///     The BlazorStaticContentService is responsible for parsing and adding blog posts.
@@ -12,33 +12,22 @@ using Blog;
 /// /// <typeparam name="TFrontMatter"></typeparam>
 /// <typeparam name="TBlazorStaticContentOptions"></typeparam>
 /// <typeparam name="TPost"></typeparam>
-public class BlazorStaticContentService<TFrontMatter, TPost, TBlazorStaticContentOptions>(
-    TBlazorStaticContentOptions options,
+public class BlazorStaticContentService<TFrontMatter>(
+    BlazorStaticContentOptions<TFrontMatter> options,
     BlazorStaticHelpers helpers,
-    BlazorStaticService blazorStaticService)
+    BlazorStaticService blazorStaticService,
+    ILogger<BlazorStaticContentService<TFrontMatter>> logger)
     where TFrontMatter : class, IFrontMatter, new()
-    where TPost : class, IPost<TFrontMatter>, new()
-    where TBlazorStaticContentOptions : IBlazorStaticContentOptions<TFrontMatter, TPost>
 {
     /// <summary>
-    ///     The list of posts parsed and added to the BlazorStaticContentService.
+    /// Place where processed blog posts live (their HTML and front matter).
     /// </summary>
-    public List<TPost> Posts => options.Posts;
+    public List<Post<TFrontMatter>> Posts { get; } = [];
 
     /// <summary>
     ///     The BlazorStaticContentOptions used to configure the BlazorStaticContentService.
     /// </summary>
-    public TBlazorStaticContentOptions Options => options;
-
-
-    /// <summary>
-    ///     Obsolete method. Use <see cref="ParseAndAddPosts" /> instead. This method will be removed in future versions.
-    /// </summary>
-    [Obsolete("Use ParseAndAddPosts instead. This method will be removed in future versions.")]
-    public async Task ParseAndAddBlogPosts()
-    {
-        await ParseAndAddPosts();
-    }
+    public BlazorStaticContentOptions<TFrontMatter> Options => options;
 
     /// <summary>
     ///     Parses and adds posts to the BlazorStaticContentService. This method reads markdown files
@@ -63,14 +52,14 @@ public class BlazorStaticContentService<TFrontMatter, TPost, TBlazorStaticConten
             {
                 continue;
             }
-            TPost post = new()
+            Post<TFrontMatter> post = new()
             {
                 FrontMatter = frontMatter,
                 Url = GetRelativePathWithFilename(file),
                 HtmlContent = htmlContent
             };
 
-            options.Posts.Add(post);
+            Posts.Add(post);
 
             blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.PageUrl}/{post.Url}",
             Path.Combine(options.PageUrl, $"{post.Url}.html"), options.GetAdditionalInfoFromFrontMatter?.Invoke(post.FrontMatter)));
@@ -82,7 +71,10 @@ public class BlazorStaticContentService<TFrontMatter, TPost, TBlazorStaticConten
             var pathWithMedia = Path.Combine(options.ContentPath, options.MediaFolderRelativeToContentPath);
             blazorStaticService.Options.ContentToCopyToOutput.Add(new ContentToCopy(pathWithMedia, pathWithMedia));
         }
-        options.AfterContentParsedAndAddedAction?.Invoke(blazorStaticService);
+
+        ProcessTags();
+
+        options.AfterContentParsedAndAddedAction?.Invoke(blazorStaticService,this);
         return;
 
         string[] GetPostsPath()
@@ -111,20 +103,51 @@ public class BlazorStaticContentService<TFrontMatter, TPost, TBlazorStaticConten
                 .Replace("\\", "/");
         }
     }
+
+    /// <summary>
+    /// A dictionary of unique Tags parsed from the FrontMatter of all posts.
+    /// Each Tag is distinct, and every Post references a collection of these Tag objects.
+    /// </summary>
+    public Dictionary<string, Tag> AllTags { get; private set; } = [];
+
+
+    private void ProcessTags()
+    {
+        if(!typeof(IFrontMatterWithTags).IsAssignableFrom(typeof(TFrontMatter)))
+        {
+            if(options.Tags.AddTagPagesFromPosts)
+                logger.LogWarning("BlazorStaticContentOptions.Tags.AddTagPagesFromPosts is true, but the used FrontMatter does not inherit from IFrontMatterWithTags. No tags were processed.");
+            return;
+        }
+        //gather List<string> tags and create Tag objects from them.
+        AllTags = Posts
+            .SelectMany(post => (post.FrontMatter as IFrontMatterWithTags)?.Tags ?? Enumerable.Empty<string>())
+            .Distinct()
+            .Select(tag => new Tag { Name = tag, EncodedName = options.Tags.TagEncodeFunc(tag) })
+            .ToDictionary(tag => tag.Name);
+
+
+        foreach(var post in Posts)
+        {
+            //add Tag objects to every post based on the front matter tags
+            post.Tags = ((IFrontMatterWithTags)post.FrontMatter).Tags
+                .Where(tagName => AllTags.ContainsKey(tagName))
+                .Select(tagName => AllTags[tagName])
+                .ToList();
+        }
+
+        if(!options.Tags.AddTagPagesFromPosts) return;
+
+        if(options.Tags.TagsPageUrl is null)
+        {
+            logger.LogWarning("BlazorStaticContentService.Options.Tags.TagsPageUrl is null, but AddTagPagesFromPosts is true");
+            return;
+        }
+        foreach(var tag in AllTags.Values)
+        {
+            blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.Tags.TagsPageUrl}/{tag.EncodedName}",
+            Path.Combine(options.Tags.TagsPageUrl, $"{tag.EncodedName}.html")));
+        }
+    }
+
 }
-
-public class BlazorStaticContentService<TFrontMatter, TPost>(
-    BlazorStaticContentOptions<TFrontMatter, TPost> options,
-    BlazorStaticHelpers helpers,
-    BlazorStaticService blazorStaticService)
-    : BlazorStaticContentService<TFrontMatter, TPost, BlazorStaticContentOptions<TFrontMatter,TPost>>(options, helpers, blazorStaticService)
-    where TFrontMatter : class, IFrontMatter, new()
-    where TPost : class, IPost<TFrontMatter>, new();
-
-/// <inheritdoc />
-public class BlazorStaticContentService<TFrontMatter>(
-    BlazorStaticContentOptions<TFrontMatter,Post<TFrontMatter>> options,
-    BlazorStaticHelpers helpers,
-    BlazorStaticService blazorStaticService)
-    : BlazorStaticContentService<TFrontMatter, Post<TFrontMatter>>(options, helpers, blazorStaticService)
-    where TFrontMatter : class, IFrontMatter, new();

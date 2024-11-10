@@ -1,5 +1,4 @@
 using BlazorStatic;
-using BlazorStatic.Blog;
 using BlazorStaticWebsite;
 using BlazorStaticWebsite.Components;
 using Microsoft.Extensions.FileProviders;
@@ -27,7 +26,7 @@ builder.Services.AddBlazorStaticService(opt => {
         opt.ShouldGenerateSitemap = true;
         opt.SiteUrl = WebsiteKeys.SiteUrl;
         opt.HotReloadEnabled = true;
-    }).AddBlogService<BlogFrontMatter>()// or: .AddBlogService<MyBlogFrontMatter>() //where MyBlogFrontMatter: IBlogFrontMatter
+    }).AddBlazorStaticContentService<BlogFrontMatter>()//
     .AddBlazorStaticContentService<ProjectFrontMatter>(opt=> {
         opt.ContentPath = Path.Combine("Content", "Projects");
         opt.PageUrl = WebsiteKeys.ProjectsUrl;

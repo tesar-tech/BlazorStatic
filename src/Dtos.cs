@@ -1,6 +1,5 @@
 ﻿namespace BlazorStatic;
 
-using Blog;
 
 /// <summary>
 ///     Interface for front matter. FrontMatter is the metadata of a post.
@@ -12,35 +11,14 @@ public interface IFrontMatter
     /// </summary>
     bool IsDraft => false;
 
-
 }
 
-
-
-
-public interface IPost<TFrontMatter> where TFrontMatter: class, IFrontMatter
+public interface IFrontMatterWithTags
 {
-
-    TFrontMatter FrontMatter { get; set; }
-    string Url { get; set; }
-    string HtmlContent { get; set; }
-
-    /// <summary>
-    ///     Optional data for configuring certain parts of the generation process.
-    ///     Currently used for passing the Date of creation to site.xml.
-    ///     (generation process isn't aware of IFrontMatter implementation)
-    /// </summary>
-     AdditionalInfo? AdditionalInfo => null;
-
+    List<string> Tags { get; set; }
 }
 
-public interface IPostWithTags
-{
-    public List<Tag> Tags { get; set; }
 
-    // void InitTags();
-
-}
 
 public class Tag
 {
@@ -52,7 +30,8 @@ public class Tag
 ///     Keeps metadata and html content of a post (parsed from md).
 /// </summary>
 /// <typeparam name="TFrontMatter"></typeparam>
-public class Post<TFrontMatter>:IPost<TFrontMatter> where TFrontMatter: class, IFrontMatter, new()
+public class Post<TFrontMatter>
+    where TFrontMatter: class, IFrontMatter, new()
 {
 
     /// <summary>
@@ -69,6 +48,8 @@ public class Post<TFrontMatter>:IPost<TFrontMatter> where TFrontMatter: class, I
     ///     HTML content of the post. Parsed from md. Without front matter part.
     /// </summary>
     public  string HtmlContent { get; set; } = "";
+
+    public List<Tag> Tags { get; set; } = [];
 
 
 }

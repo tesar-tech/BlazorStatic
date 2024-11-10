@@ -4,7 +4,7 @@
 @using BlazorStatic.Services
 @using BlazorStaticWebsite.Components.Blog
 @using System.Net
-@inject BlogService<BlogFrontMatter> BlogService
+@inject BlazorStaticContentService<BlogFrontMatter> BlogService
 
 
 @if (TagEncodedName == null)
@@ -17,9 +17,9 @@
                 .Select(group => new { Tag = group.Key, Count = group.Count() })
                 .OrderByDescending(x => x.Count);
 
-            foreach(var tag in tagsWithCount)
+            foreach(var tagGroup in tagsWithCount)
             {
-                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@($"{BlogService.Options.TagsPageUrl}/{tag.Tag.EncodedName}")"> @tag.Tag.Name (@tag.Count) </a>
+                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@($"{BlogService.Options.Tags.TagsPageUrl}/{tagGroup.Tag.EncodedName}")"> @tagGroup.Tag.Name (@tagGroup.Count) </a>
             }
         }
     </div>
@@ -43,12 +43,12 @@
     [Parameter] public string? TagEncodedName { get; set; }
     Tag? tag;
 
-    List<BlogPost<BlogFrontMatter>>? posts;
+    List<Post<BlogFrontMatter>>? posts;
 
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(TagEncodedName)) return;
-        tag = BlogService.Options.AllTags.FirstOrDefault(x=>x.Value.EncodedName == TagEncodedName).Value;
+        tag = BlogService.AllTags.FirstOrDefault(x=>x.Value.EncodedName == TagEncodedName).Value;
         if (tag == null) return;
         posts = BlogService.Posts
             .Where(x => x.Tags.Any(c => c.EncodedName == TagEncodedName))

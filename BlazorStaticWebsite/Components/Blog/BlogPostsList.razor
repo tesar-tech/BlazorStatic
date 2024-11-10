@@ -1,5 +1,5 @@
 @using System.Globalization
-@inject BlogService<BlogFrontMatter> blazorStaticContentService
+@inject BlazorStaticContentService<BlogFrontMatter> blazorStaticContentService
 @inject BlazorStaticService blazorStaticService
 
 <ul class="divide-y divide-gray-700">
@@ -27,7 +27,7 @@
                                 <div class="flex flex-wrap">
                                     @foreach(Tag tag in post.Tags)
                                     {
-                                        <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@($"{blazorStaticContentService.Options.TagsPageUrl}/{tag.EncodedName}")">@tag.Name</a>
+                                        <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@($"{blazorStaticContentService.Options.Tags.TagsPageUrl}/{tag.EncodedName}")">@tag.Name</a>
                                     }
                                 </div>
                             </div>
@@ -47,10 +47,10 @@
 
 
 @code {
-    List<BlogPost<BlogFrontMatter>> posts = [];
+    List<Post<BlogFrontMatter>> posts = [];
 
 
-    [Parameter] public List<BlogPost<BlogFrontMatter>>? Posts { get; set; }
+    [Parameter] public List<Post<BlogFrontMatter>>? Posts { get; set; }
 
     protected override void OnInitialized()
     {
