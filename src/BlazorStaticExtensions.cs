@@ -12,9 +12,9 @@ namespace BlazorStatic;
 /// </summary>
 public static class BlazorStaticExtensions
 {
-    private static readonly Dictionary<Type, Action> ActionsToConfigureOptions = new();
+    private static readonly Dictionary<Type, Action> s_actionsToConfigureOptions = new();
 
-    private static WebApplication? _app;
+    private static WebApplication? s_app;
     /// <summary>
     ///     holds the actions that will run when UseBlazorStaticGenerator is called.
     ///     Will manage content for every BlazorStaticContentService added.
@@ -22,6 +22,7 @@ public static class BlazorStaticExtensions
     ///     We use dictionary for type, because it removes the need for hassling with duplicate (in case of hot reload)
     /// </summary>
     private static Dictionary<Type, Action<WebApplication>> staticContentUse { get; } = [];
+
 
 
     /// <summary>
@@ -40,19 +41,35 @@ public static class BlazorStaticExtensions
     ///     The method configures and registers a singleton instance of BlazorStaticContentOptions`TFrontMatter` and
     ///     BlazorStaticContentService`TFrontMatter` in the service collection.
     /// </remarks>
+
+
     public static IServiceCollection AddBlazorStaticContentService<TFrontMatter>(this IServiceCollection services,
         Action<BlazorStaticContentOptions<TFrontMatter>>? configureOptions = null)
         where TFrontMatter : class, IFrontMatter, new()
     {
-        var options = new BlazorStaticContentOptions<TFrontMatter>();
-        configureOptions?.Invoke(options);
+        BlazorStaticContentOptions<TFrontMatter> options = new();
+        ConfigureOptions();
 
         services.AddSingleton(options);
         services.AddSingleton<BlazorStaticContentService<TFrontMatter>>();
+
         staticContentUse[typeof(TFrontMatter)] = UseBlazorStaticContent<TFrontMatter>;
-        ActionsToConfigureOptions[typeof(TFrontMatter)] = () => configureOptions?.Invoke(options);
+        s_actionsToConfigureOptions[typeof(TFrontMatter)] = ConfigureOptions;
         return services;
+
+        void ConfigureOptions()
+        {
+            configureOptions?.Invoke(options);
+            options.CheckOptions();
+        }
     }
+
+
+
+
+
+
+
 
 
     /// <summary>
@@ -77,7 +94,7 @@ public static class BlazorStaticExtensions
 
         services.AddSingleton(options);
         services.AddSingleton<BlazorStaticService>();
-        ActionsToConfigureOptions[typeof(BlazorStaticService)] = () => configureOptions?.Invoke(options);
+        s_actionsToConfigureOptions[typeof(BlazorStaticService)] = () => configureOptions?.Invoke(options);
 
         return services;
     }
@@ -131,24 +148,24 @@ public static class BlazorStaticExtensions
 
     internal static void UseBlazorStaticGeneratorOnHotReload()
     {
-        if(_app == null)
+        if(s_app == null)
         {
             return;
         }
 
-        var blazorStaticService = _app.Services.GetRequiredService<BlazorStaticService>();
+        var blazorStaticService = s_app.Services.GetRequiredService<BlazorStaticService>();
         //basic clean up
         blazorStaticService.Options.ClearBeforeFilesGenerationActions();
         blazorStaticService.Options.PagesToGenerate.Clear();
         blazorStaticService.Options.ContentToCopyToOutput.Clear();
 
         //go through the options (from Program.cs)
-        foreach(var action in ActionsToConfigureOptions)
+        foreach(var action in s_actionsToConfigureOptions)
         {
             action.Value.Invoke();
         }
 
-        _app.UseBlazorStaticGenerator();
+        s_app.UseBlazorStaticGenerator();
     }
 
     /// <summary>
@@ -164,9 +181,9 @@ public static class BlazorStaticExtensions
         }
 
         var blazorStaticService = app.Services.GetRequiredService<BlazorStaticService>();
-        if(_app is null && blazorStaticService.Options.HotReloadEnabled)
+        if(s_app is null && blazorStaticService.Options.HotReloadEnabled)
         {
-            _app = app;
+            s_app = app;
         }
 
         HotReloadManager.HotReloadEnabled = blazorStaticService.Options.HotReloadEnabled;
@@ -179,6 +196,7 @@ public static class BlazorStaticExtensions
         var logger = app.Services.GetRequiredService<ILogger<BlazorStaticService>>();
 
         lifetime.ApplicationStarted.Register(
+        // ReSharper disable once AsyncVoidLambda
         async () => {
             try
             {

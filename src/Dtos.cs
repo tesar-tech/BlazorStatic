@@ -1,18 +1,12 @@
 ﻿namespace BlazorStatic;
 
+
 /// <summary>
 ///     Interface for front matter. FrontMatter is the metadata of a post.
 /// </summary>
 public interface IFrontMatter
 {
-    /// <summary>
-    ///     Tags for the blog post. When no tags are specified, implement empty list.
-    ///     If you have a different name for tags, or tags in complex objects, expose tags as a list of strings here.
-    ///     Useful for generating tag pages.
-    /// </summary>
-    List<string> Tags { get; set; }
-
-    /// <summary>
+        /// <summary>
     ///     If true, the blog post will not be generated.
     /// </summary>
     bool IsDraft => false;
@@ -23,59 +17,38 @@ public interface IFrontMatter
     ///     (generation process isn't aware of IFrontMatter implementation)
     /// </summary>
     AdditionalInfo? AdditionalInfo => null;
+
 }
 
 /// <summary>
-///     Showcase of a front matter class. If you have a different front matter format, implement your own class.
+/// If your FrontMatter uses Tags you need to implement this interface to process the tags.
 /// </summary>
-public class BlogFrontMatter : IFrontMatter
+public interface IFrontMatterWithTags
 {
     /// <summary>
-    ///     Title of the blog post.
+    ///     Tags for the post.
+    ///     If you have a different name for tags, or tags in complex objects, expose tags as a list of strings here.
+    /// This is just front matter, tags will be process with proper encoder.
     /// </summary>
-    public string Title { get; set; } = "Empty title";
-    /// <summary>
-    ///     Lead or description of the blog post.
-    /// </summary>
-    public string Lead { get; set; } = "";
-    /// <summary>
-    ///     Date of publishing the blog post.
-    /// </summary>
-    public DateTime Published { get; set; } = DateTime.Now;
-
-    /// <summary>
-    ///     Authors of the blog post.
-    /// </summary>
-    public List<Author> Authors { get; set; } = [];
-    /// <inheritdoc />
-    public List<string> Tags { get; set; } = [];
-
-    /// <inheritdoc />
-    public bool IsDraft { get; set; }
-
-    /// <summary>
-    ///     <inheritdoc />
-    /// </summary>
-    public AdditionalInfo? AdditionalInfo => new() { LastMod = Published };
+    List<string> Tags { get; set; }
 }
 
+
+
 /// <summary>
-///     Author of a blog post.
+/// Tags for BlazorStatic, contains Name (original string from FrontMatter)
+/// and EncodedName - used for urls and file names
 /// </summary>
-public class Author
+public class Tag
 {
     /// <summary>
-    ///     Name of the author.
+    /// Original string from FrontMatter. Can contain any characters.
     /// </summary>
-    public string? Name { get; set; }
+    public required string Name { get; set; }
     /// <summary>
-    ///     GitHub username of the author.
+    /// Encoded name, used for urls and file names
     /// </summary>
-    public string? GitHubUserName { get; set; }
-    /// <summary>
-    ///     X username of the author.
-    /// </summary>
-    public string? XUserName { get; set; }
+    public required string EncodedName { get; set; }
 }
 
 /// <summary>
@@ -83,9 +56,9 @@ public class Author
 /// </summary>
 /// <typeparam name="TFrontMatter"></typeparam>
 public class Post<TFrontMatter>
-    where TFrontMatter : class
-
+    where TFrontMatter: class, IFrontMatter, new()
 {
+
     /// <summary>
     ///     Front matter of the post.
     /// </summary>
@@ -95,11 +68,19 @@ public class Post<TFrontMatter>
     ///     Processed from the file path (Content/Blog/subfolder/post-in-subfolder.md => blog/subfolder/post-in-subfolder).
     ///     Used as url param e.g.: "blog/{Url}".
     /// </summary>
-    public required string Url { get; set; }
+    public required  string Url { get; set; }
     /// <summary>
     ///     HTML content of the post. Parsed from md. Without front matter part.
     /// </summary>
-    public required string HtmlContent { get; set; }
+    public required  string HtmlContent { get; set; }
+
+    /// <summary>
+    /// Tag for the post.
+    /// Works only when FrontMatter implements IFrontMatterWithTags
+    /// </summary>
+    public List<Tag> Tags { get; set; } = [];
+
+
 }
 
 /// <summary>

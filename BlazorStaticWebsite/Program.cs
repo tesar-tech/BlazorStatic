@@ -26,14 +26,11 @@ builder.Services.AddBlazorStaticService(opt => {
         opt.ShouldGenerateSitemap = true;
         opt.SiteUrl = WebsiteKeys.SiteUrl;
         opt.HotReloadEnabled = true;
-    }).AddBlazorStaticContentService<BlogFrontMatter>()
-    .AddBlazorStaticContentService<ProjectFrontMatter>(opt => {
-        opt.MediaFolderRelativeToContentPath = null;
+    }).AddBlazorStaticContentService<BlogFrontMatter>()//
+    .AddBlazorStaticContentService<ProjectFrontMatter>(opt=> {
         opt.ContentPath = Path.Combine("Content", "Projects");
-        opt.AddTagPagesFromPosts = false;
         opt.PageUrl = WebsiteKeys.ProjectsUrl;
     });
-
 
 // Add services to the container.
 builder.Services.AddRazorComponents();

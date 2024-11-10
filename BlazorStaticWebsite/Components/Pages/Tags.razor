@@ -4,21 +4,22 @@
 @using BlazorStatic.Services
 @using BlazorStaticWebsite.Components.Blog
 @using System.Net
-@inject BlazorStaticContentService<BlogFrontMatter> BlazorStaticContentService
+@inject BlazorStaticContentService<BlogFrontMatter> BlogService
+
 
 @if (TagEncodedName == null)
 {
     <div class="flex flex-wrap justify-between gap-1">
         @{
-            var tagsWithCount = BlazorStaticContentService.Posts
-                .SelectMany(x => x.FrontMatter.Tags)
+            var tagsWithCount = BlogService.Posts
+                .SelectMany(x => x.Tags)
                 .GroupBy(x => x)
                 .Select(group => new { Tag = group.Key, Count = group.Count() })
                 .OrderByDescending(x => x.Count);
 
-            foreach(var tag in tagsWithCount)
+            foreach(var tagGroup in tagsWithCount)
             {
-                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlazorStaticContentService.Options.TagsPageUrl/@BlazorStaticContentService.Options.TagEncodeFunc(tag.Tag)"> @tag.Tag (@tag.Count)</a>
+                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@($"{BlogService.Options.Tags.TagsPageUrl}/{tagGroup.Tag.EncodedName}")"> @tagGroup.Tag.Name (@tagGroup.Count) </a>
             }
         }
     </div>
@@ -28,25 +29,31 @@
 
 <div class="divide-y divide-gray-700">
     <div class="space-y-2 pb-8 pt-6 md:space-y-5">
-        <h1 class="font-sans md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl">@TagEncodedName</h1>
+        <h1 class="font-sans md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl">@(tag?.Name ?? TagEncodedName)</h1>
         <p class="text-lg leading-7 text-gray-400">
             Blog posts tagged by
-            <span class="text-primary-300">@TagEncodedName</span>
+            <span class="text-primary-300">@(tag?.Name ?? TagEncodedName)</span>
         </p>
     </div>
-    <PostsList Posts="posts"/>
+    <BlogPostsList Posts="posts"/>
 </div>
 
 @code {
 
     [Parameter] public string? TagEncodedName { get; set; }
+    Tag? tag;
 
     List<Post<BlogFrontMatter>>? posts;
 
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(TagEncodedName)) return;
-        posts = BlazorStaticContentService.Posts.Where(x => x.FrontMatter.Tags.Contains(WebUtility.UrlDecode( TagEncodedName))).ToList();
+        tag = BlogService.AllTags.FirstOrDefault(x=>x.Value.EncodedName == TagEncodedName).Value;
+        if (tag == null) return;
+        posts = BlogService.Posts
+            .Where(x => x.Tags.Any(c => c.EncodedName == TagEncodedName))
+            .ToList();
+
     }
 
 }

@@ -1,10 +1,9 @@
 @page "/blog"
 @page "/blog/{*postUrl}"
-@using BlazorStatic
-@using BlazorStatic.Services
 @using BlazorStaticWebsite.Components.Blog
 @using System.Globalization
-@inject BlazorStaticContentService<BlogFrontMatter> blazorStaticContentService
+@inject BlazorStaticContentService<BlogFrontMatter> BlogService
+
 
 
 @* No filename -> show latest posts *@
@@ -16,7 +15,7 @@
             <p class="text-lg leading-7 text-gray-400">posts about BlazorStatic</p>
         </div>
 
-        <PostsList/>
+        <BlogPostsList/>
     </div>
     return;
 }
@@ -97,13 +96,13 @@
                         <div class="flex flex-wrap">
                             @foreach(string tag in post.FrontMatter.Tags)
                             {
-                                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@blazorStaticContentService.Options.TagsPageUrl/@tag">@tag</a>
+                                <a class="text-primary-500 hover:text-primary-400 mr-3 text-sm font-medium uppercase" href="@BlogService.Options.Tags.TagsPageUrl/@tag">@tag</a>
                             }
                         </div>
                     </div>
                 </div>
                 <div class="pt-4 xl:pt-8">
-                    <a class="text-primary-500 hover:text-primary-400" aria-label="Back to the blog" href="@blazorStaticContentService.Options.PageUrl">← Back to the blog</a>
+                    <a class="text-primary-500 hover:text-primary-400" aria-label="Back to the blog" href="@BlogService.Options.PageUrl">← Back to the blog</a>
                 </div>
             </footer>
         </div>
@@ -118,7 +117,7 @@
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(PostUrl)) return;
-        post = blazorStaticContentService.Posts.FirstOrDefault(x => x.Url == PostUrl);
+        post = BlogService.Posts.FirstOrDefault(x => x.Url == PostUrl);
     }
 
 }

@@ -2,51 +2,30 @@ using System.Reflection;
 
 namespace BlazorStatic.Services;
 
-using System.Text.Encodings.Web;
-using System.Web;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 ///     The BlazorStaticContentService is responsible for parsing and adding blog posts.
 ///     It adds pages with blog posts to the options.PagesToGenerate list,
 ///     that is used later by BlazorStaticService to generate static pages.
 /// </summary>
-/// a
-/// <param name="options"></param>
-/// <param name="helpers"></param>
-/// <param name="blazorStaticService"></param>
-/// <typeparam name="TFrontMatter"></typeparam>
+/// /// <typeparam name="TFrontMatter"></typeparam>
 public class BlazorStaticContentService<TFrontMatter>(
     BlazorStaticContentOptions<TFrontMatter> options,
     BlazorStaticHelpers helpers,
-    BlazorStaticService blazorStaticService)
+    BlazorStaticService blazorStaticService,
+    ILogger<BlazorStaticContentService<TFrontMatter>> logger)
     where TFrontMatter : class, IFrontMatter, new()
 {
     /// <summary>
-    ///     The list of posts parsed and added to the BlazorStaticContentService.
+    /// Place where processed blog posts live (their HTML and front matter).
     /// </summary>
-    public List<Post<TFrontMatter>> Posts => options.Posts;
-
-    /// <summary>
-    ///     Obsolete property. Use <see cref="Posts" /> instead. This property will be removed in future versions.
-    /// </summary>
-    [Obsolete("Use Posts instead. This property will be removed in future versions.")]
-    public List<Post<TFrontMatter>> BlogPosts => Posts;
-
+    public List<Post<TFrontMatter>> Posts { get; } = [];
 
     /// <summary>
     ///     The BlazorStaticContentOptions used to configure the BlazorStaticContentService.
     /// </summary>
     public BlazorStaticContentOptions<TFrontMatter> Options => options;
-
-
-    /// <summary>
-    ///     Obsolete method. Use <see cref="ParseAndAddPosts" /> instead. This method will be removed in future versions.
-    /// </summary>
-    [Obsolete("Use ParseAndAddPosts instead. This method will be removed in future versions.")]
-    public async Task ParseAndAddBlogPosts()
-    {
-        await ParseAndAddPosts();
-    }
 
     /// <summary>
     ///     Parses and adds posts to the BlazorStaticContentService. This method reads markdown files
@@ -71,7 +50,6 @@ public class BlazorStaticContentService<TFrontMatter>(
             {
                 continue;
             }
-
             Post<TFrontMatter> post = new()
             {
                 FrontMatter = frontMatter,
@@ -79,7 +57,7 @@ public class BlazorStaticContentService<TFrontMatter>(
                 HtmlContent = htmlContent
             };
 
-            options.Posts.Add(post);
+            Posts.Add(post);
 
             blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.PageUrl}/{post.Url}",
             Path.Combine(options.PageUrl, $"{post.Url}.html"), post.FrontMatter.AdditionalInfo));
@@ -91,19 +69,10 @@ public class BlazorStaticContentService<TFrontMatter>(
             var pathWithMedia = Path.Combine(options.ContentPath, options.MediaFolderRelativeToContentPath);
             blazorStaticService.Options.ContentToCopyToOutput.Add(new ContentToCopy(pathWithMedia, pathWithMedia));
         }
-        //add tags pages
-        if(options.AddTagPagesFromPosts)
-        {
-            // blazorStaticService.Options.PagesToGenerate.Add(new($"{options.TagsPageUrl}", Path.Combine(options.TagsPageUrl, "index.html")));
-            foreach(var tag in options.Posts.SelectMany(x => x.FrontMatter.Tags).Distinct())//gather all unique tags from all posts
-            {
-                var encodedTag = options.TagEncodeFunc(tag);
-                blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.TagsPageUrl}/{encodedTag}",
-                Path.Combine(options.TagsPageUrl, $"{encodedTag}.html")));
-            }
-        }
 
-        options.AfterContentParsedAndAddedAction?.Invoke();
+        ProcessTags();
+
+        options.AfterContentParsedAndAddedAction?.Invoke(blazorStaticService,this);
         return;
 
         string[] GetPostsPath()
@@ -132,4 +101,51 @@ public class BlazorStaticContentService<TFrontMatter>(
                 .Replace("\\", "/");
         }
     }
+
+    /// <summary>
+    /// A dictionary of unique Tags parsed from the FrontMatter of all posts.
+    /// Each Tag is distinct, and every Post references a collection of these Tag objects.
+    /// </summary>
+    public Dictionary<string, Tag> AllTags { get; private set; } = [];
+
+
+    private void ProcessTags()
+    {
+        if(!typeof(IFrontMatterWithTags).IsAssignableFrom(typeof(TFrontMatter)))
+        {
+            if(options.Tags.AddTagPagesFromPosts)
+                logger.LogWarning("BlazorStaticContentOptions.Tags.AddTagPagesFromPosts is true, but the used FrontMatter does not inherit from IFrontMatterWithTags. No tags were processed.");
+            return;
+        }
+        //gather List<string> tags and create Tag objects from them.
+        AllTags = Posts
+            .SelectMany(post => (post.FrontMatter as IFrontMatterWithTags)?.Tags ?? Enumerable.Empty<string>())
+            .Distinct()
+            .Select(tag => new Tag { Name = tag, EncodedName = options.Tags.TagEncodeFunc(tag) })
+            .ToDictionary(tag => tag.Name);
+
+
+        foreach(var post in Posts)
+        {
+            //add Tag objects to every post based on the front matter tags
+            post.Tags = ((IFrontMatterWithTags)post.FrontMatter).Tags
+                .Where(tagName => AllTags.ContainsKey(tagName))
+                .Select(tagName => AllTags[tagName])
+                .ToList();
+        }
+
+        if(!options.Tags.AddTagPagesFromPosts) return;
+
+        if(options.Tags.TagsPageUrl is null)
+        {
+            logger.LogWarning("BlazorStaticContentService.Options.Tags.TagsPageUrl is null, but AddTagPagesFromPosts is true");
+            return;
+        }
+        foreach(var tag in AllTags.Values)
+        {
+            blazorStaticService.Options.PagesToGenerate.Add(new PageToGenerate($"{options.Tags.TagsPageUrl}/{tag.EncodedName}",
+            Path.Combine(options.Tags.TagsPageUrl, $"{tag.EncodedName}.html")));
+        }
+    }
+
 }
